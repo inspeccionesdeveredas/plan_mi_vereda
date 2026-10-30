@@ -1119,8 +1119,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   </div>
 
   <footer>
-    <div class="solo-pwa" style="margin-bottom:8px"><a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span>
+    <div class="solo-pwa" style="margin-bottom:8px"><a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6">· Versión 29/10 22:25</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -1183,7 +1183,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         <p class="help" id="regHelp">Completá los datos para agregar un registro nuevo.</p>
         <form class="form" id="regForm" autocomplete="off" novalidate>
           <h3 class="fsec full">Datos de la vereda</h3>
-          <label class="full solo-carga solo-offline">Tu nombre *<input type="text" name="por" placeholder="Para que se sepa quién cargó cada registro" autocomplete="name"></label>
+          <label class="full solo-carga solo-offline">Tu nombre *<input type="text" name="por" placeholder="Para que se sepa quién cargó cada registro" autocomplete="name"><a href="#" id="porSalir" class="por" hidden>¿No sos vos? Cambiar de usuario</a></label>
           <label>Pliego *<select name="pliego"></select></label>
           <label id="pliegoOtroWrap" hidden>Nombre del pliego nuevo<input type="text" name="pliegoOtro" placeholder="Ej: 5"></label>
           <datalist id="pliegosList"></datalist>
@@ -1643,9 +1643,10 @@ $('gear').onclick=()=>openPanel(CARGA?'reg':'imp');
 // en la app, el nombre sale del link personal de cada inspector (no se puede cambiar)
 function porSync(){
   if(!PWA) return;
-  form.por.readOnly=CARGA; if(CARGA){ form.por.value=PW.yo||''; form.por.placeholder='Identificate con tu celular en la portada'; }
+  form.por.readOnly=CARGA; form.por.autocomplete='off'; if(CARGA){ form.por.value=PW.yo||''; form.por.placeholder='Identificate en la portada'; }
+  $('porSalir').hidden=!(CARGA&&PW.yo);
 }
-$('btnNuevo').onclick=()=>{ if(PWA&&CARGA&&!PW.yo){ $('usrBox').hidden=false; $('usrBox').scrollIntoView({behavior:'smooth',block:'center'}); $('usrCod').focus(); toast('Para cargar registros, identificate con tu celular'); return; } openPanel('reg',null); fillForm(null); setTimeout(()=>{ (form.por&&!form.por.value&&getComputedStyle(form.por.closest('label')).display!=='none'?form.por:form.dom).focus(); },50); };
+$('btnNuevo').onclick=()=>{ if(PWA&&CARGA&&!PW.yo){ $('usrBox').hidden=false; $('usrBox').scrollIntoView({behavior:'smooth',block:'center'}); $('usrCod').focus(); toast('Para cargar registros, identificate con tu celular'); return; } openPanel('reg',null); fillForm(null); setTimeout(()=>{ const s=panel.querySelector('.pane.on')||panel; panel.scrollTop=0; s.scrollTop=0; if(document.activeElement&&document.activeElement.blur) document.activeElement.blur(); },60); };
 $('bannerEnv').onclick=()=>openPanel('env');
 $('bannerSave').onclick=()=>saveHtml();
 $('pnlClose').onclick=()=>panel.close();
@@ -2066,6 +2067,8 @@ function pwaInit(){
   // link personal: ...?u=CODIGO (queda guardado en el dispositivo)
   try{ const q=new URLSearchParams(location.search).get('u'); if(q){ const c=q.trim().toLowerCase(); if(c!==lsGet(PW_USR,'')) $('usrUsu').value=c; history.replaceState(null,'',location.pathname); } }catch(e){}
   PW.u=lsGet(PW_USR,''); PW.yo=PW.u?lsGet(PW_YO,''):'';
+  const salir=e=>{ e.preventDefault(); lsSet(PW_USR,''); lsSet(PW_YO,''); PW.u=''; PW.yo=''; if(panel.open) panel.close(); render(); $('usrBox').scrollIntoView({behavior:'smooth',block:'center'}); toast('Identificate con tu usuario y celular'); };
+  $('usrSalir').onclick=salir; $('porSalir').onclick=salir;
   $('usrGo').onclick=pwUsarCodigo; $('usrCod').onkeydown=e=>{ if(e.key==='Enter') pwUsarCodigo(); }; $('usrUsu').onkeydown=e=>{ if(e.key==='Enter') $('usrCod').focus(); };
   const c=lsGet(PW_CACHE,null);
   if(c){ PW.regs=c.regs||[]; PW.altas=c.altas||[]; PW.lastSync=c.ts||0; }
@@ -2162,7 +2165,7 @@ async function pwSync(){
 function pwaBanner(){
   if(!PWA) return;
   const b=$('banner'), txt=$('bannerTxt'), ap=$('bannerAprobar'); b.classList.add('on'); ap.hidden=true;
-  if(PW.role==='admin') $('usrBox').hidden=true;
+  if(PW.role==='admin'){ $('usrBox').hidden=true; $('usrSalir').hidden=true; }
   const pend=PW.queue.length, off=!navigator.onLine;
   const hace=PW.lastSync?` Última sincronización: ${fmtFecha(PW.lastSync)}.`:' Todavía no se sincronizó con la planilla.';
   let estado = off ? `Sin conexión: podés seguir trabajando.${pend?` ${pend} cambio${pend>1?'s':''} esperando para enviarse cuando vuelva la señal.`:''}`
@@ -2175,7 +2178,7 @@ function pwaBanner(){
       txt.textContent=`${estado}${hace} · ${nuevos.length} registro${nuevos.length>1?'s':''} nuevo${nuevos.length>1?'s':''} de colaboradores${q.length?' ('+q.join(', ')+')':''}.`; ap.hidden=false; }
     else txt.textContent=estado+hace;
   } else {
-    $('usrBox').hidden=!!PW.yo;
+    $('usrBox').hidden=!!PW.yo; $('usrSalir').hidden=!PW.yo;
     const mios=DATA.filter(d=>d.src==='alta'&&d.dev===PW.dev).length;
     txt.textContent=`${estado} ${mios?`Cargaste ${mios} registro${mios>1?'s':''} desde este dispositivo.`:'Tocá “Registrar nuevo” para agregar registros; los existentes no se pueden modificar.'}`;
   }
