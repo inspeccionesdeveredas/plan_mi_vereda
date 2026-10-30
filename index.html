@@ -269,6 +269,13 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 .session li.gone{opacity:.55;cursor:default}
 .form .bad{border-color:var(--crit);outline:1px solid var(--crit)}
 .fsec{margin:6px 0 -2px;font-size:13px;font-weight:700;color:var(--brand-ink);text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--grid);padding-bottom:6px}
+#regForm input,#regForm select,#regForm textarea{font-size:16px;padding:12px 14px;min-height:48px}
+#regForm textarea{min-height:80px}
+.solo-insp{display:none!important}
+body.modo-carga .solo-insp{display:flex!important}
+body.modo-carga .no-insp{display:none!important}
+.ent-ok{align-items:center;gap:10px;padding:12px 14px;border-radius:12px;background:#e8f6ec;color:#1d7a3e;font-weight:700;font-size:16px;border:1px solid #bfe5cb}
+.ent-ok span{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#2e9e57;color:#fff;font-size:15px}
 .trabajos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .trab{display:flex!important;flex-direction:column;gap:4px;font-size:12px;color:var(--ink2);background:var(--page);border:1px solid var(--grid);border-radius:10px;padding:10px}
 .trab>span:first-child{font-weight:600;color:var(--ink);font-size:13px;line-height:1.25}
@@ -1120,7 +1127,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6">· Versión 29/10 22:25</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6">· Versión 29/10 22:35</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -1190,19 +1197,20 @@ svg.leaflet-image-layer.leaflet-interactive path {
           <label>Número de cédula<input type="text" name="ced" inputmode="numeric"></label>
           <label class="full">Catastro<input type="text" name="cat" inputmode="numeric" placeholder="Escribilo y se completa la calle"></label>
           <div class="full cat-info" id="catInfo" hidden><canvas id="catMapa" width="640" height="200" aria-label="Ubicación del lote"></canvas><div id="catTxt"></div></div>
-          <label>Domicilio *<input type="text" name="dom" placeholder="Calle y número"></label>
-          <label>Calle<input type="text" name="calle" list="callesList" placeholder="Se completa con el catastro"></label>
+          <label class="full">Domicilio *<input type="text" name="dom" placeholder="Calle y número"></label>
+          <label class="full">Calle<input type="text" name="calle" list="callesList" placeholder="Se completa con el catastro"></label>
           <datalist id="callesList"></datalist>
-          <h3 class="fsec full">Estado</h3>
-          <div class="checks full">
+          <h3 class="fsec full no-insp">Estado</h3>
+          <div class="full solo-insp ent-ok"><span>✓</span> Entregada</div>
+          <div class="checks full no-insp">
             <label><input type="checkbox" name="ent" checked> Entregada</label>
             <label><input type="checkbox" name="pag"> Pagada</label>
             <label><input type="checkbox" name="eje"> Ejecutada</label>
           </div>
-          <label>Forma de pago<select name="fp"><option>Sin dato</option><option>Contado</option><option>3 cuotas</option></select></label>
-          <label>Año de pago<input type="text" name="anio" inputmode="numeric" placeholder="Ej: 2026"></label>
-          <h3 class="fsec full">Trabajos a realizar</h3>
-          <div class="trabajos full">
+          <label class="no-insp">Forma de pago<select name="fp"><option>Sin dato</option><option>Contado</option><option>3 cuotas</option></select></label>
+          <label class="no-insp">Año de pago<input type="text" name="anio" inputmode="numeric" placeholder="Ej: 2026"></label>
+          <h3 class="fsec full no-insp">Trabajos a realizar</h3>
+          <div class="trabajos full no-insp">
             <label class="trab"><span>Colocación y nivelación de baldosas existentes</span><span class="inu"><input type="text" name="niv" inputmode="decimal" placeholder="0"><em>m²</em></span></label>
             <label class="trab"><span>Provisión y colocación de baldosas</span><span class="inu"><input type="text" name="prov" inputmode="decimal" placeholder="0"><em>m²</em></span></label>
             <label class="trab"><span>Contrapiso de H° A°</span><span class="inu"><input type="text" name="contra" inputmode="decimal" placeholder="0"><em>m²</em></span></label>
@@ -1760,7 +1768,7 @@ $('sessClear').onclick=()=>{ SESS=[]; sessSave(); };
 form.onsubmit=e=>{
   e.preventDefault();
   const r={pliego:(form.pliego.value==='__otro'?form.pliegoOtro.value:form.pliego.value).trim(),ced:form.ced.value.trim(),cat:form.cat.value.trim(),dom:form.dom.value.trim(),calle:fixCalle(form.calle.value),
-    ent:form.ent.checked,pag:form.pag.checked,eje:form.eje.checked,fp:form.fp.value,anio:form.anio.value.trim(),obs:form.obs.value.trim(),
+    ent:CARGA?true:form.ent.checked,pag:form.pag.checked,eje:form.eje.checked,fp:form.fp.value,anio:form.anio.value.trim(),obs:form.obs.value.trim(),
     ...Object.fromEntries(TRAB.map(([k])=>[k,numTrab(form[k].value)]))};
   form.querySelectorAll('.bad').forEach(x=>x.classList.remove('bad'));
   r.pliego=r.pliego.replace(/^pliego\s*/i,'');
