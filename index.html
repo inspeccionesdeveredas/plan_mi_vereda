@@ -1176,7 +1176,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         <p class="help" id="regHelp">Completá los datos para agregar un registro nuevo.</p>
         <form class="form" id="regForm" autocomplete="off" novalidate>
           <h3 class="fsec full">Datos de la vereda</h3>
-          <label class="full solo-carga solo-offline">Tu nombre *<input type="text" name="por" placeholder="Para que se sepa quién cargó cada registro" autocomplete="name"></label>
+          <label class="full solo-carga solo-offline">Tu nombre *<input type="text" name="por" placeholder="Para que se sepa quién cargó cada registro" autocomplete="name"><select id="porLista" hidden></select></label>
           <label>Pliego *<select name="pliego"></select></label>
           <label id="pliegoOtroWrap" hidden>Nombre del pliego nuevo<input type="text" name="pliegoOtro" placeholder="Ej: 5"></label>
           <datalist id="pliegosList"></datalist>
@@ -1632,6 +1632,16 @@ function showTab(t){ panel.classList.toggle('full',t==='reg'); $('pnlTitle').tex
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{ if(b.dataset.tab==='reg'&&editId===null) fillForm(null); showTab(b.dataset.tab); });
 function openPanel(tab,id){ if(CARGA&&(tab==='imp'||tab==='sav'||!tab)) tab='reg'; if(CARGA&&id!=null&&!canEdit(DATA.find(x=>x.id===id))) id=null; if((tab||'imp')==='imp'&&!parsed&&!$('impPliego').value) $('impPliego').value=F.pliego||''; if(tab==='reg') fillForm(id??null); showTab(tab||'imp'); if(!panel.open) panel.showModal(); }
 $('gear').onclick=()=>openPanel(CARGA?'reg':'imp');
+
+// lista de inspectores (hoja "Inspectores" de la planilla): si hay nombres cargados, se elige de la lista
+function porListaSync(){
+  const sel=$('porLista'), lista=(PWA&&PW.insp)||[];
+  if(!lista.length){ sel.hidden=true; form.por.hidden=false; return; }
+  const actual=form.por.value.trim();
+  sel.innerHTML='<option value="">Elegí tu nombre…</option>'+lista.map(n=>`<option${n===actual?' selected':''}>${esc(n)}</option>`).join('');
+  if(actual&&!lista.includes(actual)) sel.value='';
+  sel.hidden=false; form.por.hidden=true;
+}
 $('btnNuevo').onclick=()=>{ openPanel('reg',null); fillForm(null); setTimeout(()=>{ (form.por&&!form.por.value&&getComputedStyle(form.por.closest('label')).display!=='none'?form.por:form.dom).focus(); },50); };
 $('bannerEnv').onclick=()=>openPanel('env');
 $('bannerSave').onclick=()=>saveHtml();
@@ -1647,7 +1657,7 @@ function fillForm(id){
   { const PL=pliegosList(); const def=d?.pliego??(F.pliego||lastPliego||(PL.length===1?PL[0]:''));
     form.pliego.innerHTML=(def?'':'<option value="">Elegí un pliego…</option>')+PL.map(v=>`<option value="${esc(v)}">Pliego ${esc(v)}</option>`).join('')+(CARGA?'':'<option value="__otro">Otro (nuevo)…</option>');
     form.pliego.value=PL.includes(def)?def:''; form.pliegoOtro.value=''; $('pliegoOtroWrap').hidden=true; }
-  if(CARGA){ let n=''; try{ n=localStorage.getItem('pmv-carga-nombre')||''; }catch(e){} form.por.value=d?.por||n; }
+  if(CARGA){ let n=''; try{ n=localStorage.getItem('pmv-carga-nombre')||''; }catch(e){} form.por.value=d?.por||n; porListaSync(); }
   form.ced.value=d?.ced??''; form.cat.value=d?.cat??''; form.dom.value=d?.dom??''; form.calle.value=d?.calle??'';
   form.ent.checked=d?d.ent:true; form.pag.checked=!!d?.pag; form.eje.checked=!!d?.eje;
   const fps=[...new Set(['Sin dato','Contado','3 cuotas',...DATA.map(x=>x.fp)])];
@@ -1753,7 +1763,7 @@ form.onsubmit=e=>{
   if(!r.calle && r.dom){ const m=r.dom.match(/^(.+?)\s+(N[°º]?\s*|NRO\.?\s*)?\d+\b/i); if(m) r.calle=fixCalle(m[1]); }
   if(r.anio){ let a=parseInt(r.anio,10); if(a>=0&&a<100) a+=2000; r.anio=(a>=2000&&a<=2100)?String(a):''; }
   if(!CARGA&&editId!==null){ const prev=DATA.find(x=>x.id===editId); r.por=prev?.por||''; }
-  if(CARGA&&!ONLINE){ r.por=form.por.value.trim(); r.mine=true; try{ localStorage.setItem('pmv-carga-nombre',r.por); }catch(e){} }
+  if(CARGA&&!ONLINE){ if(!$('porLista').hidden) form.por.value=$('porLista').value; r.por=form.por.value.trim(); r.mine=true; try{ localStorage.setItem('pmv-carga-nombre',r.por); }catch(e){} }
   const falta=[]; if(CARGA&&!ONLINE&&!r.por) falta.push(['por','tu nombre']); if(!r.pliego) falta.push(['pliego','el número de pliego']); if(!r.dom) falta.push(['dom','el domicilio']); if(r.dom&&!r.calle) falta.push(['calle','la calle (no la pude sacar del domicilio)']);
   if(falta.length){ falta.forEach(([n])=>form[n].classList.add('bad')); form[falta[0][0]].focus();
     const fx=falta.map(f=>f[1]); $('regErr').textContent='Falta completar '+(fx.length>1?fx.slice(0,-1).join(', ')+' y '+fx.at(-1):fx[0])+'.'; return; }
@@ -2033,7 +2043,7 @@ function aprobarTodos(){
 
 // ================= MODO APP (link propio, funciona sin internet, sincroniza con Google Sheets) =================
 // Cada cambio se guarda primero en el dispositivo (cola) y se envía solo cuando hay conexión.
-const PW = { api:'', admin:'', role:'contrib', dev:'', regs:[], altas:[], queue:[], keyOf:new Map(), synced:new Map(),
+const PW = { api:'', admin:'', role:'contrib', dev:'', regs:[], altas:[], insp:[], queue:[], keyOf:new Map(), synced:new Map(),
   lastSync:0, syncing:false, err:'' };
 const PW_CACHE='pmv-app-cache', PW_QUEUE='pmv-app-cola', PW_ADMIN='pmv-app-admin', PW_DEV='pmv-app-dispositivo';
 const PW_FIELDS=['pliego','ced','dom','cat','calle','ent','pag','eje','fp','anio','obs','por','t','niv','prov','contra','juntas','caz'];
@@ -2050,7 +2060,7 @@ function pwaInit(){
   PW.admin=lsGet(PW_ADMIN,''); PW.role=PW.admin?'admin':'contrib';
   PW.queue=lsGet(PW_QUEUE,[]);
   const c=lsGet(PW_CACHE,null);
-  if(c){ PW.regs=c.regs||[]; PW.altas=c.altas||[]; PW.lastSync=c.ts||0; }
+  if(c){ PW.regs=c.regs||[]; PW.altas=c.altas||[]; PW.insp=c.insp||[]; PW.lastSync=c.ts||0; }
   else { PW.regs=EMB.rows.map(r=>({...pwBody(r),key:'r'+String(r.id).padStart(2,'0')})); }   // datos incluidos, hasta la primera sincronización
   setRole(); pwRebuild();
   window.addEventListener('online',()=>pwSync()); window.addEventListener('offline',()=>render());
@@ -2128,8 +2138,8 @@ async function pwSync(){
     }
     const res=await fetch(PW.api+(PW.api.includes('?')?'&':'?')+'action=list&_='+Date.now());
     const j=await res.json(); if(!j||!j.ok) throw new Error('no se pudo leer la planilla');
-    PW.regs=(j.registros||[]).filter(r=>r.key); PW.altas=(j.altas||[]).filter(a=>a.k);
-    PW.lastSync=Date.now(); lsSet(PW_CACHE,{regs:PW.regs,altas:PW.altas,ts:PW.lastSync});
+    PW.regs=(j.registros||[]).filter(r=>r.key); PW.altas=(j.altas||[]).filter(a=>a.k); PW.insp=(j.inspectores||[]).map(s=>String(s).trim()).filter(Boolean);
+    PW.lastSync=Date.now(); lsSet(PW_CACHE,{regs:PW.regs,altas:PW.altas,insp:PW.insp,ts:PW.lastSync});
     if(PW.role==='admin' && !PW.regs.length && !PW.altas.length && EMB.rows.length && !lsGet('pmv-app-sembrado',false)){
       lsSet('pmv-app-sembrado',true);
       PW.queue.push(...EMB.rows.map(r=>({op:'reg_set',key:'r'+String(r.id).padStart(2,'0'),body:pwBody(r),id:'o'+pwRand()}))); lsSet(PW_QUEUE,PW.queue);
@@ -2588,17 +2598,25 @@ pwaInit();
 // ---- instalar como aplicación (solo en la versión link / GitHub)
 (function(){
   if(!PWA) return;
-  const box=$('instalar'), btn=$('btnInstalar'); let evt=null;
+  const box=$('instalar'), btn=$('btnInstalar'), txt=$('instTxt'); let evt=null;
   const instalada=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
   const cerrada=()=>{ try{ return sessionStorage.getItem('pmv-inst-cerrado')==='1'; }catch(e){ return false; } };
   if(instalada()) return;
-  window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); evt=e; btn.hidden=false; if(!cerrada()) box.hidden=false; });
-  btn.onclick=async()=>{ if(!evt) return; evt.prompt(); const r=await evt.userChoice.catch(()=>null); evt=null; box.hidden=true; if(r&&r.outcome==='accepted') toast('Listo: la app quedó en tu pantalla de inicio'); };
+  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent), movil=/android|mobi/i.test(navigator.userAgent);
+  const ayuda = ios ? 'En Safari tocá Compartir ⬆︎ y después “Agregar a inicio”.'
+    : movil ? 'Tocá el menú ⋮ de Chrome (arriba a la derecha) y elegí “Instalar aplicación” o “Agregar a pantalla principal”.'
+    : 'Tocá el ícono de instalar en la barra de direcciones, o el menú ⋮ → “Transmitir, guardar y compartir” → “Instalar”.';
+  if(!cerrada()) box.hidden=false;   // la tarjeta se muestra siempre; el botón usa el cartel de Chrome si está disponible
+  if(ios) btn.hidden=true;
+  window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); evt=e; });
+  btn.onclick=async()=>{
+    if(!evt){ txt.textContent=ayuda; btn.hidden=true; return; }
+    evt.prompt(); const r=await evt.userChoice.catch(()=>null); evt=null;
+    if(r&&r.outcome==='accepted'){ box.hidden=true; toast('Listo: la app quedó instalada'); }
+  };
   window.addEventListener('appinstalled',()=>{ box.hidden=true; });
   $('instCerrar').onclick=()=>{ box.hidden=true; try{ sessionStorage.setItem('pmv-inst-cerrado','1'); }catch(e){} };
-  // iPhone/iPad: Safari no muestra el cartel, se explica cómo hacerlo
-  if(/iphone|ipad|ipod/i.test(navigator.userAgent) && !cerrada()){
-    btn.hidden=true; $('instTxt').textContent='En Safari tocá Compartir ⬆︎ y después “Agregar a inicio”.'; box.hidden=false; }
+  if(ios) txt.textContent=ayuda;
 })();
 
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{ render(); mapThemeChanged(); });
