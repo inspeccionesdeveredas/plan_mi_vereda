@@ -1634,7 +1634,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6">· Versión 04/11 20:55</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6">· Versión 06/11 12:50</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -1889,9 +1889,9 @@ function persist(msg){
   if(msg) toast(msg);
   render();
 }
-let toastT; function toast(m,undo){ const t=$('toast'); t.textContent=m; t.classList.toggle('act',!!undo);
+let toastT; function toast(m,undo){ let dur=0; if(typeof undo==='number'){ dur=undo; undo=null; } const t=$('toast'); t.textContent=m; t.classList.toggle('act',!!undo);
   if(undo){ const b=document.createElement('button'); b.textContent='Deshacer'; b.onclick=()=>{ t.classList.remove('on'); undo(); }; t.appendChild(b); }
-  t.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),undo?6000:2800); }
+  t.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),dur||(undo?6000:2800)); }
 
 // ---------- tema ----------
 (function(){
@@ -3062,7 +3062,7 @@ function pwaInit(){
   try{ if(new URLSearchParams(location.search).has('admin')){ PW.verAdm=true; } }catch(e){}
   try{ const q=new URLSearchParams(location.search).get('u'); if(q){ const c=q.trim().toLowerCase(); if(c!==lsGet(PW_USR,'')){ $('usrUsu').value=c; $('accUsu').value=c; } history.replaceState(null,'',location.pathname); } }catch(e){}
   PW.u=lsGet(PW_USR,''); PW.yo=PW.u?lsGet(PW_YO,''):''; PW.rol=PW.yo?lsGet(PW_ROL,''):''; PW.t=PW.u?lsGet(PW_TOK,''):'';
-  if(PW.t&&PW.rol==='admin'&&!PW.admin) PW.role='admin';
+  if(PW.u&&PW.t){ if(PW.admin){ PW.admin=''; lsSet(PW_ADMIN,''); } PW.role=PW.rol==='admin'?'admin':'contrib'; }
   if(window.PMV_DEMO&&window.PMV_DEMO_ROL){ PW.u='demo'; PW.yo='Sofía (ejemplo)'; PW.rol=window.PMV_DEMO_ROL; }
   const salir=e=>{ e.preventDefault(); const eraSec=PW.rol==='secretario'; lsSet(PW_USR,''); lsSet(PW_YO,''); lsSet(PW_ROL,''); PW.u=''; PW.yo=''; PW.rol=''; tilesKey=''; if(panel.open) panel.close(); render(); $('usrBox').scrollIntoView({behavior:'smooth',block:'center'}); toast('Identificate con tu usuario y celular'); if(eraSec) setTimeout(()=>location.reload(),600); };
   $('usrSalir').onclick=e=>{ if(PW.t){ e.preventDefault(); cerrarSesion(); return; } salir(e); }; $('porSalir').onclick=e=>{ if(PW.t){ e.preventDefault(); cerrarSesion(); return; } salir(e); };
@@ -3242,26 +3242,39 @@ function fotosDe(d){ const id=regId(d);
   return [...PW.fotos.filter(f=>f.registro===id).map(f=>({...f,src:f.url||'https://drive.google.com/thumbnail?id='+encodeURIComponent(f.archivo)+'&sz=w600',full:f.url||'https://drive.google.com/thumbnail?id='+encodeURIComponent(f.archivo)+'&sz=w2000'})),
     ...PW.fotosPend.filter(f=>f.registro===id).map(f=>({...f,src:'data:image/jpeg;base64,'+f.b64,full:'data:image/jpeg;base64,'+f.b64,pend:true}))]; }
 function achicarFoto(file){
-  return new Promise((ok,mal)=>{ const img=new Image(), url=URL.createObjectURL(file);
-    img.onload=()=>{ const M=1600, k=Math.min(1,M/Math.max(img.width,img.height)), c=document.createElement('canvas');
-      c.width=Math.round(img.width*k); c.height=Math.round(img.height*k); c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-      URL.revokeObjectURL(url); ok(c.toDataURL('image/jpeg',.8).split(',')[1]); };
-    img.onerror=()=>{ URL.revokeObjectURL(url); mal(new Error('imagen')); }; img.src=url; });
+  // achica la foto a 1600 px. Prueba dos formas de leerla (algunos celulares fallan con una).
+  const dibujar=(src,w,h)=>{ const M=1600, k=Math.min(1,M/Math.max(w,h)), c=document.createElement('canvas');
+    c.width=Math.max(1,Math.round(w*k)); c.height=Math.max(1,Math.round(h*k)); const cx=c.getContext('2d'); cx.fillStyle='#fff'; cx.fillRect(0,0,c.width,c.height); cx.drawImage(src,0,0,c.width,c.height);
+    const b=c.toDataURL('image/jpeg',.8).split(',')[1]; if(!b||b.length<500) throw new Error('vacia'); return b; };
+  const porImg=()=>new Promise((ok,mal)=>{ const img=new Image(), url=URL.createObjectURL(file);
+    img.onload=()=>{ try{ ok(dibujar(img,img.naturalWidth||img.width,img.naturalHeight||img.height)); }catch(e){ mal(e); } finally{ URL.revokeObjectURL(url); } };
+    img.onerror=()=>{ URL.revokeObjectURL(url); mal(new Error('formato')); }; img.src=url; });
+  const porBitmap=async()=>{ const bm=await createImageBitmap(file); try{ return dibujar(bm,bm.width,bm.height); } finally{ bm.close&&bm.close(); } };
+  return porImg().catch(e1=>(typeof createImageBitmap==='function'?porBitmap():Promise.reject(e1)).catch(()=>{ throw e1; }));
 }
 async function pwAgregarFoto(d,tipo,file){
-  try{ const b64=await achicarFoto(file);
-    const f={fid:'f'+pwRand(),registro:regId(d),tipo,b64,etiqueta:(d.cat?'Cat '+d.cat+' - ':'')+d.dom,t:Date.now()};
-    await fotosDb('put',f); PW.fotosPend.push(f); render(); toast(navigator.onLine?'Foto guardada, subiendo…':'Foto guardada en el teléfono: se sube cuando haya señal'); pwSync();
-  }catch(e){ toast('No se pudo procesar la foto'); }
+  if(!file){ return; }
+  let b64;
+  try{ b64=await achicarFoto(file); }
+  catch(e){ const heic=/heic|heif/i.test(file.type||'')||/\.(heic|heif)$/i.test(file.name||'');
+    toast(heic?'Esa foto está en formato HEIC/HEIF y este celular no la puede abrir. Sacala con la cámara desde la app o cambiá la cámara a formato JPG.':'No se pudo abrir la foto. Probá sacarla de nuevo con la cámara desde la app.',8000); return; }
+  const f={fid:'f'+pwRand(),registro:regId(d),tipo,b64,etiqueta:(d.cat?'Cat '+d.cat+' - ':'')+d.dom,t:Date.now()};
+  try{ await fotosDb('put',f); }catch(e){ f.soloMemoria=true; }   // si el teléfono no deja guardar, se intenta subir igual
+  PW.fotosPend.push(f); render(); toast(navigator.onLine?'Foto guardada, subiendo…':'Foto guardada en el teléfono: se sube cuando haya señal'); pwSync();
 }
 async function pwSubirFotos(){
+  PW.errFoto='';
   for(const f of [...PW.fotosPend]){
-    const r=await pwPost({action:'foto',adminKey:PW.admin||undefined,u:PW.u||undefined,fid:f.fid,registro:f.registro,tipo:f.tipo,etiqueta:f.etiqueta,b64:f.b64});
-    if(r&&r.ok){ PW.fotos.push({id:f.fid,registro:f.registro,tipo:f.tipo,fecha:Date.now(),archivo:r.archivo}); }
-    else if(r&&r.error==='forbidden') toast('Una foto no se subió: tu usuario no tiene permiso de obra.');
-    else throw new Error('no se pudo subir una foto');
-    await fotosDb('del',f.fid).catch(()=>{}); PW.fotosPend=PW.fotosPend.filter(x=>x.fid!==f.fid);
+    let r=null;
+    try{ r=await pwPost({action:'foto',adminKey:PW.admin||undefined,u:PW.u||undefined,fid:f.fid,registro:f.registro,tipo:f.tipo,etiqueta:f.etiqueta,b64:f.b64}); }
+    catch(e){ PW.errFoto='No se pudo subir una foto (conexión). Se reintenta sola.'; continue; }   // sin señal: queda para el próximo intento, sin frenar lo demás
+    const quitar=async()=>{ await fotosDb('del',f.fid).catch(()=>{}); PW.fotosPend=PW.fotosPend.filter(x=>x.fid!==f.fid); };
+    if(r&&r.ok){ PW.fotos.push({id:f.fid,registro:f.registro,tipo:f.tipo,fecha:Date.now(),archivo:r.archivo}); PW.errFoto=''; await quitar(); }
+    else if(r&&r.error==='forbidden'){ toast('Una foto no se subió: tu usuario no tiene permiso de obra (revisá la columna "rol" en la hoja Inspectores).',8000); await quitar(); }
+    else if(r&&(r.error==='datos'||r.error==='grande')){ toast(r.error==='grande'?'Una foto era demasiado grande y no se pudo subir. Sacala de nuevo.':'Una foto llegó incompleta y no se pudo subir. Sacala de nuevo.',8000); await quitar(); }
+    else { PW.errFoto='No se pudo subir una foto'+(r&&r.error?' ('+r.error+')':'')+'. Se reintenta sola.'; }
   }
+  if(PW.errFoto) toast(PW.errFoto,6000);
 }
 
 function pwLinks(r){ const l={planilla:r.planilla||'',inspectores:r.inspectores||'',fotos:r.fotos||''}; PW.links=l; lsSet('pmv-app-links',l); tilesKey=''; render(); }
@@ -3281,7 +3294,7 @@ function accesoNecesario(){ return PWA&&!window.PMV_DEMO&&!PW.prueba&&!PW.admin&
 function accesoRevisar(){ if(accesoNecesario()) mostrarAcceso(true); else if(!$('acceso').hidden&&!$('acceso').dataset.vista) mostrarAcceso(false); }
 function mostrarAcceso(on,vista){ const a=$('acceso'); a.hidden=!on; document.body.classList.toggle('con-acceso',on); a.dataset.vista=on&&vista?'1':'';
   $('accDemoVolver').hidden=!(on&&vista); if(on){ $('accMsg').textContent=''; $('accMsg').className='acc-msg'; $('accRepL').hidden=true; $('accClave').value=''; $('accRep').value=''; setTimeout(()=>($('accUsu').value?$('accClave'):$('accUsu')).focus(),80); } }
-function cerrarSesion(msg){ [PW_USR,PW_YO,PW_ROL,PW_TOK].forEach(k=>lsSet(k,'')); PW.u=PW.yo=PW.rol=PW.t=''; if(!PW.admin&&!PW.prueba) PW.role='contrib'; tilesKey=''; if(panel.open) panel.close(); setRole(); pwRebuild(); mostrarAcceso(true); if(msg){ $('accMsg').textContent=msg; } }
+function cerrarSesion(msg){ [PW_USR,PW_YO,PW_ROL,PW_TOK,PW_ADMIN].forEach(k=>lsSet(k,'')); PW.admin=''; PW.u=PW.yo=PW.rol=PW.t=''; if(!PW.admin&&!PW.prueba) PW.role='contrib'; tilesKey=''; if(panel.open) panel.close(); setRole(); pwRebuild(); mostrarAcceso(true); if(msg){ $('accMsg').textContent=msg; } }
 const VER_DE_ROL={admin:null,obra:'obra',secretario:'secretario','':'cedulas'};
 async function pwAcceso(){
   const usu=$('accUsu').value.trim().toLowerCase(), clave=$('accClave').value, crear=!$('accRepL').hidden, msg=$('accMsg');
@@ -3296,7 +3309,7 @@ async function pwAcceso(){
   if(!navigator.onLine||!PW.api){ msg.textContent='Para ingresar hace falta conexión a internet.'; return; }
   $('accGo').disabled=true; $('accGo').textContent='Verificando…';
   try{ const j=await pwPost({action:'acceso',usuario:usu,clave,crear});
-    if(j&&j.ok){ PW.u=j.usuario||usu; PW.yo=String(j.nombre||''); PW.rol=j.rol||''; PW.t=j.t||''; [[PW_USR,PW.u],[PW_YO,PW.yo],[PW_ROL,PW.rol],[PW_TOK,PW.t]].forEach(([k,v])=>lsSet(k,v));
+    if(j&&j.ok){ PW.admin=''; lsSet(PW_ADMIN,''); PW.u=j.usuario||usu; PW.yo=String(j.nombre||''); PW.rol=j.rol||''; PW.t=j.t||''; [[PW_USR,PW.u],[PW_YO,PW.yo],[PW_ROL,PW.rol],[PW_TOK,PW.t]].forEach(([k,v])=>lsSet(k,v));
       mostrarAcceso(false); tilesKey='';
       if(PW.prueba||vista){ const nom=PW.yo; verComo((PW.rol in VER_DE_ROL)?VER_DE_ROL[PW.rol]:'cedulas',true); if(PW.rol!=='admin'){ PW.yo=nom; tilesKey=''; render(); } }
       else { PW.role=PW.rol==='admin'?'admin':'contrib'; setRole(); pwRebuild(); }
