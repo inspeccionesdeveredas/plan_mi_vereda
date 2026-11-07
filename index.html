@@ -605,6 +605,9 @@ body.modo-carga .no-insp{display:none!important}
 .visita label:has(input:checked){color:#fff}
 .visita .v-ent:has(input:checked){background:linear-gradient(100deg,#0a5cb6,#083f7c);border-color:#0a5cb6}
 .visita .v-volver:has(input:checked){background:linear-gradient(100deg,#3d93e6,#1f6fc4);border-color:#3d93e6}
+.solo-obra{display:none!important}
+body.rol-obra .visita .solo-obra{display:flex!important}
+.visita .v-noent:has(input:checked){background:linear-gradient(100deg,#1f8a4c,#146235);border-color:#1f8a4c}
 .visita .v-aband:has(input:checked){background:linear-gradient(100deg,#0b3a6b,#062849);border-color:#0b3a6b}
 .visita{background:color-mix(in srgb,#0a5cb6 6%,var(--surface));border:1px solid color-mix(in srgb,#0a5cb6 25%,transparent);border-radius:14px;padding:12px}
 .visita label{border-color:color-mix(in srgb,#0a5cb6 30%,var(--grid))!important}
@@ -1634,7 +1637,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6">· Versión 06/11 12:50</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6">· Versión 06/11 14:20</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -1712,6 +1715,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
             <label class="v-ent"><input type="radio" name="visita" value="entregada" checked><span>✓</span> Entregada</label>
             <label class="v-volver"><input type="radio" name="visita" value="volver"><span>↻</span> No se encuentra, volver</label>
             <label class="v-aband"><input type="radio" name="visita" value="abandonada"><span>⌂</span> Casa abandonada</label>
+            <label class="v-noent solo-obra"><input type="radio" name="visita" value="noent_eje"><span>✔</span> No se entrega - ejecutada</label>
           </div>
           <div class="checks full no-insp">
             <label class="ent-adm" hidden><input type="checkbox" name="paraEnt"> Para entregar</label>
@@ -2258,7 +2262,7 @@ function renderObraAdm(){
   $('nuevoSub').textContent=esAdmApp()?'Cargá una cédula antes de entregarla: datos de la vereda, pagos y trabajos.':'Cargá una cédula: datos de la vereda, resultado de la visita y observación.';
   $('btnObraAdm').hidden=!verDatosObra(); $('btnInfMini').hidden=!verDatosObra(); $('btnRegMini').hidden=!esAdmApp(); $('miniGear').hidden=!esAdmApp();
   if(PWA&&!window.__fLimpio&&(F.pliego||F.calle||F.estado||F.fp||F.dom||F.ced||F.cat)){ window.__fLimpio=1; setTimeout(()=>$('reset').click(),0); }
-  $('btnNuevo').hidden=esSec(); document.body.classList.toggle('rol-sec',esSec()); if(!verDatosObra()||$('obraAdm').hidden) return;
+  $('btnNuevo').hidden=esSec(); document.body.classList.toggle('rol-sec',esSec()); document.body.classList.toggle('rol-obra',esObra()); if(!verDatosObra()||$('obraAdm').hidden) return;
   const log=PW.obraLog||[], ultimo={};
   log.forEach(o=>{ (ultimo[o.registro]=ultimo[o.registro]||[]).push(o); });
   const conFoto=new Set([...(PW.fotos||[])].map(f=>f.registro));
@@ -2341,6 +2345,35 @@ $('obraRes').addEventListener('click',e=>{
   const a=e.target.closest('button[data-foto]'); if(a){ fotoPend={id:+a.dataset.id,tipo:a.dataset.foto}; $('obraFile').click(); return; }
   const v=e.target.closest('button[data-full]'); if(v){ $('fotoVer').querySelector('img').src=v.dataset.full; $('fotoVer').hidden=false; } });
 $('fotoVer').onclick=()=>{ $('fotoVer').hidden=true; $('fotoVer').querySelector('img').src=''; };
+// ---------- botón "atrás" del celular: cierra la foto o la ventana abierta en vez de salir de la app ----------
+(function(){
+  const vis=id=>{ const e=$(id); return !!e&&!e.hidden; };
+  function cerrarArriba(){
+    if(vis('fotoVer')){ $('fotoVer').click(); return true; }
+    if(vis('gearMenu')){ $('gearMenu').hidden=true; return true; }
+    const dlg=[...document.querySelectorAll('dialog[open]')].pop(); if(dlg){ dlg.close(); return true; }
+    if(vis('vistaInforme')){ cerrarInforme(); return true; }
+    if(document.body.classList.contains('mapa-full')){ mapaFull(false); return true; }
+    if(vis('vistaTareas')){ cerrarTareas(); return true; }
+    if(vis('vistaNotas')){ cerrarNotas(); return true; }
+    if(vis('obraBox')){ cerrarObra(); return true; }
+    if(vis('obraAdm')){ cerrarObraAdm(); return true; }
+    if(vis('vistaDet')){ cerrarDetalle(); return true; }
+    return false;
+  }
+  let saliendo=null;
+  const guardia=()=>{ try{ if(!(history.state&&history.state.pmvAtras)) history.pushState({pmvAtras:1},''); }catch(e){} };
+  try{ if(!(history.state&&history.state.pmvAtras)) history.replaceState({pmvBase:1},''); }catch(e){}
+  guardia();
+  document.addEventListener('pointerdown',()=>{ if(!saliendo) guardia(); },true);
+  addEventListener('popstate',()=>{
+    let cerro=false; try{ cerro=cerrarArriba(); }catch(e){}
+    if(cerro){ clearTimeout(saliendo); saliendo=null; guardia(); return; }
+    // en la pantalla principal: el próximo "atrás" sale de la app
+    toast('Tocá "atrás" otra vez para salir de la app',2200);
+    clearTimeout(saliendo); saliendo=setTimeout(()=>{ saliendo=null; guardia(); },2400);
+  });
+})();
 $('obraQ').addEventListener('input',obraBuscar);
 $('obraRes').addEventListener('click',e=>{ const b=e.target.closest('button[data-obra]'); if(!b) return;
   const d=DATA.find(x=>x.id===+b.dataset.id); if(!d) return; const est=b.getAttribute('aria-pressed')==='true'?'none':b.dataset.obra;
@@ -2546,7 +2579,7 @@ function fillForm(id){
     form.pliego.value=PL.includes(def)?def:''; form.pliegoOtro.value=''; $('pliegoOtroWrap').hidden=true; }
   if(CARGA){ let n=''; try{ n=localStorage.getItem('pmv-carga-nombre')||''; }catch(e){} form.por.value=d?.por||n; porSync(); }
   form.ced.value=d?.ced??''; form.cat.value=d?.cat??''; form.dom.value=d?.dom??''; form.calle.value=d?.calle??'';
-  rfLimpiar(); form.paraEnt.checked=d?!d.ent:!CARGA; form.querySelector('.ent-adm').hidden=CARGA; { const v=d?.visita||'entregada'; form.querySelectorAll('input[name=visita]').forEach(x=>x.checked=x.value===v); } form.pag.checked=!!d?.pag; form.eje.checked=!!d?.eje;
+  rfLimpiar(); form.paraEnt.checked=d?!d.ent:!CARGA; form.querySelector('.ent-adm').hidden=CARGA; { const v=d?.visita||(d&&d.eje&&!d.ent&&esObra()?'noent_eje':'entregada'); form.querySelectorAll('input[name=visita]').forEach(x=>x.checked=x.value===v); } form.pag.checked=!!d?.pag; form.eje.checked=!!d?.eje;
   const fps=[...new Set(['Sin dato','Contado','3 cuotas',...DATA.map(x=>x.fp)])];
   form.fp.innerHTML=fps.map(v=>`<option>${esc(v)}</option>`).join(''); form.fp.value=d?.fp??'Sin dato';
   form.anio.value=d?.anio??''; form.monto.value=d?.monto??''; form.obs.value=d?.obs??'';
@@ -2643,7 +2676,7 @@ $('sessClear').onclick=()=>{ SESS=[]; sessSave(); };
 form.onsubmit=e=>{
   e.preventDefault();
   const r={pliego:(form.pliego.value==='__otro'?form.pliegoOtro.value:form.pliego.value).trim(),ced:form.ced.value.trim(),cat:form.cat.value.trim(),dom:form.dom.value.trim(),calle:fixCalle(form.calle.value),
-    ent:CARGA?form.visita.value==='entregada':!form.paraEnt.checked, visita:CARGA?(form.visita.value!=='entregada'?form.visita.value:null):(editId!==null?(DATA.find(x=>x.id===editId)||{}).visita||null:null),pag:form.pag.checked,eje:form.eje.checked,fp:form.fp.value,anio:form.anio.value.trim(),monto:form.monto.value.trim().replace(/\$|\s/g,'').replace(/\.(?=\d{3}(\D|$))/g,''),obs:form.obs.value.trim(),
+    ent:CARGA?form.visita.value==='entregada':!form.paraEnt.checked, visita:CARGA?(!['entregada','noent_eje'].includes(form.visita.value)?form.visita.value:null):(editId!==null?(DATA.find(x=>x.id===editId)||{}).visita||null:null),pag:form.pag.checked,eje:form.eje.checked||(CARGA&&form.visita.value==='noent_eje'),fp:form.fp.value,anio:form.anio.value.trim(),monto:form.monto.value.trim().replace(/\$|\s/g,'').replace(/\.(?=\d{3}(\D|$))/g,''),obs:form.obs.value.trim(),
     ...Object.fromEntries(TRAB.map(([k])=>[k,numTrab(form[k].value)]))};
   form.querySelectorAll('.bad').forEach(x=>x.classList.remove('bad'));
   r.pliego=r.pliego.replace(/^pliego\s*/i,'');
@@ -3163,7 +3196,7 @@ async function pwSync(){
     PW.regs=(j.registros||[]).filter(r=>r.key); PW.altas=(j.altas||[]).filter(a=>a.k);
     if(!!j.prueba!==!!PW.prueba){ PW.prueba=!!j.prueba; lsSet('pmv-app-prueba',PW.prueba); pwModoPrueba(); } PW.fotos=(j.fotos||[]).filter(f=>f.archivo); PW.obraLog=(j.obra||[]).filter(o=>o.registro); PW.prios=(j.prioridades||[]).filter(x=>x.registro); lsSet('pmv-app-prios',PW.prios);
     if(PW.u&&PW.t&&!PW.ver&&!j.yo&&!window.PMV_DEMO){ cerrarSesion('Tu sesión venció o te cambiaron la contraseña. Volvé a ingresar.'); PW.syncing=false; return; }
-    if(PW.u&&PW.t&&!PW.ver&&j.rol){ const want=String(j.rol)==='admin'?'admin':(PW.admin||PW.prueba?'admin':'contrib'); if(PW.role!==want){ PW.role=want; setRole(); tilesKey=''; } }
+    if(PW.u&&PW.t&&!PW.ver&&j.rol){ const want=String(j.rol)==='admin'?'admin':'contrib'; if(PW.role!==want){ PW.role=want; setRole(); tilesKey=''; } }
     if(PW.u&&!PW.ver){ const yo=j.yo?String(j.yo):''; if(PW.yo&&!yo) toast('Tu usuario ya no está habilitado. Hablá con el responsable.'); PW.yo=yo; lsSet(PW_YO,yo); const rol=yo&&j.rol?String(j.rol):''; if(rol!==PW.rol) tilesKey=''; PW.rol=rol; lsSet(PW_ROL,rol); }
     if(PW.role==='admin'&&!PW.ver) pwNotas();
     if(PW.role==='admin'||PW.ver||(PW.yo&&PW.rol!=='secretario')) pwTareas();
@@ -3323,9 +3356,10 @@ async function pwAcceso(){
 // modo de prueba (se activa desde Code.gs): entra directo como administrador, sin usuario ni clave
 function pwModoPrueba(inicio){
   document.body.classList.toggle('app-prueba',!!PW.prueba); if(!inicio) setTimeout(accesoRevisar,0);
-  if(PW.prueba&&!PW.ver&&PW.role!=='admin'){ PW.role='admin'; if(!inicio){ setRole(); tilesKey=''; pwRebuild(); }
+  const ses=!!(PW.u&&PW.t);   // con sesión iniciada manda el rol de la planilla, aunque esté el modo de prueba
+  if(PW.prueba&&!PW.ver&&!ses&&PW.role!=='admin'){ PW.role='admin'; if(!inicio){ setRole(); tilesKey=''; pwRebuild(); }
     if(navigator.onLine&&PW.api) pwPost({action:'check'}).then(r=>{ if(r&&r.admin) pwLinks(r); }).catch(()=>{}); }
-  else if(!PW.prueba&&!PW.admin&&!(PW.t&&PW.rol==='admin')&&PW.role==='admin'&&!PW.ver){ PW.role='contrib'; if(!inicio){ setRole(); tilesKey=''; pwRebuild(); } }
+  else if(!PW.ver&&PW.role==='admin'&&(ses?PW.rol!=='admin':(!PW.prueba&&!PW.admin))){ PW.role='contrib'; if(!inicio){ setRole(); tilesKey=''; pwRebuild(); } }
 }
 
 // borrar una foto: si todavía no se subió se borra del teléfono; si ya está en Drive hace falta conexión
