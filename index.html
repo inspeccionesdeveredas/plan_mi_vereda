@@ -446,6 +446,10 @@ body.navidad .brand-foot::before{content:"";position:absolute;left:0;right:0;top
 .brand-name{font-size:26px;font-weight:800;color:var(--brand);letter-spacing:-.01em}
 .brand .chip-carga{margin-left:0}
 .brand-foot{background:var(--brand-navy);color:#fff;margin-top:8px}
+/* el pie queda siempre abajo de la pantalla (PC o celular), aunque haya poco contenido */
+body{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
+body>.wrap{flex:1 0 auto;width:100%;box-sizing:border-box}
+body>.brand,body>.brand-foot{flex:none}
 .brand-foot .brand-logo{color:#fff}
 .brand-foot .brand-logo svg{height:38px}
 .brand-foot-name{font-size:18px;font-weight:700;display:flex;flex-direction:column;line-height:1.15}.brand-foot-name small{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;letter-spacing:.04em;opacity:.9;margin-top:3px}
@@ -595,6 +599,9 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 .fsec{margin:6px 0 -2px;font-size:13px;font-weight:700;color:var(--brand-ink);text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--grid);padding-bottom:6px}
 #regForm input,#regForm select,#regForm textarea{font-size:16px;padding:12px 14px;min-height:48px}
 #regForm textarea{min-height:80px}
+#regForm .checks{align-content:flex-start;row-gap:12px;column-gap:22px}
+#regForm .checks input[type=checkbox]{min-height:0;height:22px;width:22px!important;padding:0}
+#regForm .checks label{margin:0;min-height:0}
 .solo-insp{display:none!important}
 body.modo-carga .solo-insp{display:flex!important}
 body.modo-carga .no-insp{display:none!important}
@@ -647,6 +654,9 @@ dialog.full .tabs{border-bottom:0;padding-top:4px}
 .cat-info{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:12px;align-items:center;background:var(--page);border:1px solid var(--grid);border-radius:12px;padding:10px}
 .cat-info[hidden]{display:none}
 .cat-info canvas{width:100%;height:auto;border-radius:8px;background:#f6f8fb;border:1px solid var(--grid)}
+.cat-mapas{min-width:0}
+#catMini{height:230px;border-radius:8px;border:1px solid var(--grid);overflow:hidden;background:#eef1f5}
+#catMini[hidden]{display:none}
 #catTxt{font-size:13px;color:var(--ink2);display:flex;flex-direction:column;gap:4px}
 #catTxt b{color:var(--ink)}
 .sug{border-color:#e0a106!important;background:color-mix(in srgb,#ffcf4a 14%,var(--page))!important}
@@ -1637,7 +1647,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6">· Versión 06/11 14:20</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6">· Versión 10/11 21:10</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -1705,10 +1715,10 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
           <label id="pliegoOtroWrap" hidden>Nombre del pliego nuevo<input type="text" name="pliegoOtro" placeholder="Ej: 5"></label>
           <datalist id="pliegosList"></datalist>
           <label>Número de cédula<input type="text" name="ced" inputmode="numeric"></label>
-          <label class="full">Catastro<input type="text" name="cat" inputmode="numeric" placeholder="Escribilo y se completa la calle"></label>
-          <div class="full cat-info" id="catInfo" hidden><canvas id="catMapa" width="640" height="200" aria-label="Ubicación del lote"></canvas><div id="catTxt"></div></div>
+          <label class="full">Catastro<input type="text" name="cat" inputmode="numeric" placeholder="Escribilo y se ve el lote en el mapa"></label>
+          <div class="full cat-info" id="catInfo" hidden><div class="cat-mapas"><div id="catMini" hidden></div><canvas id="catMapa" width="640" height="200" aria-label="Ubicación del lote"></canvas></div><div id="catTxt"></div></div>
           <label class="full">Domicilio *<input type="text" name="dom" placeholder="Calle y número"></label>
-          <label class="full">Calle<input type="text" name="calle" list="callesList" placeholder="Se completa con el catastro"></label>
+          <input type="hidden" name="calle">
           <datalist id="callesList"></datalist>
           <h3 class="fsec full">Estado</h3>
           <div class="full visita solo-insp" role="radiogroup" aria-label="Resultado de la visita">
@@ -1719,6 +1729,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
           </div>
           <div class="checks full no-insp">
             <label class="ent-adm" hidden><input type="checkbox" name="paraEnt"> Para entregar</label>
+            <label class="ent-adm" hidden><input type="checkbox" name="entr"> Entregada</label>
             <label><input type="checkbox" name="pag"> Pagada</label>
             <label><input type="checkbox" name="eje"> Ejecutada</label>
           </div>
@@ -2080,7 +2091,7 @@ function fotoMini(d){ if(!PWA||!d.src) return ''; let fs=[]; try{ fs=fotosDe(d);
   return `<button type="button" class="fmini" data-full="${esc(f.full)}" title="Ver foto (${f.tipo==='despues'?'después':'antes'})"><img src="${esc(f.src)}" alt="Foto" loading="lazy"></button>`; }
 $('tbody').addEventListener('click',e=>{ const v=e.target.closest('.fmini'); if(!v) return; e.stopPropagation(); $('fotoVer').querySelector('img').src=v.dataset.full; $('fotoVer').hidden=false; },true);
 $('tCalleSel').onchange=e=>{ tCalle=e.target.value; render(); };
-$('tCatQ').addEventListener('input',()=>render()); { const rf=$('regForm'); ['pag','eje'].forEach(n=>rf[n].addEventListener('change',()=>{ if(rf[n].checked) rf.paraEnt.checked=false; })); } $('tCedQ').addEventListener('input',()=>render());
+$('tCatQ').addEventListener('input',()=>render()); { const rf=$('regForm'); ['pag','eje'].forEach(n=>rf[n].addEventListener('change',()=>{ if(rf[n].checked){ rf.paraEnt.checked=false; rf.entr.checked=true; } })); rf.paraEnt.addEventListener('change',()=>{ if(rf.paraEnt.checked){ rf.entr.checked=false; rf.pag.checked=false; rf.eje.checked=false; } }); rf.entr.addEventListener('change',()=>{ if(rf.entr.checked) rf.paraEnt.checked=false; else { rf.pag.checked=false; rf.eje.checked=false; } }); } $('tCedQ').addEventListener('input',()=>render());
 $('tPlSel').onchange=e=>{ tPl=e.target.value; tCalle=''; render(); };
 $('tEst').addEventListener('click',e=>{ const b=e.target.closest('.chip'); if(!b) return; tEst=b.dataset.e; render(); });
 // ---- inspectores de obra: botones En ejecución / Ejecutada en el detalle
@@ -2464,7 +2475,9 @@ function mbLlenar(){ const PL=pliegosList().filter(p=>DATA.some(d=>d.pliego===p)
 document.addEventListener('click',e=>{ const b=e.target.closest('button[type=submit],form button:not([type])'); if(!b||!b.form) return;
   e.preventDefault(); b.form.dispatchEvent(new Event('submit',{cancelable:true,bubbles:true})); },true);
 document.addEventListener('keydown',e=>{ if(e.key!=='Enter'||e.isComposing) return; const el=e.target; if(!el.form||el.tagName==='TEXTAREA'||el.tagName==='BUTTON'||el.type==='checkbox'||el.type==='radio') return;
-  if(el.closest('#notasList')) return; e.preventDefault(); el.form.dispatchEvent(new Event('submit',{cancelable:true,bubbles:true})); },true);
+  if(el.closest('#notasList')) return; e.preventDefault();
+  if(el.form.id==='regForm'){ const cs=[...el.form.querySelectorAll('input:not([type=hidden]):not([type=checkbox]):not([type=radio]):not([type=file]),select,textarea')].filter(x=>!x.disabled&&x.offsetParent!==null); const i=cs.indexOf(el); if(i>=0&&cs[i+1]) cs[i+1].focus(); else el.blur(); return; }   // solo se guarda con el botón
+  el.form.dispatchEvent(new Event('submit',{cancelable:true,bubbles:true})); },true);
 $('mapClose').onclick=()=>mapaFull(false);
 // ---------- inspectores: buscar una dirección e ir al mapa ----------
 function insBuscar(){ const nn=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
@@ -2579,7 +2592,7 @@ function fillForm(id){
     form.pliego.value=PL.includes(def)?def:''; form.pliegoOtro.value=''; $('pliegoOtroWrap').hidden=true; }
   if(CARGA){ let n=''; try{ n=localStorage.getItem('pmv-carga-nombre')||''; }catch(e){} form.por.value=d?.por||n; porSync(); }
   form.ced.value=d?.ced??''; form.cat.value=d?.cat??''; form.dom.value=d?.dom??''; form.calle.value=d?.calle??'';
-  rfLimpiar(); form.paraEnt.checked=d?!d.ent:!CARGA; form.querySelector('.ent-adm').hidden=CARGA; { const v=d?.visita||(d&&d.eje&&!d.ent&&esObra()?'noent_eje':'entregada'); form.querySelectorAll('input[name=visita]').forEach(x=>x.checked=x.value===v); } form.pag.checked=!!d?.pag; form.eje.checked=!!d?.eje;
+  rfLimpiar(); form.paraEnt.checked=d?!d.ent:!CARGA; form.entr.checked=!!d?.ent; form.querySelectorAll('.ent-adm').forEach(x=>x.hidden=CARGA); { const v=d?.visita||(d&&d.eje&&!d.ent&&esObra()?'noent_eje':'entregada'); form.querySelectorAll('input[name=visita]').forEach(x=>x.checked=x.value===v); } form.pag.checked=!!d?.pag; form.eje.checked=!!d?.eje;
   const fps=[...new Set(['Sin dato','Contado','3 cuotas',...DATA.map(x=>x.fp)])];
   form.fp.innerHTML=fps.map(v=>`<option>${esc(v)}</option>`).join(''); form.fp.value=d?.fp??'Sin dato';
   form.anio.value=d?.anio??''; form.monto.value=d?.monto??''; form.obs.value=d?.obs??'';
@@ -2597,7 +2610,22 @@ let catTimer=null, catSeq=0;
 function lotesDeCatastro(v){ const nums=(String(v).match(/\d+/g)||[]).map(Number).filter(n=>n>0); const out=[];
   nums.forEach(n=>{ const loc=(typeof PIDX!=='undefined'&&PIDX.byCat.get(n))||null; if(loc) loc.forEach(i=>out.push(parcel(i))); else if(typeof PHX!=='undefined'&&PHX.byCat.has(n)) out.push(phParcel(n)); });
   return out; }
+let catMini=null, catCapa=null;
 function dibujarLote(lotes){
+  const usarMapa=navigator.onLine&&typeof L!=='undefined'&&lotes.length;
+  $('catMini').hidden=!usarMapa; $('catMapa').hidden=!!usarMapa;
+  if(usarMapa){ try{
+    if(!catMini){ catMini=L.map('catMini',{zoomControl:false,attributionControl:false,dragging:true,scrollWheelZoom:false});
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,maxNativeZoom:19}).addTo(catMini); }
+    if(catCapa) catCapa.remove();
+    // manzanas y lotes de alrededor (del parcelario) + el lote buscado en rojo
+    const capas=[]; if(PIDX.lines){ let s=90,n=-90,w=180,e=-180; lotes.forEach(p=>p.rings[0].forEach(([la,lo])=>{ s=Math.min(s,la); n=Math.max(n,la); w=Math.min(w,lo); e=Math.max(e,lo); }));
+      const m=0.0025, ids=new Set(); for(let x=Math.floor((w-m)/CELL);x<=Math.floor((e+m)/CELL);x++) for(let y=Math.floor((s-m)/CELL);y<=Math.floor((n+m)/CELL);y++){ const c=PIDX.grid.get(x+'_'+y); if(c) c.forEach(i=>ids.add(i)); }
+      [...ids].slice(0,3000).forEach(i=>capas.push(L.polygon(parcel(i).rings,{color:'#5b6b82',weight:1,fillColor:'#ffffff',fillOpacity:.35,interactive:false}))); }
+    lotes.forEach(p=>capas.push(L.polygon(p.rings,{color:'#e6194b',weight:3,fillColor:'#e6194b',fillOpacity:.35})));
+    catCapa=L.featureGroup(capas).addTo(catMini);
+    setTimeout(()=>{ catMini.invalidateSize(); catMini.fitBounds(L.featureGroup(capas.slice(-lotes.length)).getBounds(),{maxZoom:18,padding:[40,40]}); },60);
+    return; }catch(e){ $('catMini').hidden=true; $('catMapa').hidden=false; } }
   const cv=$('catMapa'), g=cv.getContext('2d'), W=cv.width, H=cv.height; g.clearRect(0,0,W,H); g.fillStyle='#f6f8fb'; g.fillRect(0,0,W,H);
   let s=90,n=-90,w=180,e=-180; lotes.forEach(p=>p.rings[0].forEach(([la,lo])=>{ s=Math.min(s,la); n=Math.max(n,la); w=Math.min(w,lo); e=Math.max(e,lo); }));
   const cy=(s+n)/2, cx=(w+e)/2, k=Math.cos(cy*Math.PI/180); let span=Math.max((n-s),(e-w)*k,0.0004)*3.2;
@@ -2629,7 +2657,7 @@ async function buscarCatastro(){
   // 1) ya registrado
   const previo=DATA.find(d=>d.id!==editId&&catNums(d).some(n=>(String(v).match(/\d+/g)||[]).map(Number).includes(n)));
   if(previo){ lines.push(`<span>Ya registrado: <b>${esc(previo.dom)}</b> · pliego ${esc(previo.pliego)} · ${previo.estado}</span>`);
-    marcarSug(form.calle,previo.calle); }
+  }
   // 2) lote en el parcelario
   const lotes=PIDX.ready?lotesDeCatastro(v):[];
   if(lotes.length){ box.hidden=false; dibujarLote(lotes); const p=lotes[0];
@@ -2638,18 +2666,10 @@ async function buscarCatastro(){
     if(!p.cod&&p.c){ // PH: se busca el lote del parcelario que contiene al edificio
       const [la,lo]=p.c, inside=(r)=>{ let c=false; for(let i=0,j=r.length-1;i<r.length;j=i++){ const [yi,xi]=r[i],[yj,xj]=r[j]; if(((yi>la)!==(yj>la))&&(lo<(xj-xi)*(la-yi)/(yj-yi)+xi)) c=!c; } return c; };
       const cell=PIDX.grid.get(Math.floor(lo/CELL)+'_'+Math.floor(la/CELL))||[]; for(const i of cell){ const q=parcel(i); if(q.cod&&inside(q.rings[0])){ p.cod=q.cod; break; } } }
-    const porCodigo=p.cod?mapaCodigosCalle().get(p.cod):null;
-    if(!previo&&porCodigo&&!form.calle.value.trim()){ marcarSug(form.calle,porCodigo); lines.push(`<span><span class="sug-tag">Calle completada</span> Según el parcelario. Revisala antes de guardar.</span>`); }
-    // 4) si no se conoce, calle sugerida por el mapa (con internet)
-    if(!previo&&!form.calle.value.trim()){
-      if(navigator.onLine){ $('catTxt').innerHTML=lines.join('')+'<span>Buscando la calle en el mapa…</span>';
-        const r=await direccionSugerida(p.c[0],p.c[1]); if(seq!==catSeq) return;
-        if(r&&r.calle){ const conocidas=[...new Set(DATA.map(d=>d.calle))]; const calle=igualaCalle(r.calle,conocidas);
-          marcarSug(form.calle,calle);
-          lines.push(`<span><span class="sug-tag">Calle sugerida por el mapa</span> Revisala antes de guardar.</span>`); }
-        else lines.push('<span>No se encontró la calle en el mapa: escribila a mano.</span>');
-      } else lines.push('<span>Sin internet: la calle no se puede sugerir. Escribila a mano.</span>');
-    }
+    // 3) nombre de la calle según el mapa (solo para mostrar: no completa nada)
+    if(navigator.onLine){ $('catTxt').innerHTML=lines.join('')+'<span>Buscando la calle en el mapa…</span>';
+      const r=await direccionSugerida(p.c[0],p.c[1]); if(seq!==catSeq) return;
+      if(r&&r.calle) lines.push(`<span>Frente sobre <b>${esc(r.calle)}${r.num?' '+esc(r.num):''}</b> (según el mapa). Fijate que coincida con el domicilio.</span>`); }
   } else { box.hidden=!previo; if(previo) dibujarLote([]); if(!previo&&PIDX.ready){ box.hidden=false; dibujarLote([]); lines.push('<span>No se encontró ese catastro en el parcelario de Salta Capital. Revisá el número.</span>'); } }
   if(seq===catSeq) $('catTxt').innerHTML=lines.join('');
 }
@@ -2676,15 +2696,17 @@ $('sessClear').onclick=()=>{ SESS=[]; sessSave(); };
 form.onsubmit=e=>{
   e.preventDefault();
   const r={pliego:(form.pliego.value==='__otro'?form.pliegoOtro.value:form.pliego.value).trim(),ced:form.ced.value.trim(),cat:form.cat.value.trim(),dom:form.dom.value.trim(),calle:fixCalle(form.calle.value),
-    ent:CARGA?form.visita.value==='entregada':!form.paraEnt.checked, visita:CARGA?(!['entregada','noent_eje'].includes(form.visita.value)?form.visita.value:null):(editId!==null?(DATA.find(x=>x.id===editId)||{}).visita||null:null),pag:form.pag.checked,eje:form.eje.checked||(CARGA&&form.visita.value==='noent_eje'),fp:form.fp.value,anio:form.anio.value.trim(),monto:form.monto.value.trim().replace(/\$|\s/g,'').replace(/\.(?=\d{3}(\D|$))/g,''),obs:form.obs.value.trim(),
+    ent:CARGA?form.visita.value==='entregada':(form.entr.checked||form.pag.checked||form.eje.checked), visita:CARGA?(!['entregada','noent_eje'].includes(form.visita.value)?form.visita.value:null):(editId!==null?(DATA.find(x=>x.id===editId)||{}).visita||null:null),pag:form.pag.checked,eje:form.eje.checked||(CARGA&&form.visita.value==='noent_eje'),fp:form.fp.value,anio:form.anio.value.trim(),monto:form.monto.value.trim().replace(/\$|\s/g,'').replace(/\.(?=\d{3}(\D|$))/g,''),obs:form.obs.value.trim(),
     ...Object.fromEntries(TRAB.map(([k])=>[k,numTrab(form[k].value)]))};
   form.querySelectorAll('.bad').forEach(x=>x.classList.remove('bad'));
   r.pliego=r.pliego.replace(/^pliego\s*/i,'');
+  { const prev=editId!==null?DATA.find(x=>x.id===editId):null; if(!prev||norm(prev.dom)!==norm(r.dom)) r.calle=''; }   // la calle sale del domicilio (si se edita sin cambiar el domicilio, queda la que tenía)
   if(!r.calle && r.dom){ const m=r.dom.match(/^(.+?)\s+(N[°º]?\s*|NRO\.?\s*)?\d+\b/i); if(m) r.calle=fixCalle(m[1]); }
+  if(!r.calle&&r.dom) r.calle=fixCalle((r.dom.match(/^[^\d]+/)||[''])[0].replace(/\s+(N[°º]?|NRO\.?)\s*$/i,''))||'Sin calle';
   if(r.anio){ let a=parseInt(r.anio,10); if(a>=0&&a<100) a+=2000; r.anio=(a>=2000&&a<=2100)?String(a):''; }
   if(!CARGA&&editId!==null){ const prev=DATA.find(x=>x.id===editId); r.por=prev?.por||''; }
   if(CARGA&&!ONLINE){ if(PWA) form.por.value=PW.yo||''; r.por=form.por.value.trim(); r.mine=true; if(!PWA) try{ localStorage.setItem('pmv-carga-nombre',r.por); }catch(e){} }
-  const falta=[]; if(CARGA&&!ONLINE&&!r.por) falta.push(['por','tu nombre']); if(!r.pliego) falta.push(['pliego','el número de pliego']); if(!r.dom) falta.push(['dom','el domicilio']); if(r.dom&&!r.calle) falta.push(['calle','la calle (no la pude sacar del domicilio)']);
+  const falta=[]; if(CARGA&&!ONLINE&&!r.por) falta.push(['por','tu nombre']); if(!r.pliego) falta.push(['pliego','el número de pliego']); if(!r.dom) falta.push(['dom','el domicilio']); 
   if(falta.length){ falta.forEach(([n])=>form[n].classList.add('bad')); form[falta[0][0]].focus();
     const fx=falta.map(f=>f[1]); $('regErr').textContent='Falta completar '+(fx.length>1?fx.slice(0,-1).join(', ')+' y '+fx.at(-1):fx[0])+'.'; return; }
   $('regErr').textContent='';
