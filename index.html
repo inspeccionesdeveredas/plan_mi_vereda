@@ -272,6 +272,20 @@ body.insp-app .wrap #detCard{display:none}
 .foto-modal[hidden]{display:none}
 .fm-in{background:var(--page);border-radius:16px;padding:18px;width:min(640px,100%);max-height:90vh;overflow:auto;box-shadow:0 20px 50px rgba(0,0,0,.3)}
 .fm-in h2{font-size:18px!important}
+#oaRes tr.oa-fila-click{cursor:pointer}
+#oaRes tr.oa-fila-click:hover td{background:color-mix(in srgb,var(--accent) 7%,transparent)}
+.fi-est{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:15px;margin:2px 0 12px}
+.fi-est .sw{width:12px;height:12px;border-radius:3px}
+.fi-prio{background:#fff4cc;color:#7a5a00;border:1px solid #f0c94d;border-radius:20px;padding:1px 9px;font-size:12px}
+.fi-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.fi-d{background:var(--surface);border:1px solid var(--grid);border-radius:10px;padding:8px 11px;min-width:0}
+.fi-d span{display:block;font-size:11.5px;color:var(--ink2);text-transform:uppercase;letter-spacing:.03em}
+.fi-d b{display:block;font-size:15px;overflow-wrap:anywhere}
+.fi-h{font-size:13px!important;text-transform:uppercase;letter-spacing:.04em;color:var(--ink2);margin:16px 0 6px!important;border-bottom:1px solid var(--grid);padding-bottom:4px}
+.fi-ul{margin:0;padding-left:18px;font-size:14.5px}.fi-ul li{margin:3px 0}.fi-hist small{color:var(--ink2);margin-left:4px}
+.fi-obs{margin:0;font-size:14.5px;white-space:pre-wrap}
+.fi-acc{margin-top:16px;display:flex;justify-content:flex-end}
+.fi-acc .a-mapa{width:auto;height:auto;padding:10px 16px;border-radius:10px;font-weight:700}
 .tbl.lim{box-shadow:inset 0 -10px 10px -10px rgba(16,40,80,.18)}
 .bars.lim{overflow:auto;padding-right:4px}
 .oa-hist{margin-top:10px;font-size:12.5px;color:var(--ink2);display:flex;flex-direction:column;gap:3px}
@@ -1647,7 +1661,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6">· Versión 10/11 21:10</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6">· Versión 10/11 21:40</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -2080,7 +2094,7 @@ function render(){
 }
 document.querySelectorAll('th').forEach(th=>th.onclick=()=>{const k=th.dataset.k; if(sortK===k)sortDir*=-1; else{sortK=k;sortDir=1} render();});
 function irAlMapa(id){ const d=(window.DATA_ALL||DATA).find(x=>x.id===+id); if(!d) return;
-  if(!$('vistaDet').hidden) cerrarDetalle(); if(!$('obraAdm').hidden) cerrarObraAdm(); if(!$('obraBox').hidden) cerrarObra();
+  if(!$('fotoModal').hidden) $('fotoModal').hidden=true; if(!$('vistaDet').hidden) cerrarDetalle(); if(!$('obraAdm').hidden) cerrarObraAdm(); if(!$('obraBox').hidden) cerrarObra();
   mapaFull(true); setTimeout(()=>mbIrA(d),400); }
 document.addEventListener('click',e=>{ const b=e.target.closest('.a-mapa[data-mapa]'); if(!b) return; e.preventDefault(); e.stopPropagation(); irAlMapa(b.dataset.mapa); },true);
 $('tbody').addEventListener('click',e=>{ if(e.target.closest('select,.est,.a-mapa')) return; const tr=e.target.closest('tr[data-id]'); if(!tr) return;
@@ -2130,6 +2144,7 @@ function navOn(){ let v=''; try{ v=localStorage.getItem('pmv-navidad')||''; }cat
   const h=new Date(), m=h.getMonth(), d=h.getDate(); return (m===11)||(m===0&&d<=6); }
 function navidad(on){
   document.body.classList.toggle('navidad',on);
+  if(!on){ document.querySelectorAll('.brand-logo svg .xmas, .nieve, .felices').forEach(x=>x.remove()); if($('gmNavTxt')) $('gmNavTxt').textContent='Diseño navideño'; return; }
   document.querySelectorAll('.brand-logo svg').forEach(s=>{ if(!s.querySelector('.xmas')) s.insertAdjacentHTML('beforeend',XMAS_G); });
   document.querySelectorAll('.brand').forEach(b=>{ if(b.closest('.brand-foot')||b.querySelector('.nieve')) return;
     const n=document.createElement('div'); n.className='nieve'; n.setAttribute('aria-hidden','true');
@@ -2301,7 +2316,7 @@ function renderObraAdm(){
   l.sort((a,b)=>tUlt(b)-tUlt(a)); window.OA_ROWS={l,ultimo,tUlt};
   const col={}; ESTADOS.forEach(e=>col[e.k]=e.c);
   $('oaRes').innerHTML=l.length?l.map(d=>{ const h=(ultimo[regId(d)]||[]), u=h[h.length-1], nf=(PW.fotos||[]).filter(f=>f.registro===regId(d)).length;
-    return `<tr><td>${callesDe(d).map(esc).join(' y ')}</td><td class="n">${d.ced??'s/d'}</td><td>${esc(d.dom)}<button type="button" class="a-mapa" data-mapa="${d.id}" title="Ver en el mapa" aria-label="Ver en el mapa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.6-6-11a6 6 0 0 1 12 0c0 5.4-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/></svg></button></td><td class="n">${esc(d.cat)}</td>
+    return `<tr class="oa-fila-click" data-ficha="${d.id}" title="Ver la ficha completa"><td>${callesDe(d).map(esc).join(' y ')}</td><td class="n">${d.ced??'s/d'}</td><td>${esc(d.dom)}<button type="button" class="a-mapa" data-mapa="${d.id}" title="Ver en el mapa" aria-label="Ver en el mapa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.6-6-11a6 6 0 0 1 12 0c0 5.4-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/></svg></button></td><td class="n">${esc(d.cat)}</td>
       <td><span class="est"><span class="sw" style="background:${col[d.estado]}"></span>${esc(d.estado)}</span></td>
       <td class="oa-u">${u?`${esc(u.estado||'')} · ${esc(u.por||'')}<br><small>${fmtF(u.fecha)}</small>`:'<small>—</small>'}</td>
       <td>${nf?`<button type="button" class="oa-fb" data-fotos="${d.id}">📷 Ver ${nf}</button>`:'<small>Sin fotos</small>'}</td></tr>`; }).join('')
@@ -2309,8 +2324,25 @@ function renderObraAdm(){
   $('oaN').textContent=l.length>4?`${l.length} veredas · deslizá el cuadro para ver todas`:'';
   limFilas($('oaTbl'),'tbody tr',4,2);
 }
-$('oaRes').addEventListener('click',e=>{ const b=e.target.closest('button[data-fotos]'); if(!b) return; const d=DATA.find(x=>x.id===+b.dataset.fotos); if(!d) return;
-  $('fmTit').textContent=d.dom; $('fmBody').innerHTML=fotosHtml(d,true); $('fotoModal').hidden=false; });
+$('oaRes').addEventListener('click',e=>{ if(e.target.closest('.a-mapa')) return; const b=e.target.closest('button[data-fotos]')||e.target.closest('tr[data-ficha]'); if(!b) return;
+  const id=+(b.dataset.fotos||b.dataset.ficha); const d=(window.DATA_ALL||DATA).find(x=>x.id===id); if(d) abrirFicha(d); });
+// ---------- ficha completa de una vereda (Datos de obra) ----------
+function fichaHtml(d){
+  const col={}; (window.ESTADOS_ALL||ESTADOS).forEach(e=>col[e.k]=e.c);
+  const pesos=v=>v==null||v===''?'':'$ '+Number(v).toLocaleString('es-AR');
+  const dato=(l,v)=>`<div class="fi-d"><span>${l}</span><b>${v===null||v===undefined||v===''?'—':v}</b></div>`;
+  const trab=TRAB.filter(([k])=>d[k]!=null&&d[k]!=='').map(([k,l,u])=>`<li>${esc(l)}: <b>${String(d[k]).replace('.',',')} ${u}</b></li>`).join('');
+  const h=((typeof PW!=='undefined'&&PW.obraLog)||[]).filter(o=>o.registro===regId(d)).sort((a,b)=>(+b.fecha||0)-(+a.fecha||0));
+  const pr=((typeof PW!=='undefined'&&PW.prios)||[]).find(p=>p.registro===regId(d));
+  return `<div class="fi-est"><span class="sw" style="background:${col[d.estado]||'#999'}"></span>${esc(d.estado)}${pr?` <span class="fi-prio">${pr.atendida?'Prioridad atendida':'Prioridad'}</span>`:''}</div>
+    <div class="fi-grid">${dato('Pliego',esc(d.pliego))}${dato('N° de cédula',d.ced??'s/d')}${dato('Catastro',esc(d.cat))}${dato('Calle',callesDe(d).map(esc).join(' y '))}${dato('Entregada',d.ent?'Sí':'No')}${dato('Pagada',d.pag?'Sí':'No')}${dato('Forma de pago',esc(d.fp))}${dato('Año de pago',d.anio)}${dato('Monto pagado',pesos(d.monto))}${dato('Cargado por',esc(d.por))}</div>
+    ${trab?`<h3 class="fi-h">Trabajos a realizar</h3><ul class="fi-ul">${trab}</ul>`:''}
+    ${d.obs?`<h3 class="fi-h">Observación</h3><p class="fi-obs">${esc(d.obs)}</p>`:''}
+    <h3 class="fi-h">Avance de obra</h3>${h.length?`<ul class="fi-ul fi-hist">${h.map(o=>`<li><b>${esc(o.estado||'')}</b> · ${esc(o.por||'')} <small>${fmtF(o.fecha)}</small></li>`).join('')}</ul>`:'<p class="fi-obs">Todavía no hay avances cargados.</p>'}
+    <h3 class="fi-h">Fotos</h3>${fotosHtml(d,true)}
+    <div class="fi-acc"><button type="button" class="btn a-mapa" data-mapa="${d.id}">📍 Ver en el mapa</button></div>`;
+}
+function abrirFicha(d){ $('fmTit').textContent=d.dom; $('fmBody').innerHTML=fichaHtml(d); $('fotoModal').hidden=false; $('fotoModal').querySelector('.fm-in').scrollTop=0; }
 $('fmCerrar').onclick=()=>{ $('fotoModal').hidden=true; };
 $('fotoModal').addEventListener('click',e=>{ if(e.target.id==='fotoModal') $('fotoModal').hidden=true;
   const v=e.target.closest('button[data-full]'); if(v){ $('fotoVer').querySelector('img').src=v.dataset.full; $('fotoVer').hidden=false; } });
@@ -2351,7 +2383,7 @@ let fotoPend=null;
 $('obraFile').onchange=e=>{ const f=e.target.files&&e.target.files[0]; e.target.value=''; if(!f||!fotoPend) return; const d=DATA.find(x=>x.id===fotoPend.id); if(d) pwAgregarFoto(d,fotoPend.tipo,f); fotoPend=null; };
 document.addEventListener('click',e=>{ const b=e.target.closest('.fdel'); if(!b) return; e.stopPropagation(); e.preventDefault();
   if(!b.classList.contains('conf')){ b.classList.add('conf'); b.textContent='¿Borrar?'; setTimeout(()=>{ if(b.isConnected){ b.classList.remove('conf'); b.textContent='×'; } },3000); return; }
-  pwBorrarFoto(b.dataset.fdel).then(()=>{ if(!$('fotoModal').hidden){ const d=DATA.find(x=>x.dom===$('fmTit').textContent); if(d) $('fmBody').innerHTML=fotosHtml(d,true); } }); },true);
+  pwBorrarFoto(b.dataset.fdel).then(()=>{ if(!$('fotoModal').hidden){ const d=DATA.find(x=>x.dom===$('fmTit').textContent); if(d) $('fmBody').innerHTML=fichaHtml(d); } }); },true);
 $('obraRes').addEventListener('click',e=>{
   const a=e.target.closest('button[data-foto]'); if(a){ fotoPend={id:+a.dataset.id,tipo:a.dataset.foto}; $('obraFile').click(); return; }
   const v=e.target.closest('button[data-full]'); if(v){ $('fotoVer').querySelector('img').src=v.dataset.full; $('fotoVer').hidden=false; } });
@@ -2362,6 +2394,7 @@ $('fotoVer').onclick=()=>{ $('fotoVer').hidden=true; $('fotoVer').querySelector(
   function cerrarArriba(){
     if(vis('fotoVer')){ $('fotoVer').click(); return true; }
     if(vis('gearMenu')){ $('gearMenu').hidden=true; return true; }
+    if(vis('fotoModal')){ $('fotoModal').hidden=true; return true; }
     const dlg=[...document.querySelectorAll('dialog[open]')].pop(); if(dlg){ dlg.close(); return true; }
     if(vis('vistaInforme')){ cerrarInforme(); return true; }
     if(document.body.classList.contains('mapa-full')){ mapaFull(false); return true; }
@@ -3813,7 +3846,7 @@ ${comp}
 <section class="mapa-sec"><h2>Mapa</h2>${img?`<img class="mapa" src="${img}" alt="Mapa de las veredas">
 <div class="ley"><span><i style="background:#1d8a52"></i>Ejecutada</span><span><i style="background:#e8890c"></i>En ejecución</span><span><i style="background:#2a78d6"></i>Pagada, sin ejecutar</span></div>`:'<p class="nota">No hay veredas ubicadas para mostrar en el mapa.</p>'}</section>`;
   }
-  const logo=(document.querySelector('.brand-logo svg')||{}).outerHTML||'';
+  const logo=(()=>{ const s=document.querySelector('.brand-logo svg'); if(!s) return ''; const c=s.cloneNode(true); c.querySelectorAll('.xmas').forEach(x=>x.remove()); c.style.overflow='hidden'; return c.outerHTML; })();   // sin el gorro navideño
   const titulo=`Informe de avance${pl?` · Pliego ${pl}`:''}`;
   const html=`<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Plan Mi Vereda · ${esc(titulo)} · ${fecha}</title>
