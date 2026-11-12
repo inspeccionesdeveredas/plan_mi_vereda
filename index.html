@@ -1795,7 +1795,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6">· Versión 11/11 22:55</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6">· Versión 12/11 11:40</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -3557,7 +3557,12 @@ function pwaInit(){
   window.addEventListener('online',()=>pwSync()); window.addEventListener('offline',()=>render());
   setInterval(()=>{ if(navigator.onLine) pwSync(); },60000);
   pwSync();
-  try{ if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(()=>{}); }catch(e){}   // en vistas previas aisladas no hay service worker
+  try{ if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+    const habia=!!navigator.serviceWorker.controller;
+    navigator.serviceWorker.register('sw.js').then(reg=>{ try{ reg.update(); }catch(e){} }).catch(()=>{});
+    // cuando se instala una versión nueva de la app, se recarga sola una vez para mostrarla
+    navigator.serviceWorker.addEventListener('controllerchange',()=>{ if(!habia||window.__pmvRecarga) return; window.__pmvRecarga=1; location.reload(); });
+  } }catch(e){}   // en vistas previas aisladas no hay service worker
   // acceso de administrador
   $('admLink').onclick=e=>{ e.preventDefault(); if(PW.role==='admin'){ PW.admin=''; lsSet(PW_ADMIN,''); PW.role='contrib'; setRole(); pwRebuild(); toast('Saliste del modo administrador'); return; } $('admBox').hidden=!$('admBox').hidden; $('admKey').focus(); };
   $('admGo').onclick=pwLogin; $('admKey').onkeydown=e=>{ if(e.key==='Enter') pwLogin(); };
