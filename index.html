@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Plan Mi Vereda</title>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#2a78d6">
+<meta name="theme-color" content="#004174">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -167,6 +167,12 @@ body.rol-sec #gear{display:none!important}
 .ce-at td{padding:7px 9px;border-top:1px solid var(--grid);vertical-align:top}.ce-at td.n,.ce-at th.n{text-align:right;white-space:nowrap}
 .ce-at tbody tr:nth-child(even) td{background:#f8fafc}.ce-at tfoot td{background:#e9eef4;font-weight:800;border-top:1.5px solid #9fb0c5}
 .ce-at tr[data-ficha]{cursor:pointer}.ce-at tr[data-ficha]:hover td{background:#eef4fb}
+.cea-c{white-space:nowrap}
+.cea-sel{border:1.5px dashed #9fb0c5;background:var(--surface);color:var(--brand);font:inherit;font-weight:700;font-size:12.5px;border-radius:8px;padding:5px 9px;cursor:pointer}
+.cea-sel:hover{border-style:solid;border-color:var(--brand)}
+.cea-m{display:inline-block;border-radius:6px;padding:4px 9px;font-size:12.5px;font-weight:800;white-space:nowrap}
+.cea-m.ok{border:2px solid #015cb4;color:#015cb4;background:#fff}
+.cea-m.sel{border:1.5px solid #9fb0c5;color:var(--ink2);background:#f3f6f9;font-weight:700}
 .ce-cnt{margin:0 0 10px;font-size:14px;color:var(--ink2)}.ce-cnt b{color:var(--ink)}
 .ce-pdf{background:#004174!important;border-color:#004174!important;color:#fff!important}.ce-pdf svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 #certPrint{display:none}
@@ -1789,7 +1795,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6">· Versión 11/11 23:50</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6">· Versión 11/11 22:45</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -2223,7 +2229,7 @@ function render(){
 }
 document.querySelectorAll('th').forEach(th=>th.onclick=()=>{const k=th.dataset.k; if(sortK===k)sortDir*=-1; else{sortK=k;sortDir=1} render();});
 function irAlMapa(id){ const d=(window.DATA_ALL||DATA).find(x=>x.id===+id); if(!d) return;
-  if(!$('fotoModal').hidden) $('fotoModal').hidden=true; if(!$('vistaDet').hidden) cerrarDetalle(); if(!$('obraAdm').hidden) cerrarObraAdm(); if(!$('obraBox').hidden) cerrarObra();
+  if(!$('fotoModal').hidden) $('fotoModal').hidden=true; if(!$('vistaCert').hidden) cerrarCert(); if(!$('vistaDet').hidden) cerrarDetalle(); if(!$('obraAdm').hidden) cerrarObraAdm(); if(!$('obraBox').hidden) cerrarObra();
   mapaFull(true); setTimeout(()=>mbIrA(d),400); }
 document.addEventListener('click',e=>{ const b=e.target.closest('.a-mapa[data-mapa]'); if(!b) return; e.preventDefault(); e.stopPropagation(); irAlMapa(b.dataset.mapa); },true);
 $('tbody').addEventListener('click',e=>{ if(e.target.closest('select,.est,.a-mapa')) return; const tr=e.target.closest('tr[data-id]'); if(!tr) return;
@@ -2464,7 +2470,7 @@ function fichaHtml(d){
   const h=((typeof PW!=='undefined'&&PW.obraLog)||[]).filter(o=>o.registro===regId(d)).sort((a,b)=>(+b.fecha||0)-(+a.fecha||0));
   const pr=((typeof PW!=='undefined'&&PW.prios)||[]).find(p=>p.registro===regId(d));
   return `<div class="fi-est"><span class="sw" style="background:${col[d.estado]||'#999'}"></span>${esc(d.estado)}${pr?` <span class="fi-prio">${pr.atendida?'Prioridad atendida':'Prioridad'}</span>`:''}</div>
-    <div class="fi-grid">${dato('Pliego',esc(d.pliego))}${dato('N° de cédula',d.ced??'s/d')}${dato('Catastro',esc(d.cat))}${dato('Calle',callesDe(d).map(esc).join(' y '))}${dato('Entregada',d.ent?'Sí':'No')}${dato('Pagada',d.pag?'Sí':'No')}${dato('Forma de pago',esc(d.fp))}${dato('Año de pago',d.anio)}${dato('Monto pagado',pesos(d.monto))}${dato('Cargado por',esc(d.por))}</div>
+    <div class="fi-grid">${dato('Pliego',esc(d.pliego))}${dato('N° de cédula',d.ced??'s/d')}${dato('Catastro',esc(d.cat))}${dato('Calle',callesDe(d).map(esc).join(' y '))}${dato('Entregada',d.ent?'Sí':'No')}${dato('Pagada',d.pag?'Sí':'No')}${dato('Año de pago',d.anio)}</div>
     ${trab?`<h3 class="fi-h">Trabajos a realizar</h3><ul class="fi-ul">${trab}</ul>`:''}
     ${d.obs?`<h3 class="fi-h">Observación</h3><p class="fi-obs">${esc(d.obs)}</p>`:''}
     <h3 class="fi-h">Avance de obra</h3>${h.length?`<ul class="fi-ul fi-hist">${h.map(o=>`<li><b>${esc(o.estado||'')}</b> · ${esc(o.por||'')} <small>${fmtF(o.fecha)}</small></li>`).join('')}</ul>`:'<p class="fi-obs">Todavía no hay avances cargados.</p>'}
@@ -2531,7 +2537,13 @@ const CERT_IT=[
 const CERT_BALD=0.16; const ceHoy=()=>{ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };   // área de una baldosa de 0,40 × 0,40 (se puede cambiar en cada vereda)
 let CE=null;
 function ceCargar(){ try{ CE=JSON.parse(localStorage.getItem('pmv-cert')||'null'); }catch(e){ CE=null; } if(!CE||!Array.isArray(CE.rows)) CE={num:'',pliego:'',fecha:ceHoy(),rows:[]}; }
-function ceGuardar(){ try{ localStorage.setItem('pmv-cert',JSON.stringify(CE)); }catch(e){} }
+let ceT=null;
+function ceGuardar(){ try{ localStorage.setItem('pmv-cert',JSON.stringify(CE)); }catch(e){} clearTimeout(ceT); ceT=setTimeout(()=>{ if(!$('vistaCert').hidden) renderCertAdm(); },300); }
+// veredas ya certificadas en certificados anteriores (en este dispositivo)
+function ceHist(){ try{ return JSON.parse(localStorage.getItem('pmv-cert-hist')||'[]'); }catch(e){ return []; } }
+const ceConDatos=r=>Object.entries(r.v||{}).some(([k,v])=>k!=='Z'&&k!=='AL'&&(numTrab(v)||0)>0);
+function ceaMarca(d){ if(CE){ const r=CE.rows.find(x=>x.vid===d.id); if(r) return ceConDatos(r)?{t:'Cargado - C'+(String(CE.num||'').trim()||'?'),c:'ok'}:{t:'Seleccionada',c:'sel'}; }
+  const h=ceHist().filter(x=>x.vid===d.id).pop(); return h?{t:'Cargado - C'+(h.num||'?'),c:'ok'}:null; }
 const ceN=v=>numTrab(v)||0;
 function ceCalc(r){ const v=k=>ceN(r.v[k]); const o={};
   o.M=v('J')*v('K')*v('L'); o.S=v('Q')*v('R'); o.W=v('U')*v('V'); o.AA=v('Y')*v('Z'); o.AM=v('AK')*v('AL'); o.AR=v('AP')*v('AQ'); o.AY=2*(v('AV')+v('AW'))*v('AX'); return o; }
@@ -2539,7 +2551,7 @@ const ceF=(n,u)=>(Math.round(n*100)/100).toLocaleString('es-AR',{minimumFraction
 function ceNumDom(dom){ return (String(dom||'').replace(/^\s*\d+\s+de\s+\S+/i,'').match(/\d+/)||[''])[0]; }
 function ceFila(){ return {id:'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),vid:null,calle:'',nro:'',v:{Z:String(CERT_BALD).replace('.',','),AL:String(CERT_BALD).replace('.',',')}}; }
 let ceaPl='';
-function abrirCert(modo){ const adm=modo==='adm'; $('ceAdmBox').hidden=false; $('ceEdit').hidden=adm; renderCertAdm();   // el listado de ejecutadas lo ven todos; la carga del certificado, el inspector de obra
+function abrirCert(modo){ const adm=modo==='adm'; $('ceAdmBox').hidden=false; $('ceEdit').hidden=adm; ceCargar(); renderCertAdm();   // el listado de ejecutadas lo ven todos; la carga del certificado, el inspector de obra
   $('vistaCert').querySelector('.obra-top h2').textContent=adm?'Certificaciones · veredas ejecutadas':'Certificaciones';
   if(adm){ $('vistaCert').hidden=false; document.body.style.overflow='hidden'; $('vistaCert').scrollTop=0; return; }
   ceCargar(); $('vistaCert').hidden=false; document.body.style.overflow='hidden';
@@ -2547,9 +2559,9 @@ function abrirCert(modo){ const adm=modo==='adm'; $('ceAdmBox').hidden=false; $(
   $('cePl').innerHTML=pls.map(p=>`<option value="${esc(p)}">Pliego ${esc(p)}</option>`).join(''); $('cePl').value=CE.pliego;
   $('ceNum').value=CE.num||''; $('ceFecha').value=CE.fecha||''; renderCert(); $('vistaCert').scrollTop=0; }
 function cerrarCert(){ $('vistaCert').hidden=true; const otra=!$('obraBox').hidden||!$('obraAdm').hidden; document.body.style.overflow=otra?'hidden':''; }
-function ceVeredas(){ return (window.DATA_ALL||DATA).filter(d=>!CE.pliego||d.pliego===CE.pliego).sort((a,b)=>a.calle.localeCompare(b.calle,'es')||a.dom.localeCompare(b.dom,'es',{numeric:true})); }
+function ceVeredas(){ return (window.DATA_ALL||DATA).filter(d=>d.eje&&(!CE.pliego||d.pliego===CE.pliego)).sort((a,b)=>a.calle.localeCompare(b.calle,'es')||a.dom.localeCompare(b.dom,'es',{numeric:true})); }
 function renderCert(){
-  const ver=ceVeredas(); const opts='<option value="">Elegir vereda del pliego…</option>'+ver.map(d=>`<option value="${d.id}">${esc(d.dom)}${d.eje?' · ejecutada':d.enej?' · en ejecución':''}</option>`).join('');
+  const ver=ceVeredas(); const opts='<option value="">Elegir vereda ejecutada…</option>'+ver.map(d=>`<option value="${d.id}">${esc(d.dom)}</option>`).join('');
   $('ceRows').innerHTML=CE.rows.length?CE.rows.map((r,i)=>{ const c=ceCalc(r);
     return `<div class="ce-row" data-r="${r.id}"><div class="ce-rh"><span class="ce-n">${i+1}</span>
       <label>Calle<input data-k="calle" value="${esc(r.calle)}" list="callesList" placeholder="Calle"></label>
@@ -2585,6 +2597,7 @@ $('ceEje').onclick=()=>{ const ya=new Set(CE.rows.map(r=>r.vid)); const nv=ceVer
   if(!nv.length){ toast('No hay veredas ejecutadas nuevas en este pliego'); return; }
   nv.forEach(d=>{ const r=ceFila(); r.vid=d.id; r.calle=callesDe(d)[0]||d.calle; r.nro=ceNumDom(d.dom); CE.rows.push(r); }); ceGuardar(); renderCert(); toast(`Se agregaron ${nv.length} vereda${nv.length===1?'':'s'} ejecutada${nv.length===1?'':'s'}`); };
 $('ceNuevo').onclick=()=>{ if(CE.rows.length&&!confirm('¿Empezar un certificado nuevo? Se borra lo cargado en este (descargá el Excel antes si lo necesitás).')) return;
+  { const h=ceHist(); CE.rows.filter(r=>r.vid&&ceConDatos(r)).forEach(r=>h.push({vid:r.vid,num:String(CE.num||'').trim()||'?'})); try{ localStorage.setItem('pmv-cert-hist',JSON.stringify(h.slice(-3000))); }catch(e){} }
   CE={num:'',pliego:CE.pliego,fecha:ceHoy(),rows:[]}; ceGuardar(); abrirCert(); };
 $('ceNum').oninput=()=>{ CE.num=$('ceNum').value; ceGuardar(); }; $('ceFecha').oninput=()=>{ CE.fecha=$('ceFecha').value; ceGuardar(); };
 $('cePl').onchange=()=>{ CE.pliego=$('cePl').value; ceGuardar(); renderCert(); };
@@ -2642,12 +2655,18 @@ function renderCertAdm(){ const all=window.DATA_ALL||DATA, pls=[...new Set(all.f
   $('ceaPl').querySelectorAll('button').forEach(b=>b.onclick=()=>{ ceaPl=b.dataset.p; renderCertAdm(); });
   const L=ceaDatos(); const fmt=(v,k)=>v==null||v===''?'':k==='$'?'$ '+Math.round(v).toLocaleString('es-AR'):k==='q'?String(v).replace('.',','):esc(v);
   const tot=CEA_COLS.map(([h,f,k])=>k==='q'||k==='$'?L.reduce((s,d)=>s+(+f(d)||0),0):null);
-  $('ceaRes').innerHTML=L.length?`<p class="ce-cnt"><b>${L.length}</b> vereda${L.length===1?'':'s'} ejecutada${L.length===1?'':'s'}${ceaPl?' en el pliego '+esc(ceaPl):''}. Tocá una para ver su ficha completa.</p>
-    <div class="ce-at-w"><table class="ce-at"><thead><tr>${CEA_COLS.map(([h,,k])=>`<th${k?' class="n"':''}>${h}</th>`).join('')}</tr></thead>
-    <tbody>${L.map(d=>`<tr data-ficha="${d.id}">${CEA_COLS.map(([,f,k])=>`<td${k?' class="n"':''}>${fmt(f(d),k)}</td>`).join('')}</tr>`).join('')}</tbody>
-    <tfoot><tr>${CEA_COLS.map(([h,,k],i)=>`<td${k?' class="n"':''}>${i===0?'':i===1?'Totales':tot[i]==null?'':k==='$'?'$ '+Math.round(tot[i]).toLocaleString('es-AR'):(Math.round(tot[i]*100)/100).toLocaleString('es-AR')}</td>`).join('')}</tr></tfoot></table></div>`
+  const carga=!$('ceEdit').hidden;
+  const marca=d=>{ const m=ceaMarca(d); return m?`<span class="cea-m ${m.c}">${esc(m.t)}</span>`:`<button type="button" class="cea-sel" data-sel="${d.id}">＋ Seleccionar</button>`; };
+  $('ceaRes').innerHTML=L.length?`<p class="ce-cnt"><b>${L.length}</b> vereda${L.length===1?'':'s'} ejecutada${L.length===1?'':'s'}${ceaPl?' en el pliego '+esc(ceaPl):''}. ${carga?'Tocá <b>＋ Seleccionar</b> para sumarla al certificado, o la vereda para ver su ficha.':'Tocá una para ver su ficha completa.'}</p>
+    <div class="ce-at-w"><table class="ce-at"><thead><tr>${carga?'<th>Certificado</th>':''}${CEA_COLS.map(([h,,k])=>`<th${k?' class="n"':''}>${h}</th>`).join('')}</tr></thead>
+    <tbody>${L.map(d=>`<tr data-ficha="${d.id}">${carga?`<td class="cea-c">${marca(d)}</td>`:''}${CEA_COLS.map(([,f,k])=>`<td${k?' class="n"':''}>${fmt(f(d),k)}</td>`).join('')}</tr>`).join('')}</tbody>
+    <tfoot><tr>${carga?'<td></td>':''}${CEA_COLS.map(([h,,k],i)=>`<td${k?' class="n"':''}>${i===0?'':i===1?'Totales':tot[i]==null?'':k==='$'?'$ '+Math.round(tot[i]).toLocaleString('es-AR'):(Math.round(tot[i]*100)/100).toLocaleString('es-AR')}</td>`).join('')}</tr></tfoot></table></div>`
     :'<p class="ce-cnt">Todavía no hay veredas ejecutadas'+(ceaPl?' en este pliego':'')+'.</p>'; }
-$('ceaRes').addEventListener('click',e=>{ const tr=e.target.closest('tr[data-ficha]'); if(!tr) return; const d=(window.DATA_ALL||DATA).find(x=>x.id===+tr.dataset.ficha); if(d) abrirFicha(d); });
+$('ceaRes').addEventListener('click',e=>{ const s=e.target.closest('[data-sel]');
+  if(s){ e.stopPropagation(); const d=(window.DATA_ALL||DATA).find(x=>x.id===+s.dataset.sel); if(!d) return; if(CE.rows.some(r=>r.vid===d.id)) return;
+    const r=ceFila(); r.vid=d.id; r.calle=callesDe(d)[0]||d.calle; r.nro=ceNumDom(d.dom); CE.rows.push(r); if(!CE.pliego) CE.pliego=d.pliego; ceGuardar(); renderCert(); renderCertAdm();
+    toast('Vereda sumada al certificado: completá sus medidas'); setTimeout(()=>{ const box=$('ceRows').querySelector(`[data-r="${r.id}"]`); if(box) box.scrollIntoView({behavior:'smooth',block:'start'}); },80); return; }
+  const tr=e.target.closest('tr[data-ficha]'); if(!tr) return; const d=(window.DATA_ALL||DATA).find(x=>x.id===+tr.dataset.ficha); if(d) abrirFicha(d); });
 function ceaExcel(){ const L=ceaDatos(); if(!L.length){ toast('No hay veredas ejecutadas para descargar'); return; }
   const xe=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); const CL=i=>{ let s=''; i++; while(i){ const m=(i-1)%26; s=String.fromCharCode(65+m)+s; i=(i-1-m)/26; } return s; };
   const nC=CEA_COLS.length, last=CL(nC-1), hoy=new Date().toLocaleDateString('es-AR');
