@@ -159,6 +159,7 @@ body.rol-sec #gear{display:none!important}
 .ce-acc .btn{display:inline-flex;align-items:center;gap:7px}
 .ce-xls{background:#1d6b41!important;border-color:#1d6b41!important;color:#fff!important}.ce-xls svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .ce-new{margin-left:auto}
+.ce-sec{margin:22px 0 10px;font-size:19px;color:var(--brand-ink)}
 .ce-adm-cab .oa-pl{display:flex;gap:8px;flex-wrap:wrap}
 .ce-at-w{overflow:auto;max-height:65vh;border:1px solid var(--grid);border-radius:12px}
 .ce-at{width:100%;border-collapse:collapse;font-size:13.5px;min-width:1250px}.ce-at td{white-space:nowrap}.ce-at td:last-child{white-space:normal;min-width:220px}
@@ -1595,6 +1596,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
           <div class="obra-card"><div id="ceaRes"></div></div>
         </div>
         <div id="ceEdit">
+        <h3 class="ce-sec">Cargar certificado</h3>
         <div class="obra-card ce-cab">
           <label>Certificado N°<input id="ceNum" type="text" inputmode="numeric" placeholder="Ej: 1"></label>
           <label>Pliego<select id="cePl"></select></label>
@@ -1606,10 +1608,10 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
             <button type="button" class="btn ce-pdf" id="cePdf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>Descargar PDF</button>
             <button type="button" class="btn ce-new" id="ceNuevo">Nuevo certificado</button>
           </div>
-          <p class="ce-nota">Completá las medidas de cada vereda; los resultados y los totales se calculan solos. Lo cargado queda guardado en este dispositivo hasta que empieces un certificado nuevo.</p>
+          <p class="ce-nota">Completá las medidas de cada vereda; los resultados se calculan solos y los totales salen en el Excel y el PDF. Lo cargado queda guardado en este dispositivo hasta que empieces un certificado nuevo.</p>
         </div>
         <div id="ceRows"></div>
-        <div class="obra-card ce-tot"><h3>Totales del certificado</h3><div id="ceTot"></div></div>
+        <div id="ceTot" hidden></div>
         </div>
       </div>
     </div>
@@ -1787,7 +1789,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6">· Versión 11/11 23:30</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6">· Versión 11/11 23:50</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -2470,6 +2472,8 @@ function fichaHtml(d){
     <div class="fi-acc"><button type="button" class="btn a-mapa" data-mapa="${d.id}">📍 Ver en el mapa</button></div>`;
 }
 function abrirFicha(d){ $('fmTit').textContent=d.dom; $('fmBody').innerHTML=fichaHtml(d); $('fotoModal').hidden=false; $('fotoModal').querySelector('.fm-in').scrollTop=0; }
+// la ficha y el visor de fotos van directo en el body, así quedan por encima de cualquier ventana (Certificaciones, Datos de obra…)
+document.body.appendChild($('fotoModal')); document.body.appendChild($('fotoVer'));
 $('fmCerrar').onclick=()=>{ $('fotoModal').hidden=true; };
 $('fotoModal').addEventListener('click',e=>{ if(e.target.id==='fotoModal') $('fotoModal').hidden=true;
   const v=e.target.closest('button[data-full]'); if(v) abrirFotoDe(v); });
@@ -2535,8 +2539,9 @@ const ceF=(n,u)=>(Math.round(n*100)/100).toLocaleString('es-AR',{minimumFraction
 function ceNumDom(dom){ return (String(dom||'').replace(/^\s*\d+\s+de\s+\S+/i,'').match(/\d+/)||[''])[0]; }
 function ceFila(){ return {id:'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),vid:null,calle:'',nro:'',v:{Z:String(CERT_BALD).replace('.',','),AL:String(CERT_BALD).replace('.',',')}}; }
 let ceaPl='';
-function abrirCert(modo){ const adm=modo==='adm'; $('ceAdmBox').hidden=!adm; $('ceEdit').hidden=adm; $('vistaCert').querySelector('.obra-top h2').textContent=adm?'Certificaciones · veredas ejecutadas':'Certificaciones';
-  if(adm){ $('vistaCert').hidden=false; document.body.style.overflow='hidden'; renderCertAdm(); $('vistaCert').scrollTop=0; return; }
+function abrirCert(modo){ const adm=modo==='adm'; $('ceAdmBox').hidden=false; $('ceEdit').hidden=adm; renderCertAdm();   // el listado de ejecutadas lo ven todos; la carga del certificado, el inspector de obra
+  $('vistaCert').querySelector('.obra-top h2').textContent=adm?'Certificaciones · veredas ejecutadas':'Certificaciones';
+  if(adm){ $('vistaCert').hidden=false; document.body.style.overflow='hidden'; $('vistaCert').scrollTop=0; return; }
   ceCargar(); $('vistaCert').hidden=false; document.body.style.overflow='hidden';
   const pls=[...new Set((window.DATA_ALL||DATA).map(d=>d.pliego))].sort(pliegoSort); if(!CE.pliego&&pls.length) CE.pliego=pls[pls.length-1];
   $('cePl').innerHTML=pls.map(p=>`<option value="${esc(p)}">Pliego ${esc(p)}</option>`).join(''); $('cePl').value=CE.pliego;
