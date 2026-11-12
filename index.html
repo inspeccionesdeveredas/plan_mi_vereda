@@ -1795,7 +1795,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6">· Versión 11/11 22:45</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6">· Versión 11/11 22:55</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -2650,6 +2650,8 @@ function ceaEje(d){ const h=((typeof PW!=='undefined'&&PW.obraLog)||[]).filter(o
 const CEA_COLS=[['N°',d=>d._i,'n'],['Pliego',d=>d.pliego],['Calle',d=>callesDe(d).join(' y ')],['Domicilio',d=>d.dom],['Catastro',d=>d.cat||''],['Cédula',d=>d.ced??'s/d'],['Ejecutada el',d=>d._e.f?new Date(d._e.f).toLocaleDateString('es-AR'):''],['Marcada por',d=>d._e.por],
   ['Nivelación (m²)',d=>d.niv,'q'],['Provisión (m²)',d=>d.prov,'q'],['Contrapiso (m²)',d=>d.contra,'q'],['Juntas (ml)',d=>d.juntas,'q'],['Cazuelas (u.)',d=>d.caz,'q'],['Monto pagado',d=>typeof d.monto==='number'?d.monto:null,'$'],['Observación',d=>d.obs||'']];
 function ceaDatos(){ return ceaLista().map((d,i)=>Object.assign(Object.create(d),{_i:i+1,_e:ceaEje(d)})); }
+// para descargar: el inspector de obra baja solo las veredas seleccionadas o cargadas en un certificado; el administrador, todas
+function ceaDatosDesc(){ const carga=!$('ceEdit').hidden; let l=ceaLista(); if(carga) l=l.filter(d=>ceaMarca(d)); return l.map((d,i)=>Object.assign(Object.create(d),{_i:i+1,_e:ceaEje(d)})); }
 function renderCertAdm(){ const all=window.DATA_ALL||DATA, pls=[...new Set(all.filter(d=>d.eje).map(d=>d.pliego))].sort(pliegoSort); if(ceaPl&&!pls.includes(ceaPl)) ceaPl='';
   $('ceaPl').innerHTML=`<button type="button" data-p="" aria-pressed="${!ceaPl}">Todos los pliegos</button>`+pls.map(p=>`<button type="button" data-p="${esc(p)}" aria-pressed="${ceaPl===p}">Pliego ${esc(p)}</button>`).join('');
   $('ceaPl').querySelectorAll('button').forEach(b=>b.onclick=()=>{ ceaPl=b.dataset.p; renderCertAdm(); });
@@ -2657,7 +2659,7 @@ function renderCertAdm(){ const all=window.DATA_ALL||DATA, pls=[...new Set(all.f
   const tot=CEA_COLS.map(([h,f,k])=>k==='q'||k==='$'?L.reduce((s,d)=>s+(+f(d)||0),0):null);
   const carga=!$('ceEdit').hidden;
   const marca=d=>{ const m=ceaMarca(d); return m?`<span class="cea-m ${m.c}">${esc(m.t)}</span>`:`<button type="button" class="cea-sel" data-sel="${d.id}">＋ Seleccionar</button>`; };
-  $('ceaRes').innerHTML=L.length?`<p class="ce-cnt"><b>${L.length}</b> vereda${L.length===1?'':'s'} ejecutada${L.length===1?'':'s'}${ceaPl?' en el pliego '+esc(ceaPl):''}. ${carga?'Tocá <b>＋ Seleccionar</b> para sumarla al certificado, o la vereda para ver su ficha.':'Tocá una para ver su ficha completa.'}</p>
+  $('ceaRes').innerHTML=L.length?`<p class="ce-cnt"><b>${L.length}</b> vereda${L.length===1?'':'s'} ejecutada${L.length===1?'':'s'}${ceaPl?' en el pliego '+esc(ceaPl):''}. ${carga?'Tocá <b>＋ Seleccionar</b> para sumarla al certificado, o la vereda para ver su ficha. En el Excel y el PDF salen solo las seleccionadas.':'Tocá una para ver su ficha completa.'}</p>
     <div class="ce-at-w"><table class="ce-at"><thead><tr>${carga?'<th>Certificado</th>':''}${CEA_COLS.map(([h,,k])=>`<th${k?' class="n"':''}>${h}</th>`).join('')}</tr></thead>
     <tbody>${L.map(d=>`<tr data-ficha="${d.id}">${carga?`<td class="cea-c">${marca(d)}</td>`:''}${CEA_COLS.map(([,f,k])=>`<td${k?' class="n"':''}>${fmt(f(d),k)}</td>`).join('')}</tr>`).join('')}</tbody>
     <tfoot><tr>${carga?'<td></td>':''}${CEA_COLS.map(([h,,k],i)=>`<td${k?' class="n"':''}>${i===0?'':i===1?'Totales':tot[i]==null?'':k==='$'?'$ '+Math.round(tot[i]).toLocaleString('es-AR'):(Math.round(tot[i]*100)/100).toLocaleString('es-AR')}</td>`).join('')}</tr></tfoot></table></div>`
@@ -2667,7 +2669,7 @@ $('ceaRes').addEventListener('click',e=>{ const s=e.target.closest('[data-sel]')
     const r=ceFila(); r.vid=d.id; r.calle=callesDe(d)[0]||d.calle; r.nro=ceNumDom(d.dom); CE.rows.push(r); if(!CE.pliego) CE.pliego=d.pliego; ceGuardar(); renderCert(); renderCertAdm();
     toast('Vereda sumada al certificado: completá sus medidas'); setTimeout(()=>{ const box=$('ceRows').querySelector(`[data-r="${r.id}"]`); if(box) box.scrollIntoView({behavior:'smooth',block:'start'}); },80); return; }
   const tr=e.target.closest('tr[data-ficha]'); if(!tr) return; const d=(window.DATA_ALL||DATA).find(x=>x.id===+tr.dataset.ficha); if(d) abrirFicha(d); });
-function ceaExcel(){ const L=ceaDatos(); if(!L.length){ toast('No hay veredas ejecutadas para descargar'); return; }
+function ceaExcel(){ const L=ceaDatosDesc(); if(!L.length){ toast(!$('ceEdit').hidden?'Seleccioná al menos una vereda para el certificado':'No hay veredas ejecutadas para descargar'); return; }
   const xe=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); const CL=i=>{ let s=''; i++; while(i){ const m=(i-1)%26; s=String.fromCharCode(65+m)+s; i=(i-1-m)/26; } return s; };
   const nC=CEA_COLS.length, last=CL(nC-1), hoy=new Date().toLocaleDateString('es-AR');
   const c=(r,i,v,s)=>{ const ref=CL(i)+r; if(v==null||v==='') return `<c r="${ref}" s="${s}"/>`; if(typeof v==='number') return `<c r="${ref}" s="${s}"><v>${v}</v></c>`; if(typeof v==='object') return `<c r="${ref}" s="${s}"><f>${v.f}</f></c>`; return `<c r="${ref}" s="${s}" t="inlineStr"><is><t xml:space="preserve">${xe(v)}</t></is></c>`; };
@@ -2675,7 +2677,7 @@ function ceaExcel(){ const L=ceaDatos(); if(!L.length){ toast('No hay veredas ej
   rows.push(`<row r="1" ht="30" customHeight="1">${c(1,0,'PLAN MI VEREDA · CERTIFICACIONES · VEREDAS EJECUTADAS'+(ceaPl?' · PLIEGO '+ceaPl:''),1)}${Array.from({length:nC-1},(_,i)=>c(1,i+1,'',1)).join('')}</row>`);
   rows.push(`<row r="2" ht="20" customHeight="1">${c(2,0,'Municipalidad de Salta · Control urbano · '+hoy,2)}${Array.from({length:nC-1},(_,i)=>c(2,i+1,'',2)).join('')}</row>`);
   rows.push(`<row r="4" ht="30" customHeight="1">${CEA_COLS.map(([h],i)=>c(4,i,h,3)).join('')}</row>`);
-  L.forEach((d,j)=>{ const r=5+j, z=j%2?1:0; rows.push(`<row r="${r}">${CEA_COLS.map(([,f,k],i)=>{ let v=f(d); if(k&&v!=null&&v!=='') v=+v; else if(k) v=null; return c(r,i,v,k==='$'?(z?12:6):k==='q'?(z?8:5):(z?7:4)); }).join('')}</row>`); });
+  L.forEach((d,j)=>{ const r=5+j, z=j%2?1:0; rows.push(`<row r="${r}">${CEA_COLS.map(([,f,k],i)=>{ let v=f(d); if(k&&v!=null&&v!=='') v=+v; else if(k) v=null; return c(r,i,v,k==='$'?(z?12:6):k==='q'?(z?8:5):[0,1,5,6].includes(i)?(z?14:13):(z?7:4)); }).join('')}</row>`); });
   const ult=4+L.length, rt=ult+1;
   rows.push(`<row r="${rt}">${CEA_COLS.map(([,,k],i)=>c(rt,i,i===1?'TOTALES':(k==='q'||k==='$')?{f:`SUM(${CL(i)}5:${CL(i)}${ult})`}:'',k==='$'?11:k==='q'?10:9)).join('')}</row>`);
   const W=[6,8,22,34,12,10,13,18,13,13,14,11,12,15,36];
@@ -2685,7 +2687,7 @@ function ceaExcel(){ const L=ceaDatos(); if(!L.length){ toast('No hay veredas ej
 <fonts count="5"><font><sz val="10"/><color rgb="FF10233F"/><name val="Arial"/></font><font><b/><sz val="15"/><color rgb="FFFFFFFF"/><name val="Arial"/></font><font><sz val="10"/><color rgb="FFFFFFFF"/><name val="Arial"/></font><font><b/><sz val="10"/><color rgb="FF10233F"/><name val="Arial"/></font><font><b/><sz val="10"/><color rgb="FF004174"/><name val="Arial"/></font></fonts>
 <fills count="5"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF004174"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFE9EEF4"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFF8FAFC"/></patternFill></fill></fills>
 <borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border>${B}</borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
-<cellXfs count="13"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>
+<cellXfs count="15"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>
 <xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="center" indent="1"/></xf>
 <xf numFmtId="0" fontId="2" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="center" indent="1"/></xf>
 <xf numFmtId="0" fontId="3" fillId="3" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
@@ -2697,7 +2699,9 @@ function ceaExcel(){ const L=ceaDatos(); if(!L.length){ toast('No hay veredas ej
 <xf numFmtId="0" fontId="3" fillId="3" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1"/>
 <xf numFmtId="164" fontId="4" fillId="3" borderId="1" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1" applyBorder="1"/>
 <xf numFmtId="165" fontId="4" fillId="3" borderId="1" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1" applyBorder="1"/>
-<xf numFmtId="165" fontId="0" fillId="4" borderId="1" xfId="0" applyNumberFormat="1" applyFill="1" applyBorder="1"/></cellXfs></styleSheet>`;
+<xf numFmtId="165" fontId="0" fillId="4" borderId="1" xfId="0" applyNumberFormat="1" applyFill="1" applyBorder="1"/>
+<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="top"/></xf>
+<xf numFmtId="0" fontId="0" fillId="4" borderId="1" xfId="0" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="top"/></xf></cellXfs></styleSheet>`;
   const blob=XZ([
     ['[Content_Types].xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'],
     ['_rels/.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'],
@@ -2705,14 +2709,14 @@ function ceaExcel(){ const L=ceaDatos(); if(!L.length){ toast('No hay veredas ej
     ['xl/_rels/workbook.xml.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'],
     ['xl/styles.xml',styles],['xl/worksheets/sheet1.xml',sheet]]);
   download(`veredas_ejecutadas${ceaPl?'_pliego'+ceaPl.replace(/[^\w-]+/g,''):''}_${ceHoy()}.xlsx`,blob); toast('Excel descargado'); }
-function ceaPdfHtml(){ const L=ceaDatos(); const fmt=(v,k)=>v==null||v===''?'':k==='$'?'$ '+Math.round(v).toLocaleString('es-AR'):k==='q'?String(v).replace('.',','):esc(v);
+function ceaPdfHtml(){ const L=ceaDatosDesc(); const fmt=(v,k)=>v==null||v===''?'':k==='$'?'$ '+Math.round(v).toLocaleString('es-AR'):k==='q'?String(v).replace('.',','):esc(v);
   const C=CEA_COLS.filter(([h])=>h!=='Observación'); const tot=C.map(([,f,k])=>(k==='q'||k==='$')?L.reduce((s,d)=>s+(+f(d)||0),0):null);
   const logo=(()=>{ const s=document.querySelector('.brand-logo svg'); if(!s) return ''; const c=s.cloneNode(true); c.querySelectorAll('.xmas').forEach(x=>x.remove()); return c.outerHTML; })();
   const monto=L.reduce((s,d)=>s+(typeof d.monto==='number'?d.monto:0),0);
   return `<div class="cp-head"><span class="cp-logo">${logo}</span><span class="cp-sep"></span><div><h1>Plan Mi Vereda · Certificaciones</h1><p>Municipalidad de Salta · Control urbano</p></div>
     <div class="cp-dat">Veredas ejecutadas<br><b>${ceaPl?'Pliego '+esc(ceaPl):'Todos los pliegos'}</b> · ${new Date().toLocaleDateString('es-AR')}</div></div>
     <table class="cp-t cp-ta"><thead><tr class="h">${C.map(([h])=>`<th>${h}</th>`).join('')}</tr></thead>
-    <tbody>${L.map(d=>`<tr>${C.map(([,f,k],i)=>`<td${i>=2&&i<=3?' class="l"':''}>${fmt(f(d),k)}</td>`).join('')}</tr>`).join('')}</tbody>
+    <tbody>${L.map(d=>`<tr>${C.map(([,f,k],i)=>`<td${i>=2&&i<=3?' class="l"':[0,1,5,6].includes(i)?' style="text-align:center"':''}>${fmt(f(d),k)}</td>`).join('')}</tr>`).join('')}</tbody>
     <tfoot><tr>${C.map(([,,k],i)=>`<td${i===1?' class="l"':''}>${i===1?'TOTALES':tot[i]==null?'':k==='$'?'$ '+Math.round(tot[i]).toLocaleString('es-AR'):(Math.round(tot[i]*100)/100).toLocaleString('es-AR')}</td>`).join('')}</tr></tfoot></table>
     <div class="cp-res"><div><span>Veredas ejecutadas</span><b>${L.length}</b></div><div><span>Monto total pagado</span><b>$ ${Math.round(monto).toLocaleString('es-AR')}</b></div></div>
     <div class="cp-pie"><span>Municipalidad de Salta · Control urbano · Plan Mi Vereda</span><span>Generado el ${new Date().toLocaleString('es-AR')}</span></div>`; }
@@ -2722,7 +2726,7 @@ function imprimirCert(html,titulo){ $('certPrint').innerHTML=html; const t0=docu
   window.addEventListener('afterprint',volver); toast('Elegí “Guardar como PDF” en la ventana de impresión',4000);
   setTimeout(()=>{ try{ window.print(); }catch(e){ toast('Este navegador no permite imprimir desde acá'); volver(); } },150); }
 $('ceaXls').onclick=ceaExcel;
-$('ceaPdf').onclick=()=>{ if(!ceaDatos().length){ toast('No hay veredas ejecutadas para descargar'); return; } imprimirCert(ceaPdfHtml(),`Veredas ejecutadas${ceaPl?' - Pliego '+ceaPl:''} - ${new Date().toLocaleDateString('es-AR').replace(/\//g,'-')}`); };
+$('ceaPdf').onclick=()=>{ if(!ceaDatosDesc().length){ toast(!$('ceEdit').hidden?'Seleccioná al menos una vereda para el certificado':'No hay veredas ejecutadas para descargar'); return; } imprimirCert(ceaPdfHtml(),`Veredas ejecutadas${ceaPl?' - Pliego '+ceaPl:''} - ${new Date().toLocaleDateString('es-AR').replace(/\//g,'-')}`); };
 function certPdfHtml(){
   const fx=v=>{ const x=numTrab(v); return x==null?'':ceF(x); }, fc=v=>v?ceF(v):'';
   const G=[['Ítem 1.2 · Demolición y transporte de escombros',['Long. (m)','Ancho (m)','Prof. (m)','Esc. contrapiso (m³)','Esc. cazuelas (m²)','Cordón']],['Ítem 1.3 · Nivelación y compactación',['Long. (m)','Ancho (m)','Área (m²)']],['Ítem 1.4 · Contrapiso',['Long. (m)','Ancho (m)','Área (m²)']],['Ítem 1.5 · Provisión de baldosas',['Cant.','Á. baldosa','Á. cubierta (m²)']],['Ítem 1.6 · Colocación de baldosas',['Cant.','Á. baldosa','Á. cubierta (m²)']],['Ítem 2.3 · Cordón',['Espesor (m)','Largo (ml)','Área (m²)']],['Ítem 4.1 · Cazuelas',['Ancho (m)','Largo 1','Largo 2','Cant.','Perímetro (ml)']]];
