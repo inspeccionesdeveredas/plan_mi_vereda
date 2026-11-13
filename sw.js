@@ -1,6 +1,7 @@
 // Plan Mi Vereda: guarda la app en el dispositivo para usarla sin internet.
-const APP='pmv-app-v2', TILES='pmv-mapa-v1', MAX_TILES=3000;
-const SHELL=['./','./index.html','./config.js','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
+const APP='pmv-app-v3', TILES='pmv-mapa-v1', MAX_TILES=3000;
+const SHELL=['./','./index.html','./config.js','./manifest.webmanifest','./icon-192.png','./icon-512.png','./parcelas-v1.js','./xlsx-v0185.js'];
+const FIJOS=/\/(parcelas|xlsx)-v[\w.]+\.js$/;   // archivos grandes que casi no cambian: se usan desde el dispositivo (si cambian, cambia su nombre)
 self.addEventListener('install',e=>{ e.waitUntil(caches.open(APP).then(c=>c.addAll(SHELL.map(u=>new Request(u,{cache:'no-store'})))).then(()=>self.skipWaiting())); });
 self.addEventListener('activate',e=>{ e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==APP&&k!==TILES).map(k=>caches.delete(k)))).then(()=>self.clients.claim())); });
 self.addEventListener('fetch',e=>{
@@ -12,6 +13,11 @@ self.addEventListener('fetch',e=>{
     e.respondWith(caches.open(TILES).then(async c=>{ const hit=await c.match(e.request); if(hit) return hit;
       try{ const r=await fetch(e.request); if(r.ok||r.type==='opaque'){ c.put(e.request,r.clone()); c.keys().then(k=>{ if(k.length>MAX_TILES) c.delete(k[0]); }); } return r; }
       catch(err){ return new Response('',{status:504}); } }));
+    return;
+  }
+  if(u.origin===location.origin && FIJOS.test(u.pathname)){
+    e.respondWith(caches.open(APP).then(async c=>{ const hit=await c.match(e.request,{ignoreSearch:true}); if(hit) return hit;
+      const r=await fetch(e.request); if(r&&r.ok) c.put(e.request,r.clone()); return r; }));
     return;
   }
   const esApp = u.origin===location.origin && (e.request.mode==='navigate' || /\/(index\.html|config\.js|manifest\.webmanifest|icon-\d+\.png)?$/.test(u.pathname));
