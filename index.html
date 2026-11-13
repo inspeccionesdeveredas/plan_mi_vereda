@@ -161,6 +161,7 @@ body.rol-sec #gear{display:none!important}
 .ce-acc .btn{display:inline-flex;align-items:center;gap:7px}
 .ce-xls{background:#1d6b41!important;border-color:#1d6b41!important;color:#fff!important}.ce-xls svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .ce-new{margin-left:auto}
+.inf-monto[aria-pressed="true"]{background:#004174!important;color:#fff!important;border-color:#004174!important}
 .app-upd{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:100000;display:flex;align-items:center;gap:10px;max-width:calc(100% - 24px);padding:10px 10px 10px 16px;border:0;border-radius:999px;background:#004174;color:#fff;font:inherit;font-size:14.5px;box-shadow:0 10px 30px rgba(0,30,70,.35);cursor:pointer;animation:updIn .35s ease-out}
 .app-upd[hidden]{display:none}.app-upd svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .app-upd span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.app-upd b{background:#fff;color:#004174;border-radius:999px;padding:7px 14px;font-size:14px;flex:none}
@@ -1802,7 +1803,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 12/11 23:40</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 12/11 23:59</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -1818,6 +1819,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
     <button class="btn" id="infVolver" type="button">← Volver</button>
     <b class="vi-tit">Informe</b>
     <label class="vi-pl">Pliego <select id="infPliego"></select></label>
+    <button class="btn inf-monto" id="infMonto" type="button" aria-pressed="false">$ Monto total</button>
     <span class="vi-sp"></span>
     <button class="btn" id="infDesc" type="button">Descargar (.html)</button>
     <button class="btn primary" id="infPrint" type="button">Imprimir / Guardar PDF</button>
@@ -2962,7 +2964,7 @@ function abrirInforme(){
   pintarInforme();
 }
 function pintarInforme(){
-  infHtml=infModo==='obra'?informeObraHtml($('infPliego').value):informeHtml($('infPliego').value,false);
+  infHtml=infModo==='obra'?informeObraHtml($('infPliego').value):informeHtml($('infPliego').value,false,infMontoOn);
   const doc=new DOMParser().parseFromString(infHtml,'text/html');
   let css=[...doc.querySelectorAll('style')].map(s=>s.textContent).join('\n').replace(/:root/g,':host').replace(/(^|[{}\s])body\{/g,'$1.inf-root{').replace(/body\{background:#fff\}/g,'.inf-root{background:#fff}');
   doc.querySelectorAll('script,.tool').forEach(n=>n.remove());
@@ -2978,6 +2980,8 @@ function cerrarInforme(){ $('vistaInforme').hidden=true; document.body.classList
 $('btnInforme').onclick=abrirInforme;
 $('infVolver').onclick=cerrarInforme;
 $('infPliego').onchange=pintarInforme;
+let infMontoOn=false;   // el monto total pagado se muestra solo si se pide con el botón
+$('infMonto').onclick=()=>{ infMontoOn=!infMontoOn; $('infMonto').setAttribute('aria-pressed',infMontoOn); $('infMonto').textContent=infMontoOn?'$ Ocultar monto':'$ Monto total'; pintarInforme(); };
 $('infPrint').onclick=()=>{ const t0=document.title, pl=$('infPliego').value;
   document.title=`Informe Plan Mi Vereda${pl?' - Pliego '+pl:''} - ${new Date().toLocaleDateString('es-AR').replace(/\//g,'-')}`;
   const volver=()=>{ document.title=t0; window.removeEventListener('afterprint',volver); };
@@ -4232,7 +4236,7 @@ function zonasInforme(rows){
   }
   return zonas;
 }
-function informeHtml(pl,embebido){
+function informeHtml(pl,embebido,conMonto){
   const rows=DATA.filter(d=>!pl||d.pliego===pl);
   const SEC=typeof PW!=='undefined'&&PWA&&PW.rol==='secretario'&&PW.role!=='admin';
   const n=rows.length;
@@ -4245,8 +4249,9 @@ function informeHtml(pl,embebido){
   const tabla=(cab,filas,pie,txt=[0])=>{ const cl=i=>txt.includes(i)?'':' class="n"'; return `<div class="tw"><table><thead><tr>${cab.map((c,i)=>`<th${cl(i)}>${c}</th>`).join('')}</tr></thead><tbody>${filas.map(f=>`<tr>${f.map((c,i)=>`<td${cl(i)}>${c}</td>`).join('')}</tr>`).join('')}${pie?`<tr class="tot">${pie.map((c,i)=>`<td${cl(i)}>${c}</td>`).join('')}</tr>`:''}</tbody></table></div>`; };
   const montoDe=r=>r.reduce((s,d)=>s+(typeof d.monto==='number'?d.monto:0),0);
   const filasAv=(tit,lista,conTotal)=>{
-    const fila=(o,tot)=>`<tr${tot?' class="tot"':''}><td>${o.l}</td><td class="n">${o.n}</td><td class="n"><span class="pc-l">Pagado</span> <b>${fmtPct(o.pg,o.n)}</b></td><td class="n"><span class="pc-l">Ejecutado</span> <b class="pc-e">${fmtPct(o.e,o.n)}</b></td><td class="n">${o.m?'$ '+Math.round(o.m).toLocaleString('es-AR'):'—'}</td><td class="sbar">${o.n?`<span class="sb"><i style="width:${o.e/o.n*100}%;background:#1d8a52"></i><i style="width:${(o.x||0)/o.n*100}%;background:#e8890c"></i><i style="width:${o.a/o.n*100}%;background:#2a78d6"></i><i style="width:${o.s/o.n*100}%;background:#86b6ef"></i></span><span class="cnt">${[[o.e,'ejecutadas'],[o.x||0,'en ejecución'],[o.a,'pagadas sin ejecutar'],...(SEC?[]:[[o.s,'sin pago']])].filter(x=>x[0]).map(x=>`<b>${x[0]}</b> ${x[1]}`).join(' · ')}</span>`:''}</td></tr>`;
-    return `<div class="tw"><table class="av"><thead><tr><th>${tit}</th><th class="n">Veredas</th><th class="n">Pagado</th><th class="n">Ejecutado</th><th class="n">Monto pagado</th><th>ESTADOS</th></tr></thead><tbody>${lista.map(o=>fila(o)).join('')}${conTotal?fila({l:'Total',n,e:eje,x:enx,a:pag,s:sin,pg:pagadas,m:montoDe(rows)},true):''}</tbody></table></div>`; };
+    const fila=(o,tot)=>{ const f=o.pg-o.e; return `<tr${tot?' class="tot"':''}><td>${o.l}</td><td class="n">${o.pg}</td><td class="n"><span class="pc-l">Ejecutado</span> <b class="pc-e">${fmtPct(o.e,o.pg)}</b></td><td class="sbar">${o.pg?`<span class="sb"><i style="width:${o.e/o.pg*100}%;background:#1d8a52"></i><i style="width:${f/o.pg*100}%;background:#c9d3df"></i></span><span class="cnt"><b>${o.e}</b> ejecutadas · <b>${f}</b> faltan ejecutar</span>`:''}</td></tr>`; };
+    return `<div class="tw"><table class="av"><thead><tr><th>${tit}</th><th class="n">Veredas pagadas</th><th class="n">Ejecutado</th><th>ESTADOS</th></tr></thead><tbody>${lista.map(o=>fila(o)).join('')}${conTotal?fila({l:'Total',n,e:eje,x:enx,a:pag,s:sin,pg:pagadas,m:montoDe(rows)},true):''}</tbody></table></div>
+<div class="ley"><span><i style="background:#1d8a52"></i>Ejecutadas</span><span><i style="background:#c9d3df"></i>Faltan ejecutar (pagadas, incluye en ejecución)</span></div>`; };
   const barra=(e,p,s,t)=>t?`<div class="bar"><i style="width:${e/t*100}%;background:#1d8a52"></i><i style="width:${p/t*100}%;background:#2a78d6"></i><i style="width:${s/t*100}%;background:#86b6ef"></i></div>`:'';
   // por pliego
   const pls=[...new Set(rows.map(d=>d.pliego))].sort(pliegoSort);
@@ -4268,8 +4273,9 @@ function informeHtml(pl,embebido){
   const detOrd=[...det].sort((a,b)=>a.calle.localeCompare(b.calle,'es')||a.dom.localeCompare(b.dom,'es',{numeric:true}));
   const fDeC=detOrd.map(d=>callesDe(d).map(esc).join('|'));
   const fDe=detOrd.map(d=>[callesDe(d).map(esc).join(' y '),d.ced??'s/d',esc(d.dom),esc(d.cat),esc(d.pliego),`<span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i style="width:10px;height:10px;border-radius:3px;display:inline-block;background:${COLE[d.estado]}"></i>${d.estado}</span>`,d.anio??'']);
-  const ubic=rows.filter(d=>{ const l=locate(d); return l.parc.length||l.approx; }).length;
-  const img=mapaInforme(rows);
+  const rowsMapa=rows.filter(d=>d.estado===E||d.estado===X||d.estado===P);   // en el mapa: ejecutadas, en ejecución y pagadas sin ejecutar
+  const ubic=rowsMapa.filter(d=>{ const l=locate(d); return l.parc.length||l.approx; }).length;
+  const img=mapaInforme(rowsMapa);
   const zonas=[]; if(false) zonasInforme(rows).map(z=>({...z,img:mapaInforme(z.rows,{W:1400,H:970,pad:0,ventana:z.ventana,labels:true,fs:24})})).filter(z=>z.img);
   // informe del secretario: solo gráficos con porcentajes por pliego y el mapa (también en el PDF)
   let secCuerpo='';
@@ -4326,7 +4332,7 @@ ${comp}
 header{display:flex;flex-wrap:wrap;align-items:center;gap:16px;border-bottom:3px solid var(--navy);padding-bottom:14px;margin-bottom:18px}
 header .lg{color:var(--brand);line-height:0}header .lg svg{height:46px;width:auto}
 header .sep{width:1px;height:38px;background:var(--line)}
-h1{font-size:22px;margin:0}header p{margin:2px 0 0;color:var(--ink2)}
+h1{font-size:22px;margin:0;color:#004174}header p{margin:2px 0 0;color:var(--ink2)}
 h2{font-size:15px;margin:26px 0 8px;color:var(--navy);border-bottom:1px solid var(--line);padding-bottom:4px;break-after:avoid}
 .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.k{border:1px solid var(--line);border-radius:8px;padding:10px}
 .k b{display:block;font-size:24px}.k span{color:var(--ink2);font-size:12px}
@@ -4358,11 +4364,10 @@ ${SEC?secCuerpo:`<h2>Resumen</h2>
 ${SEC?'':`<div class="k"><b>${sin}</b><span>Sin pago · ${fmtPct(sin,n)}</span></div>`}
 </div>
 <h2>Totales por pliego</h2>
-<div class="tw"><table><thead><tr><th>Pliego</th><th class="n">Veredas</th><th class="n">Sin pago</th><th class="n">Pagadas</th><th class="n">En ejecución</th><th class="n">Ejecutadas</th><th class="n">Monto total pagado</th></tr></thead><tbody>
-${pls.map(p=>{ const r=rows.filter(d=>d.pliego===p); return `<tr><td>Pliego ${esc(p)}</td><td class="n">${r.length}</td><td class="n">${cnt(r,S)}</td><td class="n">${pgDe(r)}</td><td class="n">${cnt(r,X)}</td><td class="n">${cnt(r,E)}</td><td class="n"><b>$ ${Math.round(montoDe(r)).toLocaleString('es-AR')}</b></td></tr>`; }).join('')}
-<tr class="tot"><td>Total</td><td class="n">${n}</td><td class="n">${sin}</td><td class="n">${pagadas}</td><td class="n">${enx}</td><td class="n">${eje}</td><td class="n"><b>$ ${Math.round(montoDe(rows)).toLocaleString('es-AR')}</b></td></tr>
+<div class="tw"><table><thead><tr><th>Pliego</th><th class="n">Veredas pagadas</th><th class="n">En ejecución</th><th class="n">Ejecutadas</th>${conMonto?'<th class="n">Monto total pagado</th>':''}</tr></thead><tbody>
+${pls.map(p=>{ const r=rows.filter(d=>d.pliego===p); return `<tr><td>Pliego ${esc(p)}</td><td class="n">${pgDe(r)}</td><td class="n">${cnt(r,X)}</td><td class="n">${cnt(r,E)}</td>${conMonto?`<td class="n"><b>$ ${Math.round(montoDe(r)).toLocaleString('es-AR')}</b></td>`:''}</tr>`; }).join('')}
+<tr class="tot"><td>Total</td><td class="n">${pagadas}</td><td class="n">${enx}</td><td class="n">${eje}</td>${conMonto?`<td class="n"><b>$ ${Math.round(montoDe(rows)).toLocaleString('es-AR')}</b></td>`:''}</tr>
 </tbody></table></div>
-<div class="ley"><span><i style="background:#1d8a52"></i>Ejecutada</span><span><i style="background:#e8890c"></i>En ejecución</span><span><i style="background:#2a78d6"></i>Pagada, sin ejecutar</span>${SEC?'':'<span><i style="background:#86b6ef"></i>Entregada, sin pago</span>'}</div>
 
 <h2>Avance por pliego</h2>
 ${filasAv('Pliego',pls.map(p=>{ const r=rows.filter(d=>d.pliego===p); return {l:'Pliego '+esc(p),n:r.length,e:cnt(r,E),x:cnt(r,X),a:cnt(r,P),s:cnt(r,S),pg:pgDe(r),m:montoDe(r)}; }),true)}
@@ -4371,8 +4376,8 @@ ${filasAv('Pliego',pls.map(p=>{ const r=rows.filter(d=>d.pliego===p); return {l:
 <section class="mapa-sec">
 <h2>Mapa general</h2>
 ${img?`<img class="mapa" src="${img}" alt="Mapa de las veredas registradas coloreadas por estado">
-<div class="ley"><span><i style="background:#1d8a52"></i>Ejecutada</span><span><i style="background:#e8890c"></i>En ejecución</span><span><i style="background:#2a78d6"></i>Pagada, sin ejecutar</span>${SEC?'':'<span><i style="background:#86b6ef"></i>Entregada, sin pago</span>'}</div>
-<p class="nota">${ubic} de ${n} veredas ubicadas por catastro sobre el parcelario de Salta Capital (DGI, jun-2026) y PH (IDEMSA 2024).</p>`:'<p class="nota">No hay veredas ubicadas para mostrar en el mapa.</p>'}
+<div class="ley"><span><i style="background:#1d8a52"></i>Ejecutada</span><span><i style="background:#e8890c"></i>En ejecución</span><span><i style="background:#2a78d6"></i>Pagada, sin ejecutar</span></div>
+<p class="nota">${ubic} de ${rowsMapa.length} veredas (ejecutadas, en ejecución y pagadas) ubicadas por catastro sobre el parcelario de Salta Capital (DGI, jun-2026) y PH (IDEMSA 2024).</p>`:'<p class="nota">No hay veredas ubicadas para mostrar en el mapa.</p>'}
 </section>
 ${zonas.length?`<h2>Mapas por zona <small class="np">· con más zoom; el número es la altura del domicilio</small></h2><div class="zonas">${zonas.map((z,i)=>`<figure class="zona"><img class="mapa" src="${z.img}" alt="Zona ${i+1}"><figcaption><b>Zona ${i+1}</b> · ${z.n} vereda${z.n===1?'':'s'} · ${z.calles.slice(0,4).map(esc).join(', ')}${z.calles.length>4?'…':''}</figcaption></figure>`).join('')}</div>`:''}
 <section class="no-pdf" hidden style="display:none">
