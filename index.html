@@ -1807,7 +1807,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 13/11 00:15</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 13/11 00:30</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -2801,20 +2801,25 @@ document.addEventListener('keydown',e=>{ if($('fotoVer').hidden) return; if(e.ke
     if(vis('vistaDet')){ cerrarDetalle(); return true; }
     return false;
   }
-  let saliendo=null;
-  const guardia=()=>{ try{ if(!(history.state&&history.state.pmvAtras)) history.pushState({pmvAtras:1},''); }catch(e){} };
-  try{ if(!(history.state&&history.state.pmvAtras)) history.replaceState({pmvBase:1},''); }catch(e){}
-  // Chrome en Android ignora (y hace saltar) las entradas del historial creadas antes de que la persona toque la pantalla:
-  // por eso la "guardia" del botón atrás se crea recién con el primer toque, no al abrir la app
-  let tocada=false;
-  const alTocar=()=>{ tocada=true; if(!saliendo) guardia(); };
+  // Cada ventana abierta tiene su propia entrada en el historial, creada justo después de un toque (Chrome en Android
+  // saltea las entradas creadas sin un toque reciente, y por eso la app se cerraba). "Atrás" cierra de a una ventana;
+  // en la pantalla principal avisa y recién el siguiente "atrás" sale de la app.
+  const ABIERTAS=()=>['fotoVer','gearMenu','fotoModal','vistaCert','vistaInforme','vistaTareas','vistaNotas','obraBox','obraAdm','vistaDet'].filter(vis).length
+    + document.querySelectorAll('dialog[open]').length + (document.body.classList.contains('mapa-full')?1:0);
+  const nivel=()=>(history.state&&history.state.pmvN)||0;
+  let ignorar=0;
+  try{ if(!(history.state&&('pmvN' in history.state))) history.replaceState({pmvN:0},''); }catch(e){}
+  function sincronizar(){ if(ignorar) return; try{
+    const quiero=ABIERTAS()+1; let d=nivel();
+    if(d<quiero){ while(d<quiero){ d++; history.pushState({pmvN:d},''); } }
+    else if(d>quiero){ ignorar=1; history.go(quiero-d); } }catch(e){} }
+  const alTocar=()=>{ setTimeout(sincronizar,0); setTimeout(sincronizar,350); };
   document.addEventListener('click',alTocar,true); document.addEventListener('keydown',alTocar,true);
   addEventListener('popstate',()=>{
+    if(ignorar){ ignorar=0; return; }
     let cerro=false; try{ cerro=cerrarArriba(); }catch(e){}
-    if(cerro){ clearTimeout(saliendo); saliendo=null; guardia(); return; }
-    // en la pantalla principal: el próximo "atrás" sale de la app
-    toast('Tocá "atrás" otra vez para salir de la app',2200);
-    clearTimeout(saliendo); saliendo=setTimeout(()=>{ saliendo=null; if(tocada) guardia(); },2400);
+    if(cerro) return;
+    if(nivel()===0) toast('Tocá "atrás" otra vez para salir de la app',2200);   // el próximo "atrás" sale
   });
 })();
 $('obraQ').addEventListener('input',obraBuscar);
@@ -3051,7 +3056,8 @@ function dibujarLote(lotes){
   $('catMini').hidden=!usarMapa; $('catMapa').hidden=!!usarMapa;
   if(usarMapa){ try{
     if(!catMini){ catMini=L.map('catMini',{zoomControl:false,attributionControl:false,dragging:true,scrollWheelZoom:false});
-      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,maxNativeZoom:19}).addTo(catMini); }
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,maxNativeZoom:16}).addTo(catMini);
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,maxNativeZoom:16,zIndex:5}).addTo(catMini); }
     if(catCapa) catCapa.remove();
     // manzanas y lotes de alrededor (del parcelario) + el lote buscado en rojo
     const capas=[]; if(PIDX.lines){ let s=90,n=-90,w=180,e=-180; lotes.forEach(p=>p.rings[0].forEach(([la,lo])=>{ s=Math.min(s,la); n=Math.max(n,la); w=Math.min(w,lo); e=Math.max(e,lo); }));
@@ -4095,7 +4101,10 @@ function initMap(){
   MAP.map.createPane('labelPane').style.zIndex=450; MAP.map.getPane('labelPane').style.pointerEvents='none';
   MAP.bgRenderer=L.canvas({pane:'parcPane',padding:.2});
   const ESRI='https://server.arcgisonline.com/ArcGIS/rest/services/';
-  MAP.base.calles=L.tileLayer(ESRI+'World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,maxNativeZoom:19,className:'tl-calles',attribution:'Mapa © Esri, HERE, Garmin, OpenStreetMap'});
+  // fondo de calles en gris claro (sin el amarillo del mapa de calles común), con los nombres de las calles encima
+  MAP.base.calles=L.layerGroup([
+    L.tileLayer(ESRI+'Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,maxNativeZoom:16,className:'tl-calles',attribution:'Mapa © Esri, HERE, Garmin, OpenStreetMap'}),
+    L.tileLayer(ESRI+'Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,maxNativeZoom:16,pane:'labelPane'})]);
   MAP.base.callesOsc=L.layerGroup([
     L.tileLayer(ESRI+'Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,maxNativeZoom:16,attribution:'Mapa © Esri, HERE, Garmin, OpenStreetMap'}),
     L.tileLayer(ESRI+'Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,maxNativeZoom:16})]);
@@ -4125,7 +4134,16 @@ function setBase(){
   if(!MAP.map.hasLayer(want)){ want.addTo(MAP.map); if(want.bringToBack) want.bringToBack(); }
   document.querySelectorAll('[data-base]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.base===MAP.baseSel));
 }
-function fitMap(){ const b=MAP.layer.getBounds(); if(b.isValid()) MAP.map.fitBounds(b,{padding:[30,30],maxZoom:18}); }
+// encuadre del mapa: se centra donde están la mayoría de las veredas (sin dejar que unas pocas lejanas alejen todo)
+function fitMap(){
+  const pts=[]; MAP.layer.eachLayer(l=>{ try{ const c=l.getBounds?l.getBounds().getCenter():l.getLatLng(); if(c) pts.push(c); }catch(e){} });
+  if(!pts.length){ const b=MAP.layer.getBounds(); if(b.isValid()) MAP.map.fitBounds(b,{padding:[30,30],maxZoom:18}); return; }
+  const q=(arr,p)=>arr[Math.min(arr.length-1,Math.max(0,Math.round((arr.length-1)*p)))];
+  const la=pts.map(p=>p.lat).sort((a,b)=>a-b), lo=pts.map(p=>p.lng).sort((a,b)=>a-b);
+  const r=pts.length>=12?0.1:0;   // con muchas veredas, se ignora el 10% más alejado de cada lado
+  const b=L.latLngBounds([q(la,r),q(lo,r)],[q(la,1-r),q(lo,1-r)]);
+  MAP.map.fitBounds(b.pad(0.08),{padding:[24,24],maxZoom:18});
+}
 
 function popupHtml(d,approx){
   const col={}; ESTADOS.forEach(e=>col[e.k]=cssVar(e.c.slice(4,-1)));
