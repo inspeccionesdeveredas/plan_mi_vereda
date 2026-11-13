@@ -493,7 +493,8 @@ body.mapa-full #mapGeo,body.mapa-full #mapReload{display:none}
 body.mapa-full .maptools{margin-bottom:6px}
 body.mapa-full #mapLeg{margin-bottom:6px;font-size:11px;gap:10px}
 body.mapa-full #map{flex:1;height:auto!important;min-height:0;border-radius:12px}
-.leaflet-tile.tl-calles,.tl-calles .leaflet-tile{filter:saturate(.55) brightness(1.05) contrast(.97)}
+.leaflet-tile.tl-calles,.tl-calles .leaflet-tile{filter:contrast(1.55) brightness(.9)}   /* gris claro con más contraste: manzanas grises y calles blancas */
+#catMini .leaflet-tile-pane .leaflet-layer:first-child .leaflet-tile{filter:contrast(1.55) brightness(.9)}
 .leaflet-control-attribution.attr-min{cursor:pointer;max-width:22px;height:22px;overflow:hidden;white-space:nowrap;border-radius:11px 0 0 0;padding:0 0 0 22px!important;position:relative;font-size:11px;line-height:22px}
 .leaflet-control-attribution.attr-min::before{content:"i";position:absolute;left:0;top:0;width:22px;height:22px;display:grid;place-items:center;font:700 12px/1 Georgia,serif;font-style:italic;color:var(--ink2)}
 .leaflet-control-attribution.attr-min.abierta{max-width:min(90vw,640px);white-space:normal;height:auto;padding-right:6px!important}
@@ -1807,7 +1808,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 13/11 00:30</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 13/11 00:35</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -4047,9 +4048,9 @@ function drawBackground(){
   const x0=Math.floor(b.getWest()/CELL), x1=Math.floor(b.getEast()/CELL), y0=Math.floor(b.getSouth()/CELL), y1=Math.floor(b.getNorth()/CELL);
   const ids=[]; for(let x=x0;x<=x1;x++) for(let y=y0;y<=y1;y++){ const c=PIDX.grid.get(x+'_'+y); if(c) ids.push(...c); }
   if(ids.length>9000) return;
-  const stroke=isDark()?'#6b6a64':'#8f8d86';
+  const stroke=isDark()?'#6b6a64':'#6f747c';
   ids.forEach(i=>{ const p=parcel(i);
-    L.polygon(p.rings,{renderer:MAP.bgRenderer,pane:'parcPane',color:stroke,weight:.7,fill:true,fillOpacity:0,opacity:.9})
+    L.polygon(p.rings,{renderer:MAP.bgRenderer,pane:'parcPane',color:stroke,weight:.8,fill:true,fillOpacity:0,opacity:.9})
       .bindPopup(()=>bgPopup(p)).addTo(MAP.bgLayer); });
 }
 // números de catastro sobre cada lote (se ven al acercar el mapa)
