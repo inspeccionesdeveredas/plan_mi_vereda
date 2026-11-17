@@ -161,6 +161,8 @@ body.rol-sec #gear{display:none!important}
 .ce-rt tr.ce-dem td{background:#fff8eb}.ce-rt td.ac-ok{background:#bfbfbf!important;color:#10233f;text-align:center}.ce-rt td.ac-av{background:#9dc3e6!important;color:#10233f;text-align:center}.ce-ley span{padding:1px 8px;border-radius:4px;font-weight:600;color:#10233f}.ce-ley .ac-ok{background:#bfbfbf}.ce-ley .ac-av{background:#9dc3e6}
 #certPrint .ci-t td.ac-ok{background:#ffff00;text-align:center}#certPrint .ci-t td.ac-av{background:#92d050;text-align:center}#certPrint .ci-ley{font-size:9px;margin:-6px 0 0}#certPrint .ci-ley span{display:inline-block;border:.6px solid #555}#certPrint .ci-ley .ac-ok{background:#ffff00}#certPrint .ci-ley .ac-av{background:#92d050}.ce-rt tfoot td{background:#e9eef4;font-weight:800;color:#004174}
 .ce-comp{display:flex;flex-direction:column;gap:4px;margin-top:12px;font-weight:600;font-size:13.5px}.ce-comp select{font:inherit;font-weight:400;padding:8px;border:1px solid #c9d3df;border-radius:8px;max-width:520px}
+.ce-it-t{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}.ce-it-t th{background:#e9eef4;padding:6px;border:1px solid #d3dbe6;font-size:12px}.ce-it-t td{border:1px solid #e1e7ef;padding:2px}.ce-it-t input{width:100%;box-sizing:border-box;border:0;background:transparent;font:inherit;padding:6px;min-width:50px}.ce-it-t td:nth-child(2) input{min-width:220px}.ce-it-t tr.tit td{background:#f3f6f9}.ce-it-t tr.tit input{font-weight:700}.ce-it-t .ce-del{padding:4px 8px}
+.ce-peg textarea{width:100%;box-sizing:border-box;font:13px monospace;padding:8px;border:1px solid #c9d3df;border-radius:8px;margin:6px 0}
 .ce-gl{display:flex;flex-direction:column;gap:8px}.ce-g{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border:1px solid #d3dbe6;border-radius:10px;padding:8px 12px}
 .ce-g small{display:block;color:#4a5a70;font-size:12px;margin-top:2px}.ce-gb{display:flex;gap:6px;flex-wrap:wrap}.ce-gb .btn{padding:6px 12px;min-height:0}
 /* informe completo del certificado (PDF) */
@@ -1873,7 +1875,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 17/11 18:59</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 17/11 19:02</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -2709,7 +2711,7 @@ function ceResumen(C){
     const F=it.F||it.D*it.PU, pu=it.D?F/it.D:it.PU, prev=prevDe(it);
     const medido=it.tipo&&!usado.has(it.tipo)?tot[it.tipo]:0; if(it.tipo) usado.add(it.tipo);
     const libre=Math.max(0,it.D-prev), med=Math.min(medido,libre), dem=Math.max(0,medido-med);
-    return {item:it.item,desc:it.desc,unidad:it.unidad,tipo:it.tipo,D:it.D,PU:it.PU,F,pu,prev,medido,med,dem,econ:0}; });
+    return {item:it.item,desc:it.desc,unidad:it.unidad,tipo:it.tipo,D:it.D,PU:it.PU,F,pu,prev,prev0:it.prev0,medido,med,dem,econ:0}; });
   const SF=R.reduce((s,x)=>s+(x.F||0),0)||1;
   const comp=C.comp!=null?C.comp:(R.find(x=>x.tipo==='carpetas')||{}).item||'';
   const demImp=R.reduce((s,x)=>s+(x.dem||0)*(x.pu||0),0);
@@ -2761,9 +2763,8 @@ function renderCert(){
     :'<div class="ce-vacio">Todavía no agregaste veredas a este certificado.<br>Tocá <b>＋ Agregar vereda</b> o <b>Agregar las ejecutadas del pliego</b>.</div>';
   renderCertRes(); }
 // resumen del certificado (en pantalla)
-function renderCertRes(){ const box=$('ceRes'); if(!box||$('ceEdit').hidden) return; const S=ceResumen(CE);
-  if(!S){ const adm=typeof PW!=='undefined'&&PW.role==='admin';
-    box.innerHTML=`<h3 class="ce-sec">Certificado por ítem</h3><div class="obra-card"><p class="ce-nota" style="font-size:14px">Para calcular el certificado (acumulado, saldo, % y economías y demasías) faltan los ítems del <b>pliego ${esc(CE.pliego||'')}</b>: cantidad contratada, precio unitario y lo ya certificado. ${adm?'Cargalos en la hoja <b>“Certificación - ítems”</b> de la planilla.':'Pedile al administrador que los cargue en la planilla.'}</p></div>`; return; }
+function renderCertRes(){ const box=$('ceRes'); if(!box||$('ceEdit').hidden) return; if(CEI&&CEI.pliego===CE.pliego){ renderItemsEd(); return; } CEI=null; const S=ceResumen(CE);
+  if(!S){ box.innerHTML=`<h3 class="ce-sec">Certificado por ítem</h3><div class="obra-card"><p class="ce-nota" style="font-size:14px">Para calcular el certificado (acumulado, saldo, % y economías y demasías) hacen falta los ítems del pliego ${esc(CE.pliego||'')}: cantidad contratada, precio unitario y lo ya certificado. Se cargan una sola vez (se pueden pegar desde el Excel del certificado).</p><div class="ce-acc" style="margin-top:10px"><button type="button" class="btn primary" id="ceItEd">Cargar ítems del pliego ${esc(CE.pliego||'')}</button></div></div>`; $('ceItEd').onclick=ceItemsEditar; return; }
   const filas=S.R.map(x=>x.titulo?`<tr class="ce-rub"><td>${esc(x.item)}</td><td colspan="9">${esc(x.desc)}</td></tr>`
     :`<tr${x.dem>1e-9?' class="ce-dem"':''}><td>${esc(x.item)}</td><td class="l">${esc(x.desc)}</td><td>${esc(x.unidad)}</td><td class="n">${ceF(x.D)}</td><td class="n">${ceF(x.prev)}</td><td class="n b">${ceF(x.med)}${x.econ>1e-9?'<small>compensa</small>':''}${x.dem>1e-9?`<small>demasía ${ceF(x.dem)}</small>`:''}</td><td class="n ${ceAcCl(x)}">${ceF(x.acum)}</td><td class="n">${ceF(x.saldo)}</td><td class="n">${cePc(x.pct)}</td><td class="n">${x.monto>0?'$ '+Math.round(x.monto).toLocaleString('es-AR'):''}</td></tr>`).join('');
   const opc=S.R.filter(x=>!x.titulo).map(x=>`<option value="${esc(x.item)}"${x.item===S.comp?' selected':''}>${esc(x.item)} · ${esc(x.desc.slice(0,60))}</option>`).join('');
@@ -2773,7 +2774,8 @@ function renderCertRes(){ const box=$('ceRes'); if(!box||$('ceEdit').hidden) ret
     <tfoot><tr><td colspan="8" class="l">Total del certificado</td><td class="n">${cePc(S.pct)}</td><td class="n">${ce$(S.monto)}</td></tr></tfoot></table></div>
     <p class="ce-nota ce-ley"><span class="ac-ok">gris</span> ítem completo (llegó a lo contratado) · <span class="ac-av">azul</span> ítem en avance</p>
     <label class="ce-comp">Ítem que compensa las demasías (economía)<select id="ceComp"><option value="">— Sin compensar —</option>${opc}</select></label>
-    <p class="ce-nota">${S.dems.length?`Demasías en ${S.dems.map(x=>'ítem '+esc(x.item)).join(', ')} (lo medido supera lo que queda por certificar).${S.comp?` Se compensan con el ítem ${esc(S.comp)}.`:' Elegí el ítem que las compensa.'}${S.falta>0.5?` <b>Atención:</b> al ítem ${esc(S.comp)} le falta saldo para compensar ${ce$(S.falta)}.`:''}`:'No hay demasías: ningún ítem supera lo contratado.'}</p></div>`;
+    <p class="ce-nota">${S.dems.length?`Demasías en ${S.dems.map(x=>'ítem '+esc(x.item)).join(', ')} (lo medido supera lo que queda por certificar).${S.comp?` Se compensan con el ítem ${esc(S.comp)}.`:' Elegí el ítem que las compensa.'}${S.falta>0.5?` <b>Atención:</b> al ítem ${esc(S.comp)} le falta saldo para compensar ${ce$(S.falta)}.`:''}`:'No hay demasías: ningún ítem supera lo contratado.'}</p><div class="ce-acc" style="margin-top:8px"><button type="button" class="btn" id="ceItEd">Editar ítems del pliego</button></div></div>`;
+  $('ceItEd').onclick=ceItemsEditar;
   $('ceComp').onchange=e=>{ CE.comp=e.target.value; ceGuardar(); renderCertRes(); }; }
 $('ceRows').addEventListener('input',e=>{ const box=e.target.closest('.ce-row'); if(!box) return; const r=CE.rows.find(x=>x.id===box.dataset.r); if(!r) return;
   if(e.target.dataset.v){ r.v[e.target.dataset.v]=e.target.value; if(e.target.dataset.v==='WP') e.target.closest('label').classList.toggle('baja',cePct(r)<100);
@@ -2800,6 +2802,51 @@ $('ceHasta').oninput=()=>{ CE.hasta=$('ceHasta').value; ceGuardar(); };
 $('cePl').onchange=()=>{ CE.pliego=$('cePl').value; ceGuardar(); cePrecargar(); ceCabecera(); renderCert(); };
 document.addEventListener('click',e=>{ const b=e.target.closest('[data-cert]'); if(b) abrirCert(b.closest('#obraAdm')?'adm':''); });
 $('certCerrar').onclick=cerrarCert;
+
+// ---- ítems del pliego: los carga el inspector de obra o el administrador desde la app (o se pegan del Excel) ----
+let CEI=null;
+const ceNumAR=v=>{ let s=String(v??'').replace(/\s|\$/g,'').replace(/[^\d.,-]/g,''); if(!s) return null; if(s.includes(',')) s=s.replace(/\./g,'').replace(',','.'); else if((s.match(/\./g)||[]).length>1) s=s.replace(/\./g,''); const n=parseFloat(s); return isFinite(n)?n:null; };
+const ceNumTxt=n=>n==null||n===''?'':String(Math.round(+n*1e6)/1e6).replace('.',',');
+function ceItemsEditar(){ const pl=CE.pliego; CEI={pliego:pl,pegar:false,rows:ceItemsPl(pl).map(x=>({item:x.item,desc:x.desc,unidad:x.unidad,D:x.unidad?ceNumTxt(x.D):'',PU:x.unidad?ceNumTxt(x.PU):'',F:x.unidad&&x.F?ceNumTxt(x.F):'',prev:x.unidad?ceNumTxt(x.prev0):''}))};
+  if(!CEI.rows.length) CEI.rows=[{item:'1',desc:'',unidad:'',D:'',PU:'',F:'',prev:''},{item:'1.1',desc:'',unidad:'m2',D:'',PU:'',F:'',prev:''}]; renderCertRes(); setTimeout(()=>$('ceRes').scrollIntoView({behavior:'smooth',block:'start'}),50); }
+const CEI_COLS=[['item','Ítem',60],['desc','Descripción',0],['unidad','Unidad',60],['D','Cantidad contratada',96],['PU','Precio unitario',110],['F','Valor obra (opcional)',120],['prev','Ya certificado (acumulado)',110]];
+function renderItemsEd(){ const box=$('ceRes');
+  box.innerHTML=`<h3 class="ce-sec">Ítems del pliego ${esc(CEI.pliego)}</h3><div class="obra-card ce-ied">
+    <p class="ce-nota">Cargá cada ítem como figura en el certificado. Los títulos (ej. <i>1 · RECONSTRUCCIÓN DE VEREDA</i>) van sin unidad. En “Ya certificado” poné la cantidad acumulada hasta el último certificado hecho fuera de la app; los que se guarden desde la app se suman solos.</p>
+    <div class="ce-acc"><button type="button" class="btn" data-ie="pegar">Pegar desde Excel</button><button type="button" class="btn" data-ie="item">＋ Ítem</button><button type="button" class="btn" data-ie="tit">＋ Título</button></div>
+    ${CEI.pegar?`<div class="ce-peg"><p class="ce-nota">En el Excel seleccioná las filas de los ítems con estas columnas en este orden: Ítem · Descripción · Unidad · Cantidad contratada · Precio unitario · Valor obra · Ya certificado (las dos últimas pueden faltar). Copiá (Ctrl+C) y pegá acá (Ctrl+V).</p><textarea id="ceiPeg" rows="6" placeholder="Pegá acá las filas copiadas del Excel"></textarea><div class="ce-acc"><button type="button" class="btn primary" data-ie="usar">Usar lo pegado</button><button type="button" class="btn" data-ie="nopeg">Cancelar</button></div></div>`:''}
+    <div class="ce-at-w"><table class="ce-it-t"><thead><tr>${CEI_COLS.map(([,h,w])=>`<th${w?` style="width:${w}px"`:''}>${h}</th>`).join('')}<th></th></tr></thead><tbody>
+    ${CEI.rows.map((r,i)=>`<tr${r.unidad?'':' class="tit"'}>${CEI_COLS.map(([k])=>`<td><input data-i="${i}" data-k="${k}" value="${esc(r[k]??'')}"${['D','PU','F','prev'].includes(k)?' inputmode="decimal"':''}${k==='desc'?'':''}></td>`).join('')}<td><button type="button" class="ce-del" data-iq="${i}" aria-label="Quitar">×</button></td></tr>`).join('')}
+    </tbody></table></div>
+    <div class="ce-acc"><button type="button" class="btn ce-save" data-ie="guardar">Guardar ítems</button><button type="button" class="btn" data-ie="cancelar">Cancelar</button></div></div>`;
+  box.querySelectorAll('input[data-i]').forEach(inp=>inp.oninput=()=>{ const r=CEI.rows[+inp.dataset.i]; r[inp.dataset.k]=inp.value; if(inp.dataset.k==='unidad') inp.closest('tr').classList.toggle('tit',!inp.value.trim()); });
+  box.querySelectorAll('[data-iq]').forEach(b=>b.onclick=()=>{ CEI.rows.splice(+b.dataset.iq,1); renderItemsEd(); });
+  box.querySelectorAll('[data-ie]').forEach(b=>b.onclick=()=>ceItemsAccion(b.dataset.ie)); }
+function ceItemsPegados(txt){ const out=[];
+  String(txt||'').split(/\r?\n/).forEach(l=>{ if(!l.trim()) return; const c=l.split('\t').map(x=>x.trim()); const item=c[0]||'', desc=c[1]||'', un=c[2]||'';
+    if(!item&&!desc) return; if(/^[íi]tem$/i.test(item)) return;   // encabezado
+    if(!un){ out.push({item,desc,unidad:'',D:'',PU:'',F:'',prev:''}); return; }
+    out.push({item,desc,unidad:un,D:ceNumTxt(ceNumAR(c[3])),PU:ceNumTxt(ceNumAR(c[4])),F:ceNumTxt(ceNumAR(c[5])),prev:ceNumTxt(ceNumAR(c[6]))}); });
+  return out; }
+async function ceItemsAccion(a){
+  if(a==='pegar'){ CEI.pegar=true; renderItemsEd(); setTimeout(()=>$('ceiPeg')&&$('ceiPeg').focus(),50); return; }
+  if(a==='nopeg'){ CEI.pegar=false; renderItemsEd(); return; }
+  if(a==='usar'){ const l=ceItemsPegados($('ceiPeg').value); if(!l.length){ toast('No se encontraron ítems en lo pegado'); return; } CEI.rows=l; CEI.pegar=false; renderItemsEd(); toast(`Se cargaron ${l.length} filas: revisalas y tocá “Guardar ítems”`); return; }
+  if(a==='item'){ const u=CEI.rows[CEI.rows.length-1]; CEI.rows.push({item:'',desc:'',unidad:(u&&u.unidad)||'m2',D:'',PU:'',F:'',prev:''}); renderItemsEd(); return; }
+  if(a==='tit'){ CEI.rows.push({item:'',desc:'',unidad:'',D:'',PU:'',F:'',prev:''}); renderItemsEd(); return; }
+  if(a==='cancelar'){ CEI=null; renderCertRes(); return; }
+  if(a==='guardar'){ const med=new Map(ceItemsPl(CEI.pliego).map(x=>[x.item,((PW.certItems||[]).find(z=>ceNormPl(z.pliego)===ceNormPl(CEI.pliego)&&String(z.item).trim()===x.item)||{}).medicion||'']));
+    const rows=CEI.rows.filter(r=>String(r.item).trim()||String(r.desc).trim());
+    if(rows.some(r=>!String(r.item).trim())){ toast('Hay filas sin número de ítem'); return; }
+    if(rows.some(r=>r.unidad&&!(ceNumAR(r.D)>0))){ toast('Hay ítems sin cantidad contratada'); return; }
+    const items=rows.map(r=>({pliego:CEI.pliego,item:String(r.item).trim(),descripcion:String(r.desc||'').trim(),unidad:String(r.unidad||'').trim(),cantidad:r.unidad?ceNumAR(r.D):null,precio_unitario:r.unidad?ceNumAR(r.PU):null,valor_obra:r.unidad?ceNumAR(r.F):null,acumulado_previo:r.unidad?(ceNumAR(r.prev)||0):null,medicion:med.get(String(r.item).trim())||null}));
+    if(window.PMV_DEMO){ PW.certItems=(PW.certItems||[]).filter(x=>ceNormPl(x.pliego)!==ceNormPl(CEI.pliego)).concat(items); CEI=null; renderCert(); toast('Vista de ejemplo: ítems actualizados solo en esta pantalla'); return; }
+    if(!navigator.onLine){ toast('Sin conexión: guardá los ítems cuando tengas internet'); return; }
+    const b=$('ceRes').querySelector('[data-ie="guardar"]'); b.disabled=true; b.textContent='Guardando…';
+    try{ const r=await pwPost({action:'citems_set',adminKey:PW.admin||undefined,u:PW.u||undefined,t:PW.t||undefined,pliego:CEI.pliego,items});
+      if(!r||!r.ok) throw new Error(r&&r.error==='forbidden'?'No tenés permiso para cargar ítems':'No se pudieron guardar los ítems');
+      PW.certItems=r.cert_items||PW.certItems; pwCertCache(); CEI=null; renderCert(); toast('Ítems del pliego guardados en la planilla');
+    }catch(e){ toast(e.message||'No se pudieron guardar'); b.disabled=false; b.textContent='Guardar ítems'; } } }
 
 // ---- guardar en la planilla ----
 function ceParaGuardar(C,S){ const G=Object.keys(MT);
@@ -2886,21 +2933,35 @@ function ceXlsx(C){
     const nU=ult.split('').reduce((a,ch)=>a*26+ch.charCodeAt(0)-64,0); for(let i=1;i<nU;i++){ put(rows,1,CL(i),'',logo?1:16); put(rows,2,CL(i),'',logo?2:17); } };
   const titulo=`CERTIFICADO PARCIAL N° ${num||'—'} · PLIEGO ${C.pliego||''}`, sub=`Municipalidad de Salta · Control urbano · Período ${ceFechaTxt(C.desde)||'—'} al ${ceFechaTxt(C.hasta)||'—'}`;
   const sheets=[];
-  // 1) Certificado
-  if(S){ const rows={}, merges=[]; cab(rows,merges,'N',titulo,sub,true);
-    const H=['Ítem','Descripción','Unidad','Cantidad Contratada','Precio Unitario','Valor Obra','Incidencia Total',`Cantidad acumulada al certificado N°${S.numAnt}`,`MEDICIÓN ${num}`,'Saldo de Obra','% de Medición','Avance Cantidad','%','Total acumulado'];
-    put(rows,3,'L',`CERTIFICADO ${num}`,18); put(rows,3,'M','',18); merges.push('L3:M3');
+  // 1) Certificado: todos los certificados del pliego (los guardados anteriores + este), así el acumulado sale de la suma
+  if(S){ const rows={}, merges=[];
+    const ant=ceAnteriores(C), B=ant.map(c=>({num:String(c.numero),it:ceDatos(c).items||{},act:false})).concat([{num,it:null,act:true}]);
+    const c0=8, nB=B.length, cT=c0+nB*2, ult=CL(cT+2);   // A..H fijas · 2 columnas por certificado · total acumulado, saldo y % acumulado
+    cab(rows,merges,ult,titulo,sub,true);
+    const H=['Ítem','Descripción','Unidad','Cantidad Contratada','Precio Unitario','Valor Obra','Incidencia Total','Acumulado anterior'+(ceNumOrd(B[0].num)!=null?` al cert. N°${ceNumOrd(B[0].num)-1}`:'')];
     H.forEach((h,i)=>put(rows,4,CL(i),h,3,42));
+    B.forEach((b,k)=>{ const ca=CL(c0+k*2), cb=CL(c0+k*2+1); put(rows,3,ca,`CERTIFICADO ${b.num}${b.act?' (este)':''}`,18,30); put(rows,3,cb,'',18); merges.push(`${ca}3:${cb}3`); put(rows,4,ca,`Medición ${b.num}`,3); put(rows,4,cb,'% de Medición',3); });
+    put(rows,4,CL(cT),'Total acumulado',3); put(rows,4,CL(cT+1),'Saldo de Obra',3); put(rows,4,CL(cT+2),'% acumulado',3);
     const r0=5, rN=r0+S.R.length-1, rT=rN+1;
-    S.R.forEach((x,j)=>{ const r=r0+j; if(x.titulo){ put(rows,r,'A',x.item,13); put(rows,r,'B',x.desc,12); for(let i=2;i<14;i++) put(rows,r,CL(i),'',4); return; }
+    S.R.forEach((x,j)=>{ const r=r0+j; if(x.titulo){ put(rows,r,'A',x.item,13); put(rows,r,'B',x.desc,12); for(let i=2;i<=cT+2;i++) put(rows,r,CL(i),'',4); return; }
       put(rows,r,'A',x.item,13); put(rows,r,'B',x.desc,4); put(rows,r,'C',x.unidad,13); put(rows,r,'D',x.D,5); put(rows,r,'E',x.PU,6); put(rows,r,'F',x.F,6);
-      put(rows,r,'N',{f:`H${r}+I${r}`,v:x.acum},ceAcCl(x)==='ac-ok'?19:ceAcCl(x)==='ac-av'?20:14);
-      put(rows,r,'G',{f:`IF($F$${rT}=0,0,F${r}/$F$${rT})`,v:x.inc},7); put(rows,r,'H',x.prev,14); put(rows,r,'I',x.med,8);
-      put(rows,r,'J',{f:`D${r}-H${r}-I${r}`,v:x.saldo},5); put(rows,r,'K',{f:`IF(OR(D${r}=0,$F$${rT}=0),0,I${r}*F${r}/D${r}/$F$${rT})`,v:x.pct},7); put(rows,r,'L',{f:`I${r}`,v:x.med},14); put(rows,r,'M',{f:`K${r}`,v:x.pct},7); });
-    for(let i=0;i<14;i++) put(rows,rT,CL(i),'',9); put(rows,rT,'B','TOTAL',9);
-    put(rows,rT,'F',{f:`SUM(F${r0}:F${rN})`,v:S.SF},10); put(rows,rT,'G',{f:`SUM(G${r0}:G${rN})`,v:1},11); put(rows,rT,'K',{f:`SUM(K${r0}:K${rN})`,v:S.pct},11); put(rows,rT,'M',{f:`SUM(M${r0}:M${rN})`,v:S.pct},11);
-    put(rows,rT+2,'B','Monto del certificado',9); put(rows,rT+2,'C',{f:`K${rT}*F${rT}`,v:S.monto},10); merges.push(`C${rT+2}:E${rT+2}`); put(rows,rT+2,'D','',10); put(rows,rT+2,'E','',10);
-    sheets.push({name:'Certificado',xml:hoja({rows,widths:[7,46,8,12,14,17,11,15,13,12,11,12,9,13],merges,freeze:4,ultCol:'N',logo:true,land:true})}); }
+      put(rows,r,'G',{f:`IF($F$${rT}=0,0,F${r}/$F$${rT})`,v:x.inc},7); put(rows,r,'H',x.prev0||0,14);
+      const meds=[];
+      B.forEach((b,k)=>{ const ca=CL(c0+k*2), cb=CL(c0+k*2+1); const q=b.act?x.med:(+b.it[x.item]||0); meds.push(ca+r);
+        put(rows,r,ca,q,b.act?8:14); put(rows,r,cb,{f:`IF(OR(D${r}=0,$F$${rT}=0),0,${ca}${r}*F${r}/D${r}/$F$${rT})`,v:q*x.pu/S.SF},7); });
+      put(rows,r,CL(cT),{f:`H${r}+${meds.join('+')}`,v:x.acum},ceAcCl(x)==='ac-ok'?19:ceAcCl(x)==='ac-av'?20:14);
+      put(rows,r,CL(cT+1),{f:`D${r}-${CL(cT)}${r}`,v:x.D-x.acum},5);
+      put(rows,r,CL(cT+2),{f:`IF(OR(D${r}=0,$F$${rT}=0),0,${CL(cT)}${r}*F${r}/D${r}/$F$${rT})`,v:x.acum*x.pu/S.SF},7); });
+    for(let i=0;i<=cT+2;i++) put(rows,rT,CL(i),'',9); put(rows,rT,'B','TOTAL',9);
+    put(rows,rT,'F',{f:`SUM(F${r0}:F${rN})`,v:S.SF},10); put(rows,rT,'G',{f:`SUM(G${r0}:G${rN})`,v:1},11);
+    B.forEach((b,k)=>{ const cb=CL(c0+k*2+1); put(rows,rT,cb,{f:`SUM(${cb}${r0}:${cb}${rN})`,v:null},11); });
+    put(rows,rT,CL(cT+2),{f:`SUM(${CL(cT+2)}${r0}:${CL(cT+2)}${rN})`,v:null},11);
+    const cAct=CL(c0+(nB-1)*2+1);
+    put(rows,rT+2,'B',`Monto del certificado N° ${num}`,9); put(rows,rT+2,'C',{f:`${cAct}${rT}*F${rT}`,v:S.monto},10); merges.push(`C${rT+2}:E${rT+2}`); put(rows,rT+2,'D','',10); put(rows,rT+2,'E','',10);
+    put(rows,rT+3,'B',`Porcentaje del certificado N° ${num}`,9); put(rows,rT+3,'C',{f:`${cAct}${rT}`,v:S.pct},11); merges.push(`C${rT+3}:E${rT+3}`); put(rows,rT+3,'D','',11); put(rows,rT+3,'E','',11);
+    put(rows,rT+5,'B','Total acumulado: gris = ítem completo (llegó a lo contratado) · azul = ítem en avance',0);
+    const widths=[7,46,8,12,14,17,11,14]; B.forEach(()=>widths.push(12,11)); widths.push(14,12,11);
+    sheets.push({name:'Certificado',xml:hoja({rows,widths,merges,freeze:4,ultCol:ult,logo:true,land:true})}); }
   // 2) Detalle por frente
   { const rows={}, merges=[]; const G=ceGrupos(C.pliego), n0=ceNIni(C);
     const usados=G.filter(g=>C.rows.some(r=>ceCant(r,g.tipo)>1e-9||MT[g.tipo].f.some(([k])=>!['WP','Z','AL','AD'].includes(k)&&ceN(r.v[k])>0)));
