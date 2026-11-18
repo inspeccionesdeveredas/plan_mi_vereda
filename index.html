@@ -1920,7 +1920,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 18/11 12:53</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 18/11 13:03</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -2737,9 +2737,11 @@ const ceN=v=>numTrab(v)||0;
 const CE_PCTS=[100,90,80,75,70,60,50,40,30,25,20];
 function cePct(r){ const x=numTrab((r.v||{}).WP); return x==null||x<=0||x>100?100:x; }
 function ceVals(r){ const v={}; Object.values(MT).forEach(m=>m.f.forEach(([k])=>{ v[k]=ceN((r.v||{})[k]); })); return v; }
-function ceCalcT(r,tipo){ const m=MT[tipo], v=ceVals(r), c={}; m.r.forEach(([k,,,fn])=>c[k]=fn(v,r)); return c; }
-function ceCant(r,tipo){ const m=MT[tipo], v=ceVals(r); return m.q(ceCalcT(r,tipo),v)||0; }
-const ceF=(n,u)=>(Math.round(n*100)/100).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2})+(u?' '+u:'');
+// cada resultado de cada vereda se redondea a 2 decimales (como se imprime), así el total es la suma de lo que se ve en el PDF y en el Excel
+const ceR2=x=>Math.round((+x+(x>=0?1:-1)*1e-9)*100)/100;
+function ceCalcT(r,tipo){ const m=MT[tipo], v=ceVals(r), c={}; m.r.forEach(([k,,,fn])=>c[k]=ceR2(fn(v,r))); return c; }
+function ceCant(r,tipo){ const m=MT[tipo], v=ceVals(r); return ceR2(m.q(ceCalcT(r,tipo),v)||0); }
+const ceF=(n,u)=>(Math.round((+n+(n>=0?1:-1)*1e-9)*100)/100).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2})+(u?' '+u:'');
 const ceF4=n=>(Math.round(n*10000)/10000).toLocaleString('es-AR',{maximumFractionDigits:4});
 const cePc=n=>(n*100).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2})+'%';
 const ce$=n=>'$ '+(Math.round(n*100)/100).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -3008,7 +3010,7 @@ function ceDeGuardado(c){ const d=ceDatos(c); return {num:String(c.numero),plieg
 const ceUpper=s=>String(s||'').toLocaleUpperCase('es-AR');
 function ceMembrete(){ return `<div class="ci-mem"><img class="ci-lg" src="${MEMB_LOGO}" alt=""><div class="ci-sec">SECRETARÍA DE OBRAS PÚBLICAS<br>SUBSECRETARÍA DE OBRAS PÚBLICAS</div><img class="ci-es" src="${MEMB_ESCUDO}" alt=""></div>`; }
 const ciHoja=(cont,primera,clase)=>`<table class="ci-hoja${primera?'':' ci-salto'}${clase?' '+clase:''}"><thead><tr><td>${ceMembrete()}</td></tr></thead><tbody><tr><td>${cont}</td></tr></tbody><tfoot><tr><td class="ci-pie"></td></tr></tfoot></table>`;
-const ciN=(v,dec)=>v==null||v===''||(typeof v==='number'&&Math.abs(v)<1e-9&&dec!=='z')?'':(Math.round(+v*100)/100).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const ciN=(v,dec)=>v==null||v===''||(typeof v==='number'&&Math.abs(v)<1e-9&&dec!=='z')?'':(Math.round((+v+(v>=0?1:-1)*1e-9)*100)/100).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});
 const ci$=v=>'$ '+(Math.round(v*100)/100).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});
 function ceListaItems(l){ l=l.map(x=>esc(x)); return l.length<=1?(l[0]||''):l.slice(0,-1).join(', ')+' y '+l[l.length-1]; }
 function ceInformeHtml(C){
@@ -3168,8 +3170,8 @@ function ceXlsx(C){
     C.rows.forEach((d,j)=>{ const r=r0+j; put(rows,r,'A',n0+j,13); put(rows,r,'B',d.calle||'',4); const nro=String(d.nro||'').trim(); put(rows,r,'C',/^\d+([.,]\d+)?$/.test(nro)?+nro.replace(',','.'):nro,13);
       cols.forEach(({g,gc})=>{ const ref={}; gc.forEach(o=>ref[o.k]=o.col+r); const c=ceCalcT(d,g.tipo), v=ceVals(d);
         gc.forEach(o=>{ if(o.f){ if(o.k==='WP'){ put(rows,r,o.col,(v.U||v.V)?cePct(d)/100:null,7); return; } const x=numTrab(d.v[o.k]); put(rows,r,o.col,x==null?null:x,5); return; }
-          if(o.q){ put(rows,r,o.col,{f:`${ref.M}+${ref.N}+${ref.O}`,v:ceCant(d,g.tipo)},8); return; }
-          let f=o.fx.replace(/[A-Z]{1,2}/g,k=>ref[k]||k); if(g.tipo==='contrapiso') f=`${ref.U}*${ref.V}*IF(${ref.WP}="",1,${ref.WP})`; put(rows,r,o.col,{f,v:c[o.k]},8); }); }); });
+          if(o.q){ put(rows,r,o.col,{f:`ROUND(${ref.M}+${ref.N}+${ref.O},2)`,v:ceCant(d,g.tipo)},8); return; }
+          let f=o.fx.replace(/[A-Z]{1,2}/g,k=>ref[k]||k); if(g.tipo==='contrapiso') f=`${ref.U}*${ref.V}*IF(${ref.WP}="",1,${ref.WP})`; put(rows,r,o.col,{f:`ROUND(${f},2)`,v:c[o.k]},8); }); }); });
     cols.forEach(({gc})=>gc.forEach(o=>{ if(o.r||o.q||['N','O','BG','BI','BJ','BK','Y','AC','AK','AX'].includes(o.k)) put(rows,rT,o.col,{f:`SUM(${o.col}${r0}:${o.col}${rN})`,v:C.rows.reduce((s,d)=>s+(o.q?ceCant(d,cols.find(x=>x.gc.includes(o)).g.tipo):o.r?(ceCalcT(d,cols.find(x=>x.gc.includes(o)).g.tipo)[o.k]||0):ceN(d.v[o.k])),0)},15); }));
     put(rows,rT,'B','TOTALES',9);
     const ay=[], lbl=(g,k)=>((MT[g.tipo].f.find(x=>x[0]===k)||[])[1]||k);
@@ -3177,7 +3179,7 @@ function ceXlsx(C){
       if(o.q) fx='Escombros contrapiso + Escombros cazuelas + Cordon';
       else if(o.r){ fx=g.tipo==='contrapiso'?'Longitud x Ancho x % a certificar (el % depende del espesor que realizo la empresa)':o.fx.replace(/\*/g,' x ').replace(/[A-Z]{1,2}/g,k=>lbl(g,k)); }
       if(fx){ const nom=o.l.replace(/\s*\[.*\]/,''); ay.push({r:`${o.col}${r0}:${o.col}${rN}`,t:nom.slice(0,32),p:`${nom} = ${fx}. Fila TOTALES: suma de todas las veredas = Medicion del item ${g.item} en la hoja Certificado.`});
-        GUIA.push(['Detalle por frente',`Ítem ${g.item} · ${o.l}`,'= '+fx.replace(/ x /g,' × '),`${nom} de cada vereda (frente).`,`Se calcula con las medidas que carga el inspector en la app. La fila TOTALES suma todas las veredas y ese total es la Medición del ítem ${g.item} en la hoja Certificado.`]); }
+        GUIA.push(['Detalle por frente',`Ítem ${g.item} · ${o.l}`,'= '+fx.replace(/ x /g,' × '),`${nom} de cada vereda (frente).`,`Se calcula con las medidas que carga el inspector en la app y se redondea a 2 decimales en cada vereda. La fila TOTALES suma todas las veredas y ese total es la Medición del ítem ${g.item} en la hoja Certificado.`]); }
       else if(o.k==='WP') ay.push({r:`${o.col}${r0}:${o.col}${rN}`,t:'% a certificar',p:'Porcentaje del contrapiso que se certifica. Depende del espesor que realizo la empresa (con menos espesor se certifica 50 %, 60 %, etc.).'}); }));
     GUIA.push(['Detalle por frente','TOTALES','= SUMA de la columna','Total del ítem en este certificado.','Es lo que pasa a la columna Medición de la hoja Certificado.']);
     sheets.push({name:'Detalle por frente',xml:hoja({rows,widths,merges,freeze:4,ultCol:ult,logo:!S,land:true,ayuda:ay})}); }
