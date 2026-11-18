@@ -169,6 +169,16 @@ body.rol-sec #gear{display:none!important}
 .ce-gl{display:flex;flex-direction:column;gap:8px}.ce-g{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border:1px solid #d3dbe6;border-radius:10px;padding:8px 12px}
 .ce-g small{display:block;color:#4a5a70;font-size:12px;margin-top:2px}.ce-gb{display:flex;gap:6px;flex-wrap:wrap}.ce-gb .btn{padding:6px 12px;min-height:0}
 /* informe completo del certificado (PDF) */
+#certPrint .ci-p1 .ci-mem{margin-bottom:6px}#certPrint .ci-p1 .ci-dest{font-size:11.5px;line-height:1.4;margin-top:0}#certPrint .ci-p1 .ci-exp{margin:2px 0 6px;font-size:11px}
+#certPrint .ci-p1 .ci-p{font-size:11px;line-height:1.5;margin:0 0 6px}#certPrint .ci-p1 .ci-tit{margin:6px 0 4px;font-size:12.5px}#certPrint .ci-p1 .ci-cen{font-size:11px;line-height:1.45;margin:0 0 6px}
+#certPrint .ci-hz.ci-p1 .ci-cert{font-size:7.4px}#certPrint .ci-hz.ci-p1 .ci-cert th{font-size:7px}#certPrint .ci-hz.ci-p1 .ci-cert td{padding:1.2px 3px}
+#certPrint .ci-hoja>thead>tr>td{padding-top:0}#certPrint .ci-hoja>tfoot>tr>td.ci-pie{height:9mm;padding:0;border:0}
+@media print{body.con-cert #certPrint{padding:0 12mm}#certPrint>*:first-child:not(.ci-hoja){margin-top:9mm}#certPrint .ci-hoja>thead>tr>td{padding-top:9mm!important}}
+#certPrint .cc-tit{text-align:center;font-size:14px;font-weight:800;margin:2px 0 6px;letter-spacing:.02em}
+#certPrint .cc-obra{font-size:10.5px;margin:0 0 5px}
+#certPrint .cc-cab{display:grid;grid-template-columns:1.2fr .9fr 1.2fr;gap:4px 18px;font-size:9.5px;line-height:1.45;margin:0 0 8px}#certPrint .cc-cab b{font-weight:700}
+#certPrint .cc-t{font-size:7.6px!important}#certPrint .cc-t th{font-size:7.2px!important;background:#e6e6e6}#certPrint .cc-t th.cc-g{background:#d0d0d0;letter-spacing:.04em}
+#certPrint .cc-t tr.cc-rub td{background:#d9d9d9;font-weight:800}#certPrint .cc-t tfoot td{border:.6px solid #555!important;background:#eee;font-weight:800}
 #certPrint .cf-tit{text-align:center;font-size:13px;font-weight:700;text-decoration:underline;margin:4px 0 4px}
 #certPrint .cf-sub{text-align:center;font-size:11px;margin:0 0 12px}
 #certPrint .cf-v{break-inside:avoid;page-break-inside:avoid;border:.8px solid #9aa5b4;border-radius:4px;margin:0 0 12px;padding:8px 10px}
@@ -200,7 +210,13 @@ body.rol-sec #gear{display:none!important}
 #certPrint .ci-t .ci-gr{background:#d9d9d9}#certPrint .ci-t .ci-gt{background:#fff;font-weight:600;font-size:7px}#certPrint .ci-t th.ci-rs{background:#e4e2f0}
 #certPrint .ci-t tr.ci-rub td{font-weight:700}
 #certPrint .ci-t tfoot td{border:0;font-weight:700}#certPrint .ci-t tfoot td.n{border:.6px solid #555}#certPrint .ci-rojo{color:#e00000;font-weight:700}
-#certPrint .ci-dets{line-height:0}#certPrint .ci-det{font-size:7.4px;width:auto;display:inline-table;vertical-align:top;margin:0 14px 16px 0;line-height:1.25}#certPrint .ci-det th{font-size:6.8px;min-width:44px;max-width:70px}#certPrint .ci-det th:nth-child(-n+3){min-width:0}#certPrint .ci-det td{min-width:30px}#certPrint .ci-det td.l{min-width:62px}#certPrint .ci-det tr{break-inside:avoid}
+#certPrint .ci-dets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 14px;align-items:start}
+#certPrint .ci-det{font-size:7.2px;width:100%;display:table;table-layout:fixed;margin:0;line-height:1.15}
+#certPrint .ci-det col.cn{width:22px}#certPrint .ci-det col.cc{width:68px}#certPrint .ci-det col.ca{width:26px}
+#certPrint .ci-det thead th{padding:0 2px!important;font-size:6.4px}#certPrint .ci-det .hd1{height:19px;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:6.8px;line-height:1.1}
+#certPrint .ci-det .hd2{height:30px;display:flex;align-items:center;justify-content:center;overflow:hidden;line-height:1.1;overflow-wrap:anywhere}
+#certPrint .ci-det tbody td,#certPrint .ci-det tfoot td{height:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:1px 2px}
+#certPrint .ci-det tr{break-inside:avoid}#certPrint .ci-det{break-inside:avoid;page-break-inside:avoid}
 #certPrint .ci-ed{font-size:7px}
 
 #vistaCert .ce-pct select{width:100%;font:inherit;padding:8px 6px;border:1px solid #c9d3df;border-radius:8px;background:#fff}
@@ -248,7 +264,7 @@ body:not(.listo) .home,body:not(.listo) .wrap>footer{visibility:hidden}
 @media print{
   body.con-cert{overflow:visible!important;background:#fff!important;display:block!important;min-height:0!important}
   body.con-cert > *:not(#certPrint){display:none!important}
-  body.con-cert #certPrint{display:block!important;color:#10233f;font:9px/1.3 system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body.con-cert #certPrint{padding:9mm 12mm;box-sizing:border-box;display:block!important;color:#10233f;font:9px/1.3 system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 .cp-head{display:flex;align-items:center;gap:14px;background:#004174;color:#fff;border-radius:6px;padding:10px 14px}
 .cp-head .cp-logo{line-height:0;color:#fff}.cp-head .cp-logo svg{height:34px;width:auto}
@@ -1691,10 +1707,18 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
           <label>Período hasta<input id="ceHasta" type="date"></label>
           <details class="ce-nt"><summary>Datos de la nota (expediente, obra, destinatario)</summary>
             <div class="ce-ntf">
-              <label>Exp. Ref.<input id="ceExp" placeholder="Ej: 009318-SO-2026"></label>
+              <label>Expediente (Exp. Ref.)<input id="ceExp" placeholder="Ej: 009318-SO-2026"></label>
               <label>O.C. N.°<input id="ceOc" placeholder="Ej: 37/2026"></label>
               <label class="ce-w">Obra<textarea id="ceObra" rows="2" placeholder="Ej: CONTROL URBANO – REPARACIONES DE VEREDAS S/ ORDENANZA 16348 – ZONA CENTRO – ETAPA IV"></textarea></label>
               <label class="ce-w">Destinatario<textarea id="ceDest" rows="3"></textarea></label>
+              <label>Contratista<input id="ceContr" placeholder="Ej: COMPAÑÍA DEL NORTE S.R.L."></label>
+              <label>Importe del contrato<input id="ceImporte" inputmode="decimal" placeholder="Vacío = suma del valor de obra"></label>
+              <label>Fecha O.C.<input id="ceFechaOc" type="date"></label>
+              <label>Representante técnico<input id="ceRepTec" placeholder="Ej: ING. ..."></label>
+              <label>Inspector<input id="ceInsp" placeholder="Ej: ING. ..."></label>
+              <label>Inicio de obra<input id="ceInicio" type="date"></label>
+              <label>Plazo de obra<input id="cePlazo" placeholder="Ej: 60 DÍAS"></label>
+              <label>Fecha de terminación<input id="ceFin" type="date"></label>
               <label>Primer N° de frente<input id="ceNIni" inputmode="numeric"></label>
             </div>
             <p class="ce-nota">Se completan solos con los del último certificado guardado del pliego.</p>
@@ -1892,7 +1916,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 18/11 08:02</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 18/11 11:21</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -2343,8 +2367,9 @@ function obraBtns(d){ if(!esObra()) return '';
 // muestra solo N filas visibles; el resto se ve deslizando dentro del cuadro
 function limFilas(box,sel,n,extra){ if(!box) return; requestAnimationFrame(()=>{ const rows=[...box.querySelectorAll(sel)]; if(!box.offsetParent) return;
   if(rows.length<=n){ box.style.maxHeight=''; box.classList.remove('lim'); return; }
-  const top=box.getBoundingClientRect().top, fin=rows[n-1].getBoundingClientRect().bottom;
-  box.style.maxHeight=Math.ceil(fin-top+(extra||0))+'px'; box.classList.add('lim'); }); }
+  // se mide desde el principio de la tabla aunque esté desplazada (antes, si la tabla estaba scrolleada al actualizarse, quedaba de 2 filas)
+  const top=box.getBoundingClientRect().top-box.scrollTop, fin=rows[n-1].getBoundingClientRect().bottom;
+  const h=Math.ceil(fin-top+(extra||0)); if(h>40) box.style.maxHeight=h+'px'; box.classList.add('lim'); }); }
 // ---- vista del administrador: lo que cargan los inspectores de obra
 let oaFiltro='', oaCalle='', oaPl='';
 const fmtF=ms=>{ try{ return new Date(+ms).toLocaleString('es-AR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}); }catch(e){ return ''; } };
@@ -2756,8 +2781,9 @@ function cePrecargar(){ if(CE.rows.length||String(CE.num||'').trim()) return; co
   const h=ceFechaIso(u.hasta); if(h){ const d=new Date(h+'T12:00:00'); d.setDate(d.getDate()+1); CE.desde=d.toISOString().slice(0,10); }
   const nd=ceDatos(u).nota||{}; CE.nota=Object.assign({},nd,{nIni:''}); if(ceDatos(u).comp!=null) CE.comp=ceDatos(u).comp; ceGuardar(); }
 function ceCabecera(){ $('ceNum').value=CE.num||''; $('ceFecha').value=CE.fecha||''; $('ceDesde').value=CE.desde||''; $('ceHasta').value=CE.hasta||'';
-  const n=CE.nota||{}; $('ceDest').value=n.dest!=null?n.dest:CE_DEST; $('ceExp').value=n.exp||''; $('ceObra').value=n.obra||''; $('ceOc').value=n.oc||''; $('ceNIni').value=n.nIni||''; $('ceNIni').placeholder=String(ceNIniAuto(CE)); }
-const CE_DEST='A LA SUBSECRETARÍA\nDE INSPECCIÓN Y CERTIFICACIONES\nING. EVELIA DIAZ';
+  const n=CE.nota||{}; $('ceDest').value=ceDest(n); $('ceExp').value=n.exp||''; $('ceObra').value=n.obra||''; $('ceOc').value=n.oc||''; $('ceNIni').value=n.nIni||''; $('ceNIni').placeholder=String(ceNIniAuto(CE)); [['ceContr','contratista'],['ceImporte','importe'],['ceFechaOc','fechaOc'],['ceRepTec','repTec'],['ceInsp','inspector'],['ceInicio','inicio'],['cePlazo','plazo'],['ceFin','fin']].forEach(([id,k])=>{ if($(id)) $(id).value=n[k]||''; }); }
+const CE_DEST='CONTROL DE OBRAS COMPLEMENTARIAS\nARQ. LUCIANA HERRANDO', CE_DEST_VIEJO='A LA SUBSECRETARÍA\nDE INSPECCIÓN Y CERTIFICACIONES\nING. EVELIA DIAZ';
+const ceDest=n=>{ const d=n&&n.dest!=null?String(n.dest):''; return !d.trim()||d.trim()===CE_DEST_VIEJO?CE_DEST:d; };   // el destinatario viejo se reemplaza solo
 function ceNIniAuto(C){ const ant=ceAnteriores(C); let n=1; ant.forEach(c=>{ const d=ceDatos(c), x=numTrab((d.nota||{}).nIni); n=(x&&x>0?Math.round(x):n)+(d.veredas||[]).length; }); return n; }
 const ceNIni=C=>{ const x=numTrab((C.nota||{}).nIni); return x&&x>0?Math.round(x):ceNIniAuto(C); };
 function cerrarCert(){ $('vistaCert').hidden=true; const otra=!$('obraBox').hidden||!$('obraAdm').hidden; document.body.style.overflow=otra?'hidden':''; }
@@ -2866,7 +2892,7 @@ $('ceNum').oninput=()=>{ CE.num=$('ceNum').value; ceGuardar(); };
 $('ceFecha').oninput=()=>{ CE.fecha=$('ceFecha').value; ceGuardar(); };
 $('ceDesde').oninput=()=>{ CE.desde=$('ceDesde').value; ceGuardar(); };
 $('ceHasta').oninput=()=>{ CE.hasta=$('ceHasta').value; ceGuardar(); };
-[['ceDest','dest'],['ceExp','exp'],['ceObra','obra'],['ceOc','oc'],['ceNIni','nIni']].forEach(([id,k])=>{ $(id).oninput=()=>{ CE.nota=CE.nota||{}; CE.nota[k]=$(id).value; ceGuardar(); if(k==='nIni') renderCert(); }; });
+[['ceDest','dest'],['ceExp','exp'],['ceObra','obra'],['ceOc','oc'],['ceNIni','nIni'],['ceContr','contratista'],['ceImporte','importe'],['ceFechaOc','fechaOc'],['ceRepTec','repTec'],['ceInsp','inspector'],['ceInicio','inicio'],['cePlazo','plazo'],['ceFin','fin']].forEach(([id,k])=>{ $(id).oninput=()=>{ CE.nota=CE.nota||{}; CE.nota[k]=$(id).value; ceGuardar(); if(k==='nIni') renderCert(); }; });
 $('cePl').onchange=()=>{ CE.pliego=$('cePl').value; ceGuardar(); cePrecargar(); ceCabecera(); renderCert(); };
 document.addEventListener('click',e=>{ const b=e.target.closest('[data-cert]'); if(b) abrirCert(b.closest('#obraAdm')?'adm':''); });
 $('certCerrar').onclick=cerrarCert;
@@ -2939,24 +2965,42 @@ function ceDeGuardado(c){ const d=ceDatos(c); return {num:String(c.numero),plieg
 // ---- informe completo (PDF): nota, certificado, detalle por ítem, economías y demasías ----
 const ceUpper=s=>String(s||'').toLocaleUpperCase('es-AR');
 function ceMembrete(){ return `<div class="ci-mem"><img class="ci-lg" src="${MEMB_LOGO}" alt=""><div class="ci-sec">SECRETARÍA DE OBRAS PÚBLICAS<br>SUBSECRETARÍA DE OBRAS PÚBLICAS</div><img class="ci-es" src="${MEMB_ESCUDO}" alt=""></div>`; }
-const ciHoja=(cont,primera,clase)=>`<table class="ci-hoja${primera?'':' ci-salto'}${clase?' '+clase:''}"><thead><tr><td>${ceMembrete()}</td></tr></thead><tbody><tr><td>${cont}</td></tr></tbody></table>`;
+const ciHoja=(cont,primera,clase)=>`<table class="ci-hoja${primera?'':' ci-salto'}${clase?' '+clase:''}"><thead><tr><td>${ceMembrete()}</td></tr></thead><tbody><tr><td>${cont}</td></tr></tbody><tfoot><tr><td class="ci-pie"></td></tr></tfoot></table>`;
 const ciN=(v,dec)=>v==null||v===''||(typeof v==='number'&&Math.abs(v)<1e-9&&dec!=='z')?'':(Math.round(+v*100)/100).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});
 const ci$=v=>'$ '+(Math.round(v*100)/100).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});
 function ceListaItems(l){ l=l.map(x=>esc(x)); return l.length<=1?(l[0]||''):l.slice(0,-1).join(', ')+' y '+l[l.length-1]; }
 function ceInformeHtml(C){
   const S=ceResumen(C), n=C.nota||{}, num=String(C.num||'').trim()||'—';
-  const dest=(n.dest!=null?n.dest:CE_DEST).split('\n').filter(x=>x.trim()).map(x=>esc(x)).join('<br>');
+  const dest=ceDest(n).split('\n').filter(x=>x.trim()).map(x=>esc(x)).join('<br>');
   const obra=n.obra?esc(ceUpper(n.obra)):'<span class="ci-falta">NOMBRE DE LA OBRA</span>';
   let h1=`<div class="ci-dest">${dest}<br>S____________/____________D:</div>
     <div class="ci-exp">Exp. Ref.: <b>${esc(n.exp||'')}</b></div>
     <p class="ci-p">Tengo el agrado de dirigirme a usted, a fin de elevar, de oficio por parte de esta Inspección de Obra, el certificado parcial N°${esc(num)} correspondiente a la obra de referencia “<b>${obra}</b>”${n.oc?` – O.C. N.° ${esc(n.oc)}`:''}.-</p>
     <h2 class="ci-tit">CERTIFICADO PARCIAL N°${esc(num)}</h2>
     <p class="ci-cen">PERÍODO: ${esc(ceFechaTxt(C.desde))||'____'} AL ${esc(ceFechaTxt(C.hasta))||'____'}<br>PORCENTAJE DEL CERTIFICADO: <b>${S?(S.pct*100).toFixed(2)+' %':'—'}</b></p>`;
-  let hc=''; if(S){ hc=`<p class="ci-st ci-ct">CERTIFICADO PARCIAL N°${esc(num)} · PERÍODO ${esc(ceFechaTxt(C.desde))||'____'} AL ${esc(ceFechaTxt(C.hasta))||'____'}</p><table class="ci-t ci-cert"><thead><tr><th colspan="11" class="ci-vac"></th><th colspan="2" class="ci-gr">CERTIFICADO ${esc(num)}</th></tr>
+  let hv=''; if(S){ hv=`<table class="ci-t ci-cert"><thead><tr><th colspan="11" class="ci-vac"></th><th colspan="2" class="ci-gr">CERTIFICADO ${esc(num)}</th></tr>
     <tr><th>Ítem</th><th>Descripción</th><th>Unidad</th><th>Cantidad Contratada</th><th>Precio Unitario</th><th>Valor Obra</th><th>Incidencia Total</th><th>Cantidad acumulada al certificado N°${esc(S.numAnt)}</th><th class="ci-gr">MEDICIÓN ${esc(num)}</th><th>Saldo de Obra</th><th>% de Medición</th><th>Avance Cantidad</th><th>%</th></tr></thead><tbody>
     ${S.R.map(x=>x.titulo?`<tr class="ci-rub"><td>${esc(x.item)}</td><td class="c">${esc(x.desc)}</td><td colspan="11"></td></tr>`
       :`<tr><td>${esc(x.item)}</td><td class="l">${esc(x.desc)}</td><td>${esc(x.unidad)}</td><td class="n">${ciN(x.D,'z')}</td><td class="n">${ci$(x.PU)}</td><td class="n">${ci$(x.F)}</td><td class="n">${cePc(x.inc)}</td><td class="n">${ceF4(x.prev)}</td><td class="n ci-gr b">${ceF4(x.med)}</td><td class="n">${ciN(x.saldo,'z')}</td><td class="n">${cePc(x.pct)}</td><td class="n b">${ceF4(x.med)}</td><td class="n b">${cePc(x.pct)}</td></tr>`).join('')}
     </tbody><tfoot><tr><td colspan="12"></td><td class="n ci-rojo">${cePc(S.pct)}</td></tr></tfoot></table>`; }
+  h1+=hv;
+  let hc=''; if(S){ const T=k=>S.R.filter(x=>!x.titulo).reduce((s,x)=>s+k(x),0), ff=v=>v?esc(ceFechaTxt(v).replace(/-/g,'/')):'';
+    const dato=(l,v)=>`<div><b>${l}:</b> ${v||'<span class="ci-falta">—</span>'}</div>`;
+    hc=`<h2 class="cc-tit">CERTIFICADO PARCIAL DE OBRA Nº ${esc(num)}</h2>
+    <div class="cc-obra"><b>OBRA:</b> ${n.obra?esc(ceUpper(n.obra)):'<span class="ci-falta">—</span>'}</div>
+    <div class="cc-cab"><div>${dato('CONTRATISTA',esc(ceUpper(n.contratista||'')))}${dato('EXPEDIENTE DE PLIEGO Nº',esc(n.exp||''))}${dato('IMPORTE DEL CONTRATO',ci$(n.importe?ceNum(n.importe):S.SF))}${dato('ORDEN DE COMPRA Nº',esc(n.oc||''))}${dato('FECHA DE CERTIFICACIÓN',ff(C.fecha))}</div>
+      <div>${dato('FECHA O.C.',ff(n.fechaOc))}${dato('Período',C.desde||C.hasta?`del ${ff(C.desde)} al ${ff(C.hasta)}`:'')}</div>
+      <div>${dato('Representante Técnico',esc(n.repTec||''))}${dato('Inspector',esc(n.inspector||''))}${dato('Inicio de Obra',ff(n.inicio))}${dato('Plazo de Obra',esc(n.plazo||''))}${dato('Fecha de Terminación',ff(n.fin))}</div></div>
+    <table class="ci-t ci-cert cc-t"><thead><tr><th rowspan="2">Nº de Ítem</th><th rowspan="2">Descripción de Ítem</th><th rowspan="2">Unidad</th><th rowspan="2">Cantidad</th><th rowspan="2">Precio Unitario</th><th rowspan="2">Valor de Obra</th><th rowspan="2">% Incidencia Total</th><th colspan="7" class="cc-g">CERTIFICACIONES</th><th colspan="3" class="cc-g">ESTADO FINANCIERO</th></tr>
+      <tr><th>Total Anterior</th><th>Presente Medición</th><th>Acumulado</th><th>% Acum. ÍTEM</th><th>Incidencia Anterior</th><th>Incidencia Presente</th><th>Incidencia Acumulada</th><th>ANTERIOR</th><th>PRESENTE</th><th>TOTAL</th></tr></thead><tbody>
+    ${S.R.map(x=>x.titulo?`<tr class="cc-rub"><td>${esc(x.item)}</td><td colspan="16" class="l">${esc(ceUpper(x.desc))}</td></tr>`
+      :`<tr><td>${esc(x.item)}</td><td class="l">${esc(x.desc)}</td><td>${esc(x.unidad)}</td><td class="n">${ciN(x.D,'z')}</td><td class="n">${ci$(x.PU)}</td><td class="n">${ci$(x.F)}</td><td class="n">${cePc(x.inc)}</td>
+        <td class="n">${x.prev?ciN(x.prev,'z'):''}</td><td class="n b">${ciN(x.med,'z')}</td><td class="n">${ciN(x.acum,'z')}</td><td class="n">${cePc(x.D?x.acum/x.D:0)}</td>
+        <td class="n">${cePc(x.prev*x.pu/S.SF)}</td><td class="n b">${cePc(x.pct)}</td><td class="n">${cePc(x.acum*x.pu/S.SF)}</td>
+        <td class="n">${ci$(x.prev*x.pu)}</td><td class="n b">${ci$(x.monto)}</td><td class="n">${ci$(x.acum*x.pu)}</td></tr>`).join('')}
+    </tbody><tfoot><tr><td colspan="5" class="l">TOTALES</td><td class="n">${ci$(S.SF)}</td><td class="n">100,00%</td><td colspan="4"></td>
+      <td class="n">${cePc(T(x=>x.prev*x.pu)/S.SF)}</td><td class="n">${cePc(S.pct)}</td><td class="n">${cePc(T(x=>x.acum*x.pu)/S.SF)}</td>
+      <td class="n">${ci$(T(x=>x.prev*x.pu))}</td><td class="n">${ci$(S.monto)}</td><td class="n">${ci$(T(x=>x.acum*x.pu))}</td></tr></tfoot></table>`; }
   else h1+=`<p class="ci-p ci-falta">Faltan los ítems del pliego ${esc(C.pliego)} en la hoja “Certificación - ítems” para armar el cuadro del certificado.</p>`;
   // detalle por frente y por ítem
   const G=ceGrupos(C.pliego), n0=ceNIni(C);
@@ -2967,8 +3011,8 @@ function ceInformeHtml(C){
       if(o.k==='WP') return `<td>${(v.U||v.V)?cePct(r)+' %':''}</td>`; if(o.k==='_q') return `<td class="n b">${ciN(ceCant(r,g.tipo))}</td>`;
       if(o.r) return `<td class="n b">${ciN(c[o.k])}</td>`; const x=numTrab(r.v[o.k]); return `<td class="n">${x==null?'':ciN(x,'z')}</td>`; }).join('')}</tr>`; }).join('');
     const tot=cols.map(o=>{ if(o.k==='_q') return C.rows.reduce((s,r)=>s+ceCant(r,g.tipo),0); if(o.r) return C.rows.reduce((s,r)=>s+(ceCalcT(r,g.tipo)[o.k]||0),0); if(['N','O','BG','BI','BJ','BK','Y','AC','AK','AX'].includes(o.k)) return C.rows.reduce((s,r)=>s+ceN(r.v[o.k]),0); return null; });
-    return `<table class="ci-t ci-det"><thead><tr><th colspan="3" class="ci-vac"></th><th colspan="${cols.length}" class="ci-gt">ÍTEM ${esc(g.item)} · ${esc(ceUpper(g.t))}</th></tr>
-      <tr><th>N°</th><th>Calle</th><th>N°</th>${cols.map(o=>`<th${o.r?' class="ci-rs"':''}>${esc(o.l)}</th>`).join('')}</tr></thead><tbody>${filas}</tbody>
+    return `<table class="ci-t ci-det"><colgroup><col class="cn"><col class="cc"><col class="ca">${cols.map(()=>'<col>').join('')}</colgroup><thead><tr><th colspan="3" class="ci-vac"></th><th colspan="${cols.length}" class="ci-gt"><div class="hd1">ÍTEM ${esc(g.item)} · ${esc(ceUpper(g.t))}</div></th></tr>
+      <tr><th><div class="hd2">N°</div></th><th><div class="hd2">Calle</div></th><th><div class="hd2">N°</div></th>${cols.map(o=>`<th${o.r?' class="ci-rs"':''}><div class="hd2">${esc(o.l)}</div></th>`).join('')}</tr></thead><tbody>${filas}</tbody>
       <tfoot><tr><td colspan="3"></td>${tot.map(x=>`<td class="n ci-rojo">${x==null?'':ciN(x,'z')}</td>`).join('')}</tr></tfoot></table>`; }).join('');
   const h2=`<p class="ci-p2">Se detallan a continuación planillas con dimensiones por frentes ejecutados y por ítem.</p>${tablas?'<div class="ci-dets">'+tablas+'</div>':''}${tablas?'':'<p class="ci-p2">Sin mediciones cargadas.</p>'}`;
   // economías y demasías
@@ -3248,7 +3292,7 @@ function ceaPdfHtml(){ const L=ceaDatosDesc(); const fmt=(v,k)=>v==null||v===''?
     <div class="cp-res"><div><span>Veredas ejecutadas</span><b>${L.length}</b></div><div><span>Monto total pagado</span><b>$ ${Math.round(monto).toLocaleString('es-AR')}</b></div></div>
     <div class="cp-pie"><span>Municipalidad de Salta · Control urbano · Plan Mi Vereda</span><span>Generado el ${new Date().toLocaleString('es-AR')}</span></div>`; }
 function imprimirCert(html,titulo,pagina){ $('certPrint').innerHTML=html; const t0=document.title; document.title=titulo;
-  document.body.classList.add('con-cert'); let pg=$('certPage'); if(!pg){ pg=document.createElement('style'); pg.id='certPage'; document.head.appendChild(pg); } pg.textContent=pagina||'@page{size:A4 landscape;margin:9mm}';
+  document.body.classList.add('con-cert'); let pg=$('certPage'); if(!pg){ pg=document.createElement('style'); pg.id='certPage'; document.head.appendChild(pg); } pg.textContent=(pagina||'@page{size:A4 landscape;margin:9mm}').replace(/margin:[^;}]+/g,'margin:0');   // sin margen de página el navegador no imprime fecha, título ni la dirección web; el margen lo pone el contenido
   const volver=()=>{ document.title=t0; document.body.classList.remove('con-cert'); const pg=$('certPage'); if(pg) pg.textContent=''; window.removeEventListener('afterprint',volver); };
   window.addEventListener('afterprint',volver); toast('Elegí “Guardar como PDF” en la ventana de impresión',4000);
   setTimeout(()=>{ try{ window.print(); }catch(e){ toast('Este navegador no permite imprimir desde acá'); volver(); } },150); }
