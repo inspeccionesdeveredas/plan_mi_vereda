@@ -166,6 +166,16 @@ body.rol-sec #gear{display:none!important}
 .ce-gl{display:flex;flex-direction:column;gap:8px}.ce-g{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border:1px solid #d3dbe6;border-radius:10px;padding:8px 12px}
 .ce-g small{display:block;color:#4a5a70;font-size:12px;margin-top:2px}.ce-gb{display:flex;gap:6px;flex-wrap:wrap}.ce-gb .btn{padding:6px 12px;min-height:0}
 /* informe completo del certificado (PDF) */
+#certPrint .cf-tit{text-align:center;font-size:13px;font-weight:700;text-decoration:underline;margin:4px 0 4px}
+#certPrint .cf-sub{text-align:center;font-size:11px;margin:0 0 12px}
+#certPrint .cf-v{break-inside:avoid;page-break-inside:avoid;border:.8px solid #9aa5b4;border-radius:4px;margin:0 0 12px;padding:8px 10px}
+#certPrint .cf-vh{display:flex;justify-content:space-between;gap:10px;font-size:11.5px;border-bottom:.6px solid #c9d0da;padding-bottom:5px;margin-bottom:7px}#certPrint .cf-vh b{font-size:12.5px}
+#certPrint .cf-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+#certPrint .cf-c h5{margin:0 0 4px;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:#004174}
+#certPrint .cf-c img{display:block;width:100%;height:150px;object-fit:cover;border:.6px solid #b8c1cc;margin-bottom:4px}
+#certPrint .cf-c .cf-f{font-size:8.5px;color:#555;margin:-2px 0 4px}
+#certPrint .cf-sin{height:150px;display:grid;place-items:center;border:.6px dashed #b8c1cc;color:#888;font-size:10px}
+#certPrint tr,#certPrint tr:hover{background:transparent}#certPrint .ci-hoja>tbody>tr,#certPrint .ci-hoja>thead>tr{background:none!important}
 #certPrint .ci-hoja{width:100%;border-collapse:collapse;font-family:Carlito,Calibri,"Segoe UI",Arial,sans-serif;color:#000}
 #certPrint .ci-hoja>thead>tr>td,#certPrint .ci-hoja>tbody>tr>td{padding:0;border:0}
 #certPrint .ci-salto{break-before:page;page-break-before:always}#certPrint .ci-hz{page:horiz}#certPrint .ci-hz .ci-cert{font-size:9.6px}#certPrint .ci-hz .ci-cert th{font-size:9px}#certPrint .ci-hz .ci-cert td{padding:3px 4px}#certPrint .ci-ct{text-align:center}
@@ -293,10 +303,10 @@ body:not(.listo) .home,body:not(.listo) .wrap>footer{visibility:hidden}
 .obra-box[hidden]{display:none}
 .obra-box b{font-size:17px}.obra-box small{font-size:13px;color:var(--ink2)}
 #obraQ{font-size:18px;padding:12px 14px;border-radius:12px;border:1px solid var(--grid);margin-top:4px;background:var(--page);color:var(--ink)}
-.fotos{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.fotos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}@media (max-width:520px){.fotos{gap:6px}.fcol{padding:7px!important}}
 .fcol{background:var(--page);border-radius:12px;padding:10px}
 .ft{font-weight:700;font-size:13px;margin-bottom:8px}.ft span{color:var(--ink2);font-weight:600}
-.fgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:6px}
 .fth,.fadd{all:unset;box-sizing:border-box;cursor:pointer;aspect-ratio:1;border-radius:10px;overflow:hidden;position:relative}
 .fth img{width:100%;height:100%;object-fit:cover;display:block;background:var(--grid)}
 .fth i{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);color:#fff;font-size:10px;font-style:normal;text-align:center;padding:2px}
@@ -1690,6 +1700,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
             <button type="button" class="btn" id="ceEje">Agregar las ejecutadas del pliego</button>
             <button type="button" class="btn ce-xls" id="ceXls"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>Descargar Excel</button>
             <button type="button" class="btn ce-pdf" id="cePdf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>Informe completo (PDF)</button>
+            <button type="button" class="btn ce-pdf" id="ceFotos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Fotos de las veredas (PDF)</button>
             <button type="button" class="btn ce-save" id="ceGuardarPl">Guardar en la planilla</button>
             <button type="button" class="btn ce-new" id="ceNuevo">Nuevo certificado</button>
           </div>
@@ -1875,7 +1886,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 17/11 19:02</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 17/11 21:21</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -2310,7 +2321,7 @@ $('tbody').addEventListener('click',e=>{ if(e.target.closest('select,.est,.a-map
 // miniatura de la última foto de la vereda (en la columna Estado)
 function fotoMini(d){ if(!PWA||!d.src) return ''; let fs=[]; try{ fs=fotosDe(d); }catch(e){ return ''; } if(!fs.length) return '';
   const f=fs.filter(x=>x.tipo==='despues').pop()||fs[fs.length-1];
-  return `<button type="button" class="fmini" data-id="${d.id}" data-full="${esc(f.full)}" title="Ver foto (${f.tipo==='despues'?'después':'antes'})"><img src="${esc(f.src)}" alt="Foto" loading="lazy"></button>`; }
+  return `<button type="button" class="fmini" data-id="${d.id}" data-full="${esc(f.full)}" title="Ver foto (${f.tipo==='despues'?'después':f.tipo==='durante'?'durante':'antes'})"><img src="${esc(f.src)}" alt="Foto" loading="lazy"></button>`; }
 $('tbody').addEventListener('click',e=>{ const v=e.target.closest('.fmini'); if(!v) return; e.stopPropagation(); abrirFotoDe(v); },true);
 $('tCalleSel').onchange=e=>{ tCalle=e.target.value; render(); };
 $('tCatQ').addEventListener('input',()=>render()); { const rf=$('regForm'); ['pag','eje'].forEach(n=>rf[n].addEventListener('change',()=>{ if(rf[n].checked){ rf.paraEnt.checked=false; rf.entr.checked=true; } })); rf.paraEnt.addEventListener('change',()=>{ if(rf.paraEnt.checked){ rf.entr.checked=false; rf.pag.checked=false; rf.eje.checked=false; } }); rf.entr.addEventListener('change',()=>{ if(rf.entr.checked) rf.paraEnt.checked=false; else { rf.pag.checked=false; rf.eje.checked=false; } }); } $('tCedQ').addEventListener('input',()=>render());
@@ -2585,9 +2596,9 @@ $('obraPl').addEventListener('click',e=>{ const b=e.target.closest('[data-p]'); 
 $('obraTabs').addEventListener('click',e=>{ const b=e.target.closest('[data-t]'); if(!b) return; obTab=b.dataset.t; $('obraQ').value=''; obraBuscar(); });
 function fotosHtml(d,soloVer){
   const fs=fotosDe(d), col=tipo=>{ const l=fs.filter(f=>f.tipo===tipo);
-    return `<div class="fcol"><div class="ft">${tipo==='antes'?'Antes':'Después'} <span>${l.length||''}</span></div><div class="fgrid">${l.map(f=>`<span class="fth-w"><button type="button" class="fth" data-id="${d.id}" data-full="${esc(f.full)}"><img src="${esc(f.src)}" alt="Foto ${tipo}" loading="lazy">${f.pend?'<i>sin subir</i>':''}</button>${(!soloVer||esAdmApp())?`<button type="button" class="fdel" data-fdel="${esc(f.id||f.fid)}" aria-label="Eliminar foto">×</button>`:''}</span>`).join('')}
+    return `<div class="fcol"><div class="ft">${tipo==='antes'?'Antes':tipo==='durante'?'Durante':'Después'} <span>${l.length||''}</span></div><div class="fgrid">${l.map(f=>`<span class="fth-w"><button type="button" class="fth" data-id="${d.id}" data-full="${esc(f.full)}"><img src="${esc(f.src)}" alt="Foto ${tipo}" loading="lazy">${f.pend?'<i>sin subir</i>':''}</button>${(!soloVer||esAdmApp())?`<button type="button" class="fdel" data-fdel="${esc(f.id||f.fid)}" aria-label="Eliminar foto">×</button>`:''}</span>`).join('')}
       ${soloVer?(l.length?'':'<span class="fsin">Sin fotos</span>'):`<button type="button" class="fadd" data-foto="${tipo}" data-id="${d.id}" aria-label="Agregar foto ${tipo}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span>Agregar</span></button>`}</div></div>`; };
-  return `<div class="fotos">${col('antes')}${col('despues')}</div>`;
+  return `<div class="fotos">${col('antes')}${col('durante')}${col('despues')}</div>`;
 }
 let fotoPend=null;
 $('obraFile').onchange=e=>{ const f=e.target.files&&e.target.files[0]; e.target.value=''; if(!f||!fotoPend) return; const d=DATA.find(x=>x.id===fotoPend.id); if(d) pwAgregarFoto(d,fotoPend.tipo,f); fotoPend=null; };
@@ -2912,6 +2923,26 @@ function ceInformeHtml(C){
       ${S.R.map(x=>x.titulo?`<tr class="ci-rub"><td>${esc(x.item)}</td><td class="c">${esc(x.desc)}</td><td colspan="7"></td></tr>`:`<tr><td>${esc(x.item)}</td><td class="l">${esc(x.desc)}</td><td>${esc(x.unidad)}</td><td class="n">${ciN(x.D,'z')}</td><td class="n">${ci$(x.pu)}</td><td class="n b">${x.dem>1e-9?ceF4(x.dem):''}</td><td class="n">${x.dem>1e-9?ci$(x.dem*x.pu):'$ -'}</td><td class="n b">${x.econ>1e-9?ceF4(x.econ):''}</td><td class="n">${x.econ>1e-9?ci$(x.econ*x.pu):'$ -'}</td></tr>`).join('')}
       </tbody><tfoot><tr><td colspan="5"></td><td></td><td class="n b">${ci$(S.demImp)}</td><td></td><td class="n b">${ci$(S.econImp)}</td></tr></tfoot></table>`; }
   return ciHoja(h1,true)+(hc?ciHoja(hc,false,'ci-hz'):'')+ciHoja(h2)+(h3?ciHoja(h3):''); }
+// ---- registro fotográfico de las veredas del certificado (antes / durante / después) ----
+function ceFotosDe(r){ const d=(window.DATA_ALL||DATA).find(x=>(r.rid&&ceRid(x)===r.rid)||(r.vid!=null&&x.id===r.vid)); if(!d) return {d:null,l:[]};
+  let l=[]; try{ l=fotosDe(d); }catch(e){}
+  l=l.map(f=>({...f,img:f.pend||String(f.full).startsWith('data:')?f.full:String(f.full).replace(/sz=w\d+/,'sz=w1000')}));
+  return {d,l}; }
+function ceFotosHtml(C){ const n0=ceNIni(C), num=String(C.num||'').trim()||'—';
+  const T=[['antes','Antes'],['durante','Durante'],['despues','Después']];
+  const fch=f=>f&&+f.fecha?new Date(+f.fecha).toLocaleDateString('es-AR'):'';
+  const bloques=C.rows.map((r,i)=>{ const {d,l}=ceFotosDe(r);
+    return `<div class="cf-v"><div class="cf-vh"><span><b>N° ${n0+i} · ${esc(r.calle||'')} ${esc(r.nro||'')}</b>${d&&d.dom&&!String(d.dom).toLowerCase().includes(String(r.calle||'').toLowerCase())?` · ${esc(d.dom)}`:''}</span><span>${d&&d.cat?'Catastro '+esc(d.cat):''}${d&&d.ced!=null?` · Cédula ${esc(d.ced)}`:''}</span></div>
+      <div class="cf-g">${T.map(([k,t])=>{ const fs=l.filter(f=>f.tipo===k).slice(0,2); return `<div class="cf-c"><h5>${t}</h5>${fs.length?fs.map(f=>`<img src="${esc(f.img)}" alt="${t}">${fch(f)?`<div class="cf-f">${fch(f)}</div>`:''}`).join(''):'<div class="cf-sin">Sin foto</div>'}</div>`; }).join('')}</div></div>`; }).join('');
+  return ciHoja(`<h2 class="cf-tit">REGISTRO FOTOGRÁFICO · CERTIFICADO PARCIAL N°${esc(num)}</h2><p class="cf-sub">Pliego ${esc(C.pliego||'')}${C.desde||C.hasta?` · Período ${esc(ceFechaTxt(C.desde))} al ${esc(ceFechaTxt(C.hasta))}`:''} · ${C.rows.length} vereda${C.rows.length===1?'':'s'}</p>${bloques}`,true); }
+async function ceFotosPdf(C){ if(!C.rows.length){ toast('Agregá al menos una vereda al certificado'); return; }
+  const urls=[...new Set(C.rows.flatMap(r=>ceFotosDe(r).l.map(f=>f.img)))];
+  if(!urls.length&&!confirm('Las veredas de este certificado no tienen fotos cargadas. ¿Generar igual el archivo?')) return;
+  if(urls.length){ toast(`Cargando ${urls.length} foto${urls.length===1?'':'s'}…`,8000);
+    await Promise.race([Promise.all(urls.map(u=>new Promise(ok=>{ const im=new Image(); im.onload=im.onerror=ok; im.src=u; }))),new Promise(ok=>setTimeout(ok,25000))]); }
+  imprimirCert(ceFotosHtml(C),`Fotos - Certificado ${C.num||''} - Pliego ${C.pliego||''}`,'@page{size:A4 portrait;margin:10mm 12mm}');
+  setTimeout(()=>{},0); }
+$('ceFotos').onclick=()=>ceFotosPdf(CE);
 const CE_PAG_INF='@page{size:A4 portrait;margin:10mm 12mm} @page horiz{size:A4 landscape;margin:10mm 12mm}';
 function ceInformePdf(C){ if(!C.rows.length){ toast('Agregá al menos una vereda al certificado'); return; }
   imprimirCert(ceInformeHtml(C),`Certificado ${C.num||''} - Pliego ${C.pliego||''} - informe completo`,CE_PAG_INF); }
@@ -2925,14 +2956,14 @@ function ceXlsx(C){
   // estilos: 0 normal · 1 título · 2 subtítulo · 3 encabezado · 4 texto · 5 número · 6 $ · 7 % · 8 número medición (gris) · 9 total número · 10 total $ · 11 total % rojo · 12 rubro · 13 texto centrado · 14 número 4 dec · 15 total número rojo · 16 título sin logo · 17 subtítulo sin logo · 18 grupo
   const cel=(ref,v,s)=>{ if(v==null||v==='') return `<c r="${ref}" s="${s||0}"/>`; if(typeof v==='number') return `<c r="${ref}" s="${s||0}"><v>${Math.round(v*1e8)/1e8}</v></c>`;
     if(typeof v==='object') return `<c r="${ref}" s="${s||0}"><f>${xe(v.f)}</f>${v.v!=null&&isFinite(v.v)?`<v>${Math.round(v.v*1e8)/1e8}</v>`:''}</c>`; return `<c r="${ref}" s="${s||0}" t="inlineStr"><is><t xml:space="preserve">${xe(v)}</t></is></c>`; };
-  function hoja({rows,widths,merges,freeze,ultCol,logo,land}){ const ord=Object.keys(rows).map(Number).sort((a,b)=>a-b);
+  function hoja({rows,widths,merges,freeze,ultCol,logo,land,ayuda}){ const ord=Object.keys(rows).map(Number).sort((a,b)=>a-b);
     const sd=ord.map(r=>{ const R=rows[r]; const cs=Object.keys(R.c).map(c=>[c,R.c[c]]).sort((a,b)=>a[0].length-b[0].length||a[0].localeCompare(b[0])); return `<row r="${r}"${R.ht?` ht="${R.ht}" customHeight="1"`:''}>${cs.map(([c,[v,s]])=>cel(c+r,v,s)).join('')}</row>`; }).join('');
-    return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheetPr><pageSetUpPr fitToPage="1"/></sheetPr><dimension ref="A1:${ultCol}${ord[ord.length-1]||1}"/><sheetViews><sheetView workbookViewId="0">${freeze?`<pane ySplit="${freeze}" topLeftCell="A${freeze+1}" activePane="bottomLeft" state="frozen"/>`:''}</sheetView></sheetViews><cols>${widths.map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join('')}</cols><sheetData>${sd}</sheetData>${merges.length?`<mergeCells count="${merges.length}">${merges.map(m=>`<mergeCell ref="${m}"/>`).join('')}</mergeCells>`:''}<pageMargins left="0.3" right="0.3" top="0.5" bottom="0.5" header="0.3" footer="0.3"/><pageSetup paperSize="9" orientation="${land?'landscape':'portrait'}" fitToHeight="0"/></worksheet>`; }
+    return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheetPr><pageSetUpPr fitToPage="1"/></sheetPr><dimension ref="A1:${ultCol}${ord[ord.length-1]||1}"/><sheetViews><sheetView workbookViewId="0">${freeze?`<pane ySplit="${freeze}" topLeftCell="A${freeze+1}" activePane="bottomLeft" state="frozen"/>`:''}</sheetView></sheetViews><cols>${widths.map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join('')}</cols><sheetData>${sd}</sheetData>${merges.length?`<mergeCells count="${merges.length}">${merges.map(m=>`<mergeCell ref="${m}"/>`).join('')}</mergeCells>`:''}${ayuda&&ayuda.length?`<dataValidations count="${ayuda.length}">${ayuda.map(a=>`<dataValidation allowBlank="1" showInputMessage="1" promptTitle="${xe(a.t.slice(0,32)).replace(/"/g,'&quot;')}" prompt="${xe(a.p.slice(0,255)).replace(/"/g,'&quot;')}" sqref="${a.r}"/>`).join('')}</dataValidations>`:''}<pageMargins left="0.3" right="0.3" top="0.5" bottom="0.5" header="0.3" footer="0.3"/><pageSetup paperSize="9" orientation="${land?'landscape':'portrait'}" fitToHeight="0"/></worksheet>`; }
   const put=(rows,r,c,v,s,ht)=>{ rows[r]=rows[r]||{c:{}}; rows[r].c[c]=[v,s]; if(ht) rows[r].ht=ht; };
   const cab=(rows,merges,ult,t1,t2,logo)=>{ put(rows,1,'A',t1,logo?1:16,30); put(rows,2,'A',t2,logo?2:17,24); merges.push(`A1:${ult}1`,`A2:${ult}2`);
     const nU=ult.split('').reduce((a,ch)=>a*26+ch.charCodeAt(0)-64,0); for(let i=1;i<nU;i++){ put(rows,1,CL(i),'',logo?1:16); put(rows,2,CL(i),'',logo?2:17); } };
   const titulo=`CERTIFICADO PARCIAL N° ${num||'—'} · PLIEGO ${C.pliego||''}`, sub=`Municipalidad de Salta · Control urbano · Período ${ceFechaTxt(C.desde)||'—'} al ${ceFechaTxt(C.hasta)||'—'}`;
-  const sheets=[];
+  const sheets=[], GUIA=[];   // GUIA: [hoja, columna, fórmula, qué calcula, de dónde sale / por qué]
   // 1) Certificado: todos los certificados del pliego (los guardados anteriores + este), así el acumulado sale de la suma
   if(S){ const rows={}, merges=[];
     const ant=ceAnteriores(C), B=ant.map(c=>({num:String(c.numero),it:ceDatos(c).items||{},act:false})).concat([{num,it:null,act:true}]);
@@ -2961,7 +2992,22 @@ function ceXlsx(C){
     put(rows,rT+3,'B',`Porcentaje del certificado N° ${num}`,9); put(rows,rT+3,'C',{f:`${cAct}${rT}`,v:S.pct},11); merges.push(`C${rT+3}:E${rT+3}`); put(rows,rT+3,'D','',11); put(rows,rT+3,'E','',11);
     put(rows,rT+5,'B','Total acumulado: gris = ítem completo (llegó a lo contratado) · azul = ítem en avance',0);
     const widths=[7,46,8,12,14,17,11,14]; B.forEach(()=>widths.push(12,11)); widths.push(14,12,11);
-    sheets.push({name:'Certificado',xml:hoja({rows,widths,merges,freeze:4,ultCol:ult,logo:true,land:true})}); }
+    const it=`${r0}:`, R=c=>`${c}${r0}:${c}${rN}`, ay=[];
+    const A=(col,t,p,f,q,por)=>{ ay.push({r:col.includes(':')?col:R(col),t,p}); GUIA.push(['Certificado',t,f,q,por]); };
+    A('F','Valor Obra','Cantidad contratada x Precio unitario del item (viene de los items del pliego). Fila TOTAL: suma = monto total de la obra.','Dato (cantidad x precio)','Lo que vale el ítem en el contrato.','Sale de "Ítems del pliego". La fila TOTAL suma todos: es el valor total de la obra y es la base de todos los porcentajes.');
+    A('G','Incidencia Total','= Valor Obra del item / Valor total de la obra (fila TOTAL). Es el peso del item en la obra; la suma da 100 %.','= F / F(TOTAL)','El peso del ítem dentro de la obra.','Un ítem caro “pesa” más: si se termina, la obra avanza más que con uno barato. La suma de todas las incidencias da 100 %.');
+    A('H','Acumulado anterior','Cantidad ya certificada antes de usar la app (columna "Ya certificado" de los items del pliego). No es formula.','Dato','Lo certificado antes de empezar a usar la app.','Sale de la columna “Ya certificado” de los ítems del pliego. Los certificados que se guardan desde la app se suman aparte, en sus propias columnas.');
+    B.forEach((b,k)=>{ const ca=CL(c0+k*2), cb=CL(c0+k*2+1);
+      ay.push({r:R(ca),t:`Medicion ${b.num}`,p:`Cantidad certificada en el certificado ${b.num}: suma del Detalle por frente del item. Si lo medido supera lo que queda por certificar, el excedente va a Demasias.`});
+      ay.push({r:R(cb),t:`% medicion ${b.num}`,p:`= Medicion x (Valor Obra / Cantidad contratada) / Valor total de la obra. Cuanto avanza la obra entera por este item en el certificado ${b.num}. La fila TOTAL es el % del certificado.`}); });
+    GUIA.push(['Certificado','Medición (de cada certificado)','Dato','Cantidad certificada en ese certificado.','Es la suma de la hoja “Detalle por frente” para el ítem. Si lo medido supera lo que le queda al ítem, solo se certifica hasta completar lo contratado y el resto pasa a Demasías. En el ítem que compensa, se le suma la Economía.']);
+    GUIA.push(['Certificado','% de Medición (de cada certificado)','= Medición × (Valor Obra ÷ Cantidad contratada) ÷ Valor total de la obra','Cuánto avanza la obra completa por ese ítem en ese certificado.','Valor Obra ÷ Cantidad contratada es el precio unitario real del contrato. Multiplicado por la medición da la plata certificada del ítem, y al dividir por el valor total de la obra da el porcentaje. La fila TOTAL es el porcentaje del certificado.']);
+    A(CL(cT),'Total acumulado','= Acumulado anterior + todas las Mediciones. Gris = el item llego a lo contratado; azul = item en avance.','= H + Medición 1 + Medición 2 + …','Todo lo certificado del ítem hasta este certificado.','Suma lo certificado antes de la app más cada certificado guardado y este. Gris: llegó a la cantidad contratada (completo). Azul: todavía le queda saldo.');
+    A(CL(cT+1),'Saldo de Obra','= Cantidad contratada - Total acumulado. Lo que falta certificar del item; si da 0, lo que se mida de mas es demasia.','= D − Total acumulado','Lo que falta certificar del ítem.','Si llega a 0 el ítem está completo: lo que se siga midiendo ya no se puede certificar y va a Demasías.');
+    A(CL(cT+2),'% acumulado','= Total acumulado x (Valor Obra / Cantidad contratada) / Valor total de la obra. La fila TOTAL es el avance total de la obra.','= Total acumulado × (F ÷ D) ÷ F(TOTAL)','El avance acumulado de la obra por ese ítem.','Mismo cálculo que el % de Medición pero con todo lo acumulado. La fila TOTAL es el avance total de la obra.');
+    ay.push({r:`C${rT+2}`,t:'Monto del certificado',p:'= % del certificado (fila TOTAL de su columna %) x Valor total de la obra.'});
+    GUIA.push(['Certificado','Monto del certificado','= % del certificado × Valor total de la obra','La plata que se certifica en este certificado.','Es lo mismo que sumar, ítem por ítem, Medición × precio unitario del contrato.']);
+    sheets.push({name:'Certificado',xml:hoja({rows,widths,merges,freeze:4,ultCol:ult,logo:true,land:true,ayuda:ay})}); }
   // 2) Detalle por frente
   { const rows={}, merges=[]; const G=ceGrupos(C.pliego), n0=ceNIni(C);
     const usados=G.filter(g=>C.rows.some(r=>ceCant(r,g.tipo)>1e-9||MT[g.tipo].f.some(([k])=>!['WP','Z','AL','AD'].includes(k)&&ceN(r.v[k])>0)));
@@ -2983,7 +3029,15 @@ function ceXlsx(C){
           let f=o.fx.replace(/[A-Z]{1,2}/g,k=>ref[k]||k); if(g.tipo==='contrapiso') f=`${ref.U}*${ref.V}*IF(${ref.WP}="",1,${ref.WP})`; put(rows,r,o.col,{f,v:c[o.k]},8); }); }); });
     cols.forEach(({gc})=>gc.forEach(o=>{ if(o.r||o.q||['N','O','BG','BI','BJ','BK','Y','AC','AK','AX'].includes(o.k)) put(rows,rT,o.col,{f:`SUM(${o.col}${r0}:${o.col}${rN})`,v:C.rows.reduce((s,d)=>s+(o.q?ceCant(d,cols.find(x=>x.gc.includes(o)).g.tipo):o.r?(ceCalcT(d,cols.find(x=>x.gc.includes(o)).g.tipo)[o.k]||0):ceN(d.v[o.k])),0)},15); }));
     put(rows,rT,'B','TOTALES',9);
-    sheets.push({name:'Detalle por frente',xml:hoja({rows,widths,merges,freeze:4,ultCol:ult,logo:!S,land:true})}); }
+    const ay=[], lbl=(g,k)=>((MT[g.tipo].f.find(x=>x[0]===k)||[])[1]||k);
+    cols.forEach(({g,gc})=>gc.forEach(o=>{ const m=MT[g.tipo]; let fx='';
+      if(o.q) fx='Escombros contrapiso + Escombros cazuelas + Cordon';
+      else if(o.r){ fx=g.tipo==='contrapiso'?'Longitud x Ancho x % a certificar (el % depende del espesor que realizo la empresa)':o.fx.replace(/\*/g,' x ').replace(/[A-Z]{1,2}/g,k=>lbl(g,k)); }
+      if(fx){ const nom=o.l.replace(/\s*\[.*\]/,''); ay.push({r:`${o.col}${r0}:${o.col}${rN}`,t:nom.slice(0,32),p:`${nom} = ${fx}. Fila TOTALES: suma de todas las veredas = Medicion del item ${g.item} en la hoja Certificado.`});
+        GUIA.push(['Detalle por frente',`Ítem ${g.item} · ${o.l}`,'= '+fx.replace(/ x /g,' × '),`${nom} de cada vereda (frente).`,`Se calcula con las medidas que carga el inspector en la app. La fila TOTALES suma todas las veredas y ese total es la Medición del ítem ${g.item} en la hoja Certificado.`]); }
+      else if(o.k==='WP') ay.push({r:`${o.col}${r0}:${o.col}${rN}`,t:'% a certificar',p:'Porcentaje del contrapiso que se certifica. Depende del espesor que realizo la empresa (con menos espesor se certifica 50 %, 60 %, etc.).'}); }));
+    GUIA.push(['Detalle por frente','TOTALES','= SUMA de la columna','Total del ítem en este certificado.','Es lo que pasa a la columna Medición de la hoja Certificado.']);
+    sheets.push({name:'Detalle por frente',xml:hoja({rows,widths,merges,freeze:4,ultCol:ult,logo:!S,land:true,ayuda:ay})}); }
   // 3) Economías y demasías
   if(S){ const rows={}, merges=[]; cab(rows,merges,'I',`ECONOMÍAS Y DEMASÍAS · ${titulo}`,sub,false);
     put(rows,3,'F','DEMASÍAS',18); put(rows,3,'G','',18); put(rows,3,'H','ECONOMÍAS',18); put(rows,3,'I','',18); merges.push('F3:G3','H3:I3');
@@ -2994,7 +3048,24 @@ function ceXlsx(C){
       put(rows,r,'F',x.dem>1e-9?Math.round(x.dem*10000)/10000:null,14); put(rows,r,'G',{f:`F${r}*E${r}`,v:x.dem*x.pu},6); put(rows,r,'H',x.econ>1e-9?Math.round(x.econ*1e8)/1e8:null,14); put(rows,r,'I',{f:`H${r}*E${r}`,v:x.econ*x.pu},6); });
     for(let i=0;i<9;i++) put(rows,rT,CL(i),'',9); put(rows,rT,'B','TOTAL',9); put(rows,rT,'G',{f:`SUM(G${r0}:G${rN})`,v:S.demImp},10); put(rows,rT,'I',{f:`SUM(I${r0}:I${rN})`,v:S.econImp},10);
     if(S.dems.length){ const cr=S.R.find(x=>!x.titulo&&x.item===S.comp); put(rows,rT+2,'A',`Compensación de ítems: las demasías de ${S.dems.length===1?'el ítem':'los ítems'} ${S.dems.map(x=>x.item).join(', ').replace(/, ([^,]*)$/,' y $1')} se corresponden a cantidades efectuadas en este certificado.${cr?` Dichas cantidades son compensadas por el ítem ${cr.item}.`:''}`,4); merges.push(`A${rT+2}:I${rT+2}`); rows[rT+2].ht=30; }
-    sheets.push({name:'Economías y demasías',xml:hoja({rows,widths:[7,46,8,12,14,12,16,12,16],merges,freeze:4,ultCol:'I',logo:false,land:false})}); }
+    const R=c=>`${c}${r0}:${c}${rN}`, ay=[
+      {r:R('E'),t:'Precio unitario',p:'= Valor Obra / Cantidad contratada del item (precio real del contrato).'},
+      {r:R('F'),t:'Demasia (cantidad)',p:'Lo medido en este certificado que supera el saldo del item: el item ya llego a lo contratado y ese excedente no se puede certificar como medicion.'},
+      {r:R('G'),t:'Demasia (importe)',p:'= Cantidad de demasia x Precio unitario. La fila TOTAL es la plata de mas que hay que compensar.'},
+      {r:R('H'),t:'Economia (cantidad)',p:'= Total de demasias ($) / Precio unitario del item que compensa. Es la cantidad de ese item que se certifica para cubrir las demasias.'},
+      {r:R('I'),t:'Economia (importe)',p:'= Cantidad de economia x Precio unitario. El TOTAL tiene que ser igual al de demasias: asi se compensa sin cambiar el monto del contrato.'}];
+    GUIA.push(['Economías y demasías','Precio unitario','= Valor Obra ÷ Cantidad contratada','Precio real de cada unidad del ítem en el contrato.','Se usa para pasar cantidades a plata.']);
+    GUIA.push(['Economías y demasías','Demasías · Cantidad','Medido − saldo del ítem','Lo que se ejecutó de más en un ítem que ya llegó a lo contratado.','Esa cantidad no se puede certificar como medición porque superaría el contrato.']);
+    GUIA.push(['Economías y demasías','Demasías · Importe','= Cantidad × Precio unitario','La plata de esas demasías.','El TOTAL es lo que hay que compensar con otro ítem.']);
+    GUIA.push(['Economías y demasías','Economías · Cantidad','= Total de demasías ($) ÷ Precio unitario del ítem que compensa','Cuánto del ítem que compensa (por defecto Carpetas) se certifica para cubrir las demasías.','Se elige en la app (“Ítem que compensa las demasías”). Esa cantidad se suma a la Medición de ese ítem en la hoja Certificado.']);
+    GUIA.push(['Economías y demasías','Economías · Importe','= Cantidad × Precio unitario','La plata compensada.','El TOTAL de Economías tiene que ser igual al de Demasías: se compensa sin cambiar el monto del contrato.']);
+    sheets.push({name:'Economías y demasías',xml:hoja({rows,widths:[7,46,8,12,14,12,16,12,16],merges,freeze:4,ultCol:'I',logo:false,land:false,ayuda:ay})}); }
+  // 4) Guía de fórmulas
+  if(GUIA.length){ const rows={}, merges=[]; cab(rows,merges,'E','GUÍA DE FÓRMULAS · '+titulo,'Qué calcula cada columna, de dónde sale y por qué. Tip: al tocar una celda con fórmula en las otras hojas aparece la misma explicación.',false);
+    ['Hoja','Columna','Fórmula','Qué calcula','De dónde sale / por qué'].forEach((h,i)=>put(rows,4,CL(i),h,3,26));
+    let r=5, ant='';
+    GUIA.forEach(g=>{ if(g[0]!==ant&&ant){ r++; } ant=g[0]; g.forEach((v,i)=>put(rows,r,CL(i),v,i===0?12:4)); const lar=Math.max(String(g[4]).length/62,String(g[3]).length/40,String(g[2]).length/30); rows[r].ht=Math.max(18,Math.ceil(lar)*14+4); r++; });
+    sheets.push({name:'Guía de fórmulas',xml:hoja({rows,widths:[20,30,34,40,62],merges,freeze:4,ultCol:'E',logo:false,land:true})}); }
   const B='<border><left style="thin"><color rgb="FFB7C3D1"/></left><right style="thin"><color rgb="FFB7C3D1"/></right><top style="thin"><color rgb="FFB7C3D1"/></top><bottom style="thin"><color rgb="FFB7C3D1"/></bottom><diagonal/></border>';
   const X=(n,f,fi,b,al,extra)=>`<xf numFmtId="${n}" fontId="${f}" fillId="${fi}" borderId="${b}" xfId="0"${n?' applyNumberFormat="1"':''} applyFont="1" applyFill="1" applyBorder="1"${al?' applyAlignment="1"><alignment '+al+'/></xf>':'/>'}`;
   const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="4"><numFmt numFmtId="164" formatCode="#,##0.00"/><numFmt numFmtId="165" formatCode="&quot;$&quot; #,##0.00"/><numFmt numFmtId="166" formatCode="0.00%"/><numFmt numFmtId="167" formatCode="#,##0.00##"/></numFmts>
@@ -3008,7 +3079,25 @@ ${X(0,1,2,0,'horizontal="left" vertical="center" indent="24"')}${X(0,2,2,0,'hori
     ['xl/workbook.xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>${sheets.map((s,i)=>`<sheet name="${xe(s.name)}" sheetId="${i+1}" r:id="rId${i+1}"/>`).join('')}</sheets><calcPr calcId="191029" fullCalcOnLoad="1"/></workbook>`],
     ['xl/_rels/workbook.xml.rels',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${sheets.map((s,i)=>`<Relationship Id="rId${i+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i+1}.xml"/>`).join('')}<Relationship Id="rId${sheets.length+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`],
     ['xl/styles.xml',styles],...sheets.map((s,i)=>[`xl/worksheets/sheet${i+1}.xml`,s.xml])];
-  return xlConLogo(files); }   // el logo va en la primera hoja
+  return ceNotas(xlConLogo(files)); }   // el logo va en la primera hoja
+// Notas (comentarios) en el encabezado de cada columna con fórmula: se ven en Excel, LibreOffice y Google Sheets (triangulito rojo; pasar el mouse o tocar la celda)
+function ceNotas(files){
+  const out=files.slice(), ct=out.find(f=>f[0]==='[Content_Types].xml'); let tipos=ct[1], hay=false;
+  const colN=cc=>[...cc].reduce((a,ch)=>a*26+ch.charCodeAt(0)-64,0);
+  out.filter(f=>/^xl\/worksheets\/sheet\d+\.xml$/.test(f[0])).forEach(f=>{
+    const n=f[0].match(/sheet(\d+)/)[1], notas=[], vistas=new Set();
+    f[1].replace(/<dataValidation [^>]*?promptTitle="([^"]*)" prompt="([^"]*)" sqref="([A-Z]+)(\d+)[^"]*"\/>/g,(_,t,pr,col,fila)=>{ const ref=col+(+fila===5?4:+fila); if(!vistas.has(ref)){ vistas.add(ref); notas.push({ref,col,row:+ref.slice(col.length),t,pr}); } return ''; });
+    if(!notas.length) return; hay=true;
+    out.push([`xl/comments${n}.xml`,`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><comments xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><authors><author>Plan Mi Vereda</author></authors><commentList>${notas.map(x=>`<comment ref="${x.ref}" authorId="0"><text><r><rPr><b/><sz val="9"/><rFont val="Calibri"/></rPr><t xml:space="preserve">${x.t}
+</t></r><r><rPr><sz val="9"/><rFont val="Calibri"/></rPr><t xml:space="preserve">${x.pr}</t></r></text></comment>`).join('')}</commentList></comments>`]);
+    out.push([`xl/drawings/vmlDrawing${n}.vml`,`<xml xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><o:shapelayout v:ext="edit"><o:idmap v:ext="edit" data="${n}"/></o:shapelayout><v:shapetype id="_x0000_t202" coordsize="21600,21600" o:spt="202" path="m,l,21600r21600,l21600,xe"><v:stroke joinstyle="miter"/><v:path gradientshapeok="t" o:connecttype="rect"/></v:shapetype>${notas.map((x,i)=>{ const cI=colN(x.col)-1, rI=x.row-1; return `<v:shape id="_x0000_s${n}${String(i+1).padStart(3,'0')}" type="#_x0000_t202" style="position:absolute;margin-left:80pt;margin-top:2pt;width:240pt;height:110pt;z-index:${i+1};visibility:hidden" fillcolor="#ffffe1" o:insetmode="auto"><v:fill color2="#ffffe1"/><v:shadow on="t" color="black" obscured="t"/><v:path o:connecttype="none"/><v:textbox style="mso-direction-alt:auto"><div style="text-align:left"></div></v:textbox><x:ClientData ObjectType="Note"><x:MoveWithCells/><x:SizeWithCells/><x:Anchor>${cI+1}, 15, ${rI}, 2, ${cI+5}, 15, ${rI+7}, 4</x:Anchor><x:AutoFill>False</x:AutoFill><x:Row>${rI}</x:Row><x:Column>${cI}</x:Column></x:ClientData></v:shape>`; }).join('')}</xml>`]);
+    const relK=`xl/worksheets/_rels/sheet${n}.xml.rels`, rel=out.find(z=>z[0]===relK);
+    const add=`<Relationship Id="rIdCom" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments" Target="../comments${n}.xml"/><Relationship Id="rIdVml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/vmlDrawing" Target="../drawings/vmlDrawing${n}.vml"/>`;
+    if(rel) rel[1]=rel[1].replace('</Relationships>',add+'</Relationships>'); else out.push([relK,`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${add}</Relationships>`]);
+    f[1]=f[1].replace('</worksheet>','<legacyDrawing r:id="rIdVml"/></worksheet>');
+    tipos=tipos.replace('</Types>',`<Override PartName="/xl/comments${n}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.comments+xml"/></Types>`); });
+  if(hay) tipos=tipos.replace('<Default Extension="xml"','<Default Extension="vml" ContentType="application/vnd.openxmlformats-officedocument.vmlDrawing"/><Default Extension="xml"');
+  ct[1]=tipos; return out; }
 function certExcel(C){ C=C||CE; const blob=XZ(ceXlsx(C));
   download(`certificado${C.num?'_'+String(C.num).replace(/[^\w-]+/g,''):''}_pliego${String(C.pliego||'').replace(/[^\w-]+/g,'')}_${C.fecha||ceHoy()}.xlsx`,blob); toast('Excel del certificado descargado'); }
 $('ceXls').onclick=()=>{ if(!CE.rows.length){ toast('Agregá al menos una vereda al certificado'); return; } certExcel(CE); };
@@ -3018,10 +3107,10 @@ function renderCertGuard(){ const box=$('ceGuard'); if(!box) return; const p=$('
   const l=((typeof PW!=='undefined'&&PW.certs)||[]).filter(c=>!p||ceNormPl(c.pliego)===ceNormPl(p)).sort((a,b)=>pliegoSort(String(a.pliego),String(b.pliego))||(ceNumOrd(b.numero)??0)-(ceNumOrd(a.numero)??0));
   const obra=!$('ceEdit').hidden;
   box.innerHTML=`<h3 class="ce-sec">Certificados guardados${p?' · pliego '+esc(p):''}</h3><div class="obra-card">${l.length?`<div class="ce-gl">${l.map(c=>`<div class="ce-g" data-gid="${esc(c.id)}"><div><b>Certificado N° ${esc(c.numero)}</b> · Pliego ${esc(c.pliego)}<small>${c.desde||c.hasta?`Período ${esc(ceFechaTxt(c.desde))} al ${esc(ceFechaTxt(c.hasta))} · `:''}${(+c.porcentaje*100).toFixed(2)} % · ${(ceDatos(c).veredas||[]).length} veredas${c.por?' · '+esc(c.por):''}</small></div>
-    <div class="ce-gb"><button type="button" class="btn ce-pdf" data-ga="pdf">PDF</button><button type="button" class="btn ce-xls" data-ga="xls">Excel</button>${obra?'<button type="button" class="btn" data-ga="abrir">Abrir</button>':''}</div></div>`).join('')}</div>`
+    <div class="ce-gb"><button type="button" class="btn ce-pdf" data-ga="pdf">PDF</button><button type="button" class="btn ce-xls" data-ga="xls">Excel</button><button type="button" class="btn ce-pdf" data-ga="fotos">Fotos</button>${obra?'<button type="button" class="btn" data-ga="abrir">Abrir</button>':''}</div></div>`).join('')}</div>`
     :`<p class="ce-nota">Todavía no hay certificados guardados${p?' de este pliego':''}. ${obra?'Cuando termines uno, tocá “Guardar en la planilla”: así queda el acumulado para el siguiente y el administrador lo puede descargar.':'Los guarda el inspector de obra desde la app.'}</p>`}</div>`; }
 $('ceGuard').addEventListener('click',e=>{ const b=e.target.closest('[data-ga]'); if(!b) return; const id=b.closest('[data-gid]').dataset.gid; const c=(PW.certs||[]).find(x=>String(x.id)===id); if(!c) return; const C=ceDeGuardado(c);
-  if(b.dataset.ga==='pdf') ceInformePdf(C); else if(b.dataset.ga==='xls') certExcel(C);
+  if(b.dataset.ga==='pdf') ceInformePdf(C); else if(b.dataset.ga==='xls') certExcel(C); else if(b.dataset.ga==='fotos') ceFotosPdf(C);
   else if(b.dataset.ga==='abrir'){ if(CE.rows.length&&String(CE.num).trim()!==String(c.numero)&&!confirm(`¿Abrir el certificado N° ${c.numero}? Lo que tenés cargado ahora (N° ${CE.num||'sin número'}) se reemplaza en este dispositivo.`)) return;
     CE=Object.assign(C,{rows:C.rows.map(r=>{ const d=(window.DATA_ALL||DATA).find(x=>ceRid(x)===r.rid); return Object.assign(r,{id:'c'+Math.random().toString(36).slice(2,9),vid:d?d.id:null}); })}); ceGuardar(); abrirCert(); toast(`Certificado N° ${c.numero} abierto para editar`); } });
 
@@ -3114,13 +3203,13 @@ let FV={l:[],i:0};
 function abrirFotoDe(btn){
   const d=btn.dataset.id?(window.DATA_ALL||DATA).find(x=>x.id===+btn.dataset.id):null; let l=[];
   if(d){ try{ l=fotosDe(d); }catch(e){} }
-  l=l.map((f,k)=>({...f,k})).sort((a,b)=>((a.tipo==='despues')-(b.tipo==='despues'))||((+a.fecha||0)-(+b.fecha||0))||a.k-b.k);
+  const ordT=x=>x==='antes'?0:x==='durante'?1:x==='despues'?2:3; l=l.map((f,k)=>({...f,k})).sort((a,b)=>(ordT(a.tipo)-ordT(b.tipo))||((+a.fecha||0)-(+b.fecha||0))||a.k-b.k);
   let i=l.findIndex(f=>f.full===btn.dataset.full); if(i<0){ l=[{full:btn.dataset.full,tipo:''}]; i=0; }
   FV={l,i,dom:d?d.dom:''}; mostrarFoto(); $('fotoVer').hidden=false;
 }
 function mostrarFoto(){ const f=FV.l[FV.i]; if(!f) return; const fv=$('fotoVer');
   fv.querySelector('img').src=f.full;
-  const tit=f.tipo==='despues'?'Después':f.tipo==='antes'?'Antes':'Foto';
+  const tit=f.tipo==='despues'?'Después':f.tipo==='antes'?'Antes':f.tipo==='durante'?'Durante':'Foto';
   const nT=FV.l.filter(x=>x.tipo===f.tipo).length, iT=FV.l.slice(0,FV.i+1).filter(x=>x.tipo===f.tipo).length;
   $('fvTit').innerHTML=esc(tit)+(nT>1?` ${iT} de ${nT}`:'')+(FV.dom?`<small>${esc(FV.dom)}${FV.l.length>1?` · foto ${FV.i+1} de ${FV.l.length}`:''}</small>`:'');
   fv.querySelector('.fv-ant').hidden=FV.i<=0; fv.querySelector('.fv-sig').hidden=FV.i>=FV.l.length-1;
@@ -3742,7 +3831,7 @@ function xlsxPorCalle(lista,archivo,filtro,opts){ opts=opts||{}; const COLS=opts
 }
 $('oaXlsx').onclick=()=>{ const o=window.OA_ROWS; if(!o) return; const fotos=PW.fotos||[];
   const ult=d=>{ const h=(o.ultimo[regId(d)]||[]).slice().sort((a,b)=>(+b.fecha||0)-(+a.fecha||0))[0]; const ts=o.tUlt(d); return ts?fechaCorta(ts)+(h&&h.por?' · '+h.por:''):''; };
-  const ft=d=>{ const f=fotos.filter(x=>x.registro===regId(d)); const a=f.filter(x=>x.tipo==='antes').length, b=f.length-a; return f.length?`${a} antes · ${b} después`:''; };
+  const ft=d=>{ const f=fotos.filter(x=>x.registro===regId(d)); const a=f.filter(x=>x.tipo==='antes').length, du=f.filter(x=>x.tipo==='durante').length, b=f.length-a-du; return f.length?`${a} antes · ${du?du+' durante · ':''}${b} después`:''; };
   const cols=[{h:'Calle',w:22,v:d=>d.calle},{h:'Domicilio',w:38,v:d=>d.dom},{h:'Catastro',w:13,s:'cen',v:d=>d.cat==null?'':String(d.cat)},{h:'Cédula',w:10,s:'cen',v:d=>d.ced??'s/d'},{h:'Pliego',w:8,s:'cen',v:d=>String(d.pliego??'')},{h:'Estado',w:22,s:'est',v:d=>d.estado},{h:'Último movimiento',w:26,s:'cen',v:ult},{h:'Fotos',w:20,s:'cen',v:ft}];
   const f=[oaPl?'pliego '+oaPl:'',oaFiltro==='enej'?'en ejecución':oaFiltro==='eje'?'ejecutadas':'',oaCalle?'calle '+oaCalle:''].filter(Boolean).join(' · ');
   const d=new Date(), st=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
