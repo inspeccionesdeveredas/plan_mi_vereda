@@ -1920,7 +1920,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 18/11 13:12</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 18/11 13:23</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -2737,8 +2737,9 @@ const ceN=v=>numTrab(v)||0;
 const CE_PCTS=[100,90,80,75,70,60,50,40,30,25,20];
 function cePct(r){ const x=numTrab((r.v||{}).WP); return x==null||x<=0||x>100?100:x; }
 function ceVals(r){ const v={}; Object.values(MT).forEach(m=>m.f.forEach(([k])=>{ v[k]=ceN((r.v||{})[k]); })); return v; }
-// cada resultado de cada vereda se trunca a 2 decimales (0,125 → 0,12), así el total es la suma de lo que se ve en el PDF y en el Excel
-const ceR2=x=>Math.trunc((+x+(x>=0?1:-1)*1e-9)*100)/100;
+// sin redondear: cada resultado queda con todos sus decimales (0,125 se ve 0,125); solo se limpia el ruido de los decimales de la computadora
+const ceR2=x=>Math.round((+x||0)*1e6)/1e6;
+const ceF4n=n=>(+n||0).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:4});
 function ceCalcT(r,tipo){ const m=MT[tipo], v=ceVals(r), c={}; m.r.forEach(([k,,,fn])=>c[k]=ceR2(fn(v,r))); return c; }
 function ceCant(r,tipo){ const m=MT[tipo], v=ceVals(r); return ceR2(m.q(ceCalcT(r,tipo),v)||0); }
 const ceF=(n,u)=>(Math.round((+n+(n>=0?1:-1)*1e-9)*100)/100).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2})+(u?' '+u:'');
@@ -2803,8 +2804,8 @@ function ceVeredas(){ return (window.DATA_ALL||DATA).filter(d=>d.eje&&(!CE.plieg
 function ceItHtml(r,g){ const m=MT[g.tipo], v=ceVals(r), c=ceCalcT(r,g.tipo), q=m.q(c,v)||0;
   const campos=m.f.map(([k,l,u])=>k==='WP'?`<label class="ce-pct${cePct(r)<100?' baja':''}">${l} *<select data-v="WP">${CE_PCTS.concat(CE_PCTS.includes(cePct(r))?[]:[cePct(r)]).map(p=>`<option value="${p}"${p===cePct(r)?' selected':''}>${p} %</option>`).join('')}</select></label>`
     :`<label>${l}${u?` (${u})`:''}<input data-v="${k}" value="${esc(r.v[k]??'')}" inputmode="decimal" placeholder="0"></label>`).join('');
-  const res=m.r.length?m.r.map(([k,l,u])=>`<span data-c="${k}">${l}: ${ceF(c[k],u)}</span>`).join(''):'';
-  const tot=g.tipo==='demolicion'?`<span data-q="demolicion">Total ítem: ${ceF(q,'m³')}</span>`:'';
+  const res=m.r.length?m.r.map(([k,l,u])=>`<span data-c="${k}">${l}: ${ceF4n(c[k])} ${u}</span>`).join(''):'';
+  const tot=g.tipo==='demolicion'?`<span data-q="demolicion">Total ítem: ${ceF4n(q)} m³</span>`:'';
   return `<div class="ce-it" data-t="${g.tipo}"><h4>Ítem ${esc(g.item)} · ${esc(ceCap(g.t))}</h4><div class="ce-f">${campos}</div>${g.tipo==='contrapiso'?'<p class="ce-pnota">* El % a certificar depende del espesor que realice la empresa.</p>':''}${res||tot?`<div class="ce-r" data-res>${res}${tot}</div>`:''}</div>`; }
 function renderCert(){
   const ver=ceVeredas(), G=ceGrupos(CE.pliego); const opts='<option value="">Elegir vereda ejecutada…</option>'+ver.map(d=>`<option value="${d.id}">${esc(d.dom)}</option>`).join('');
@@ -2906,7 +2907,7 @@ function renderCertRes(){ renderCeItems(); const box=$('ceRes'); if(!box||$('ceE
   $('ceComp').onchange=e=>{ CE.comp=e.target.value; ceGuardar(); renderCertRes(); }; }
 $('ceRows').addEventListener('input',e=>{ const box=e.target.closest('.ce-row'); if(!box) return; const r=CE.rows.find(x=>x.id===box.dataset.r); if(!r) return;
   if(e.target.dataset.v){ r.v[e.target.dataset.v]=e.target.value; if(e.target.dataset.v==='WP') e.target.closest('label').classList.toggle('baja',cePct(r)<100);
-    const it=e.target.closest('.ce-it'), tp=it&&it.dataset.t; if(tp){ const c=ceCalcT(r,tp); it.querySelectorAll('[data-c]').forEach(s=>{ const x=MT[tp].r.find(z=>z[0]===s.dataset.c); s.textContent=`${x[1]}: ${ceF(c[x[0]],x[2])}`; }); const q=it.querySelector('[data-q]'); if(q) q.textContent='Total ítem: '+ceF(ceCant(r,tp),MT[tp].u); } }
+    const it=e.target.closest('.ce-it'), tp=it&&it.dataset.t; if(tp){ const c=ceCalcT(r,tp); it.querySelectorAll('[data-c]').forEach(s=>{ const x=MT[tp].r.find(z=>z[0]===s.dataset.c); s.textContent=`${x[1]}: ${ceF4n(c[x[0]])} ${x[2]}`; }); const q=it.querySelector('[data-q]'); if(q) q.textContent='Total ítem: '+ceF4n(ceCant(r,tp))+' '+MT[tp].u; } }
   else if(e.target.dataset.k==='calle'||e.target.dataset.k==='nro') r[e.target.dataset.k]=e.target.value;
   ceGuardar(); });
 $('ceRows').addEventListener('change',e=>{ if(e.target.dataset.k!=='vid') return; const box=e.target.closest('.ce-row'); const r=CE.rows.find(x=>x.id===box.dataset.r); if(!r) return;
@@ -3052,12 +3053,12 @@ function ceInformeHtml(C){
   const tablas=usados.map(g=>{ const m=MT[g.tipo]; const cols=[...m.f.map(([k,l,u])=>({k,l:l+(u?` [${u}]`:''),f:1})),...m.r.map(([k,l,u])=>({k,l:l+(u?` [${u}]`:''),r:1}))];
     if(g.tipo==='demolicion') cols.push({k:'_q',l:'Total ítem [m³]',r:1});
     const filas=C.rows.map((r,i)=>{ const v=ceVals(r), c=ceCalcT(r,g.tipo); return `<tr><td>${n0+i}</td><td class="l">${esc(r.calle)}</td><td>${esc(r.nro)}</td>${cols.map(o=>{
-      if(o.k==='WP') return `<td>${(v.U||v.V)?cePct(r)+' %':''}</td>`; if(o.k==='_q') return `<td class="n b">${ciN(ceCant(r,g.tipo))}</td>`;
-      if(o.r) return `<td class="n b">${ciN(c[o.k])}</td>`; const x=numTrab(r.v[o.k]); return `<td class="n">${x==null?'':ciN(x,'z')}</td>`; }).join('')}</tr>`; }).join('');
+      if(o.k==='WP') return `<td>${(v.U||v.V)?cePct(r)+' %':''}</td>`; if(o.k==='_q') return `<td class="n b">${ceCant(r,g.tipo)?ceF4n(ceCant(r,g.tipo)):''}</td>`;
+      if(o.r) return `<td class="n b">${c[o.k]?ceF4n(c[o.k]):''}</td>`; const x=numTrab(r.v[o.k]); return `<td class="n">${x==null?'':ciN(x,'z')}</td>`; }).join('')}</tr>`; }).join('');
     const tot=cols.map(o=>{ if(o.k==='_q') return C.rows.reduce((s,r)=>s+ceCant(r,g.tipo),0); if(o.r) return C.rows.reduce((s,r)=>s+(ceCalcT(r,g.tipo)[o.k]||0),0); if(['N','O','BG','BI','BJ','BK','Y','AC','AK','AX'].includes(o.k)) return C.rows.reduce((s,r)=>s+ceN(r.v[o.k]),0); return null; });
     return `<table class="ci-t ci-det"><colgroup><col class="cn"><col class="cc"><col class="ca">${cols.map(()=>'<col>').join('')}</colgroup><thead><tr><th colspan="3" class="ci-vac"></th><th colspan="${cols.length}" class="ci-gt"><div class="hd1">ÍTEM ${esc(g.item)} · ${esc(ceUpper(g.t))}</div></th></tr>
       <tr><th><div class="hd2">N°</div></th><th><div class="hd2">Calle</div></th><th><div class="hd2">N°</div></th>${cols.map(o=>`<th${o.r?' class="ci-rs"':''}><div class="hd2">${esc(o.l)}</div></th>`).join('')}</tr></thead><tbody>${filas}</tbody>
-      <tfoot><tr><td colspan="3"></td>${tot.map(x=>`<td class="n ci-rojo">${x==null?'':ciN(x,'z')}</td>`).join('')}</tr></tfoot></table>`; }).join('');
+      <tfoot><tr><td colspan="3"></td>${tot.map(x=>`<td class="n ci-rojo">${x==null?'':ceF4n(ceR2(x))}</td>`).join('')}</tr></tfoot></table>`; }).join('');
   const h2=`<p class="ci-p2">Se detallan a continuación planillas con dimensiones por frentes ejecutados y por ítem.</p>${tablas?'<div class="ci-dets">'+tablas+'</div>':''}${tablas?'':'<p class="ci-p2">Sin mediciones cargadas.</p>'}`;
   // economías y demasías
   let h3='';
@@ -3170,8 +3171,8 @@ function ceXlsx(C){
     C.rows.forEach((d,j)=>{ const r=r0+j; put(rows,r,'A',n0+j,13); put(rows,r,'B',d.calle||'',4); const nro=String(d.nro||'').trim(); put(rows,r,'C',/^\d+([.,]\d+)?$/.test(nro)?+nro.replace(',','.'):nro,13);
       cols.forEach(({g,gc})=>{ const ref={}; gc.forEach(o=>ref[o.k]=o.col+r); const c=ceCalcT(d,g.tipo), v=ceVals(d);
         gc.forEach(o=>{ if(o.f){ if(o.k==='WP'){ put(rows,r,o.col,(v.U||v.V)?cePct(d)/100:null,7); return; } const x=numTrab(d.v[o.k]); put(rows,r,o.col,x==null?null:x,5); return; }
-          if(o.q){ put(rows,r,o.col,{f:`TRUNC(${ref.M}+${ref.N}+${ref.O},2)`,v:ceCant(d,g.tipo)},8); return; }
-          let f=o.fx.replace(/[A-Z]{1,2}/g,k=>ref[k]||k); if(g.tipo==='contrapiso') f=`${ref.U}*${ref.V}*IF(${ref.WP}="",1,${ref.WP})`; put(rows,r,o.col,{f:`TRUNC(${f},2)`,v:c[o.k]},8); }); }); });
+          if(o.q){ put(rows,r,o.col,{f:`${ref.M}+${ref.N}+${ref.O}`,v:ceCant(d,g.tipo)},8); return; }
+          let f=o.fx.replace(/[A-Z]{1,2}/g,k=>ref[k]||k); if(g.tipo==='contrapiso') f=`${ref.U}*${ref.V}*IF(${ref.WP}="",1,${ref.WP})`; put(rows,r,o.col,{f,v:c[o.k]},8); }); }); });
     cols.forEach(({gc})=>gc.forEach(o=>{ if(o.r||o.q||['N','O','BG','BI','BJ','BK','Y','AC','AK','AX'].includes(o.k)) put(rows,rT,o.col,{f:`SUM(${o.col}${r0}:${o.col}${rN})`,v:C.rows.reduce((s,d)=>s+(o.q?ceCant(d,cols.find(x=>x.gc.includes(o)).g.tipo):o.r?(ceCalcT(d,cols.find(x=>x.gc.includes(o)).g.tipo)[o.k]||0):ceN(d.v[o.k])),0)},15); }));
     put(rows,rT,'B','TOTALES',9);
     const ay=[], lbl=(g,k)=>((MT[g.tipo].f.find(x=>x[0]===k)||[])[1]||k);
@@ -3179,7 +3180,7 @@ function ceXlsx(C){
       if(o.q) fx='Escombros contrapiso + Escombros cazuelas + Cordon';
       else if(o.r){ fx=g.tipo==='contrapiso'?'Longitud x Ancho x % a certificar (el % depende del espesor que realizo la empresa)':o.fx.replace(/\*/g,' x ').replace(/[A-Z]{1,2}/g,k=>lbl(g,k)); }
       if(fx){ const nom=o.l.replace(/\s*\[.*\]/,''); ay.push({r:`${o.col}${r0}:${o.col}${rN}`,t:nom.slice(0,32),p:`${nom} = ${fx}. Fila TOTALES: suma de todas las veredas = Medicion del item ${g.item} en la hoja Certificado.`});
-        GUIA.push(['Detalle por frente',`Ítem ${g.item} · ${o.l}`,'= '+fx.replace(/ x /g,' × '),`${nom} de cada vereda (frente).`,`Se calcula con las medidas que carga el inspector en la app y se toman 2 decimales en cada vereda, sin redondear (0,125 → 0,12). La fila TOTALES suma todas las veredas y ese total es la Medición del ítem ${g.item} en la hoja Certificado.`]); }
+        GUIA.push(['Detalle por frente',`Ítem ${g.item} · ${o.l}`,'= '+fx.replace(/ x /g,' × '),`${nom} de cada vereda (frente).`,`Se calcula con las medidas que carga el inspector en la app sin redondear (0,125 queda 0,125). La fila TOTALES suma todas las veredas y ese total es la Medición del ítem ${g.item} en la hoja Certificado.`]); }
       else if(o.k==='WP') ay.push({r:`${o.col}${r0}:${o.col}${rN}`,t:'% a certificar',p:'Porcentaje del contrapiso que se certifica. Depende del espesor que realizo la empresa (con menos espesor se certifica 50 %, 60 %, etc.).'}); }));
     GUIA.push(['Detalle por frente','TOTALES','= SUMA de la columna','Total del ítem en este certificado.','Es lo que pasa a la columna Medición de la hoja Certificado.']);
     sheets.push({name:'Detalle por frente',xml:hoja({rows,widths,merges,freeze:4,ultCol:ult,logo:!S,land:true,ayuda:ay})}); }
@@ -3218,7 +3219,7 @@ function ceXlsx(C){
 <fills count="7"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF004174"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFE9EEF4"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFD9DEE5"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFBFBFBF"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FF9DC3E6"/></patternFill></fill></fills>
 <borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border>${B}</borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
 <cellXfs count="21"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>
-${X(0,1,2,0,'horizontal="left" vertical="center" indent="24"')}${X(0,2,2,0,'horizontal="left" vertical="center" indent="24"')}${X(0,3,3,1,'horizontal="center" vertical="center" wrapText="1"')}${X(0,0,0,1,'vertical="center" wrapText="1"')}${X(164,0,0,1,'vertical="center"')}${X(165,0,0,1,'vertical="center"')}${X(166,0,0,1,'vertical="center"')}${X(167,3,4,1,'vertical="center"')}${X(164,4,3,1,'vertical="center"')}${X(165,4,3,1,'vertical="center"')}${X(166,5,3,1,'vertical="center"')}${X(0,3,0,1,'horizontal="center" vertical="center"')}${X(0,0,0,1,'horizontal="center" vertical="center"')}${X(167,0,0,1,'vertical="center"')}${X(164,5,0,1,'vertical="center"')}${X(0,6,2,0,'horizontal="left" vertical="center" indent="1"')}${X(0,2,2,0,'horizontal="left" vertical="center" indent="1"')}${X(0,3,3,1,'horizontal="center" vertical="center" wrapText="1"')}${X(167,0,5,1,'horizontal="center" vertical="center"')}${X(167,0,6,1,'horizontal="center" vertical="center"')}</cellXfs></styleSheet>`;
+${X(0,1,2,0,'horizontal="left" vertical="center" indent="24"')}${X(0,2,2,0,'horizontal="left" vertical="center" indent="24"')}${X(0,3,3,1,'horizontal="center" vertical="center" wrapText="1"')}${X(0,0,0,1,'vertical="center" wrapText="1"')}${X(164,0,0,1,'vertical="center"')}${X(165,0,0,1,'vertical="center"')}${X(166,0,0,1,'vertical="center"')}${X(167,3,4,1,'vertical="center"')}${X(164,4,3,1,'vertical="center"')}${X(165,4,3,1,'vertical="center"')}${X(166,5,3,1,'vertical="center"')}${X(0,3,0,1,'horizontal="center" vertical="center"')}${X(0,0,0,1,'horizontal="center" vertical="center"')}${X(167,0,0,1,'vertical="center"')}${X(167,5,0,1,'vertical="center"')}${X(0,6,2,0,'horizontal="left" vertical="center" indent="1"')}${X(0,2,2,0,'horizontal="left" vertical="center" indent="1"')}${X(0,3,3,1,'horizontal="center" vertical="center" wrapText="1"')}${X(167,0,5,1,'horizontal="center" vertical="center"')}${X(167,0,6,1,'horizontal="center" vertical="center"')}</cellXfs></styleSheet>`;
   const files=[['[Content_Types].xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>${sheets.map((s,i)=>`<Override PartName="/xl/worksheets/sheet${i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join('')}<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`],
     ['_rels/.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'],
     ['xl/workbook.xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>${sheets.map((s,i)=>`<sheet name="${xe(s.name)}" sheetId="${i+1}" r:id="rId${i+1}"/>`).join('')}</sheets><calcPr calcId="191029" fullCalcOnLoad="1"/></workbook>`],
