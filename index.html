@@ -1920,7 +1920,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 18/11 13:23</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 18/11 15:48</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -3339,7 +3339,7 @@ function ceaPdfHtml(){ const L=ceaDatosDesc(); const fmt=(v,k)=>v==null||v===''?
 function imprimirCert(html,titulo,pagina){ $('certPrint').innerHTML=html; const t0=document.title; document.title=titulo;
   document.body.classList.add('con-cert'); let pg=$('certPage'); if(!pg){ pg=document.createElement('style'); pg.id='certPage'; document.head.appendChild(pg); } pg.textContent=(pagina||'@page{size:A4 landscape;margin:9mm}').replace(/margin:[^;}]+/g,'margin:0');   // sin margen de página el navegador no imprime fecha, título ni la dirección web; el margen lo pone el contenido
   const volver=()=>{ document.title=t0; document.body.classList.remove('con-cert'); const pg=$('certPage'); if(pg) pg.textContent=''; window.removeEventListener('afterprint',volver); };
-  window.addEventListener('afterprint',volver); toast('Elegí “Guardar como PDF” en la ventana de impresión',4000);
+  window.addEventListener('afterprint',volver); { const cel=matchMedia('(pointer:coarse)').matches; toast(cel?'En la ventana de impresión elegí “Guardar como PDF” y en “Tamaño del papel” elegí A4 (el celular lo recuerda para la próxima)':'Elegí “Guardar como PDF” en la ventana de impresión (tamaño A4)',cel?9000:4000); }
   setTimeout(()=>{ try{ window.print(); }catch(e){ toast('Este navegador no permite imprimir desde acá'); volver(); } },150); }
 $('ceaXls').onclick=ceaExcel;
 $('ceaPdf').onclick=()=>{ if(!ceaDatosDesc().length){ toast(!$('ceEdit').hidden?'Seleccioná al menos una vereda para el certificado':'No hay veredas ejecutadas para descargar'); return; } imprimirCert(ceaPdfHtml(),`Veredas ejecutadas${ceaPl?' - Pliego '+ceaPl:''} - ${new Date().toLocaleDateString('es-AR').replace(/\//g,'-')}`); };
