@@ -263,6 +263,20 @@ body:not(.listo) .home,body:not(.listo) .wrap>footer{visibility:hidden}
 .ce-cnt{margin:0 0 10px;font-size:14px;color:var(--ink2)}.ce-cnt b{color:var(--ink)}
 .ce-pdf{background:#004174!important;border-color:#004174!important;color:#fff!important}.ce-pdf svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 #certPrint{display:none}
+/* impresión más oscura: bordes negros, texto negro y letra un poco más grande (antes salía muy clara) */
+#certPrint,#certPrint .ci-hoja{color:#000!important}
+#certPrint .ci-t{font-size:7.4px}
+#certPrint .ci-t th,#certPrint .ci-t td{border:.8px solid #000!important;color:#000}
+#certPrint .ci-t td{font-weight:500}
+#certPrint .ci-t th{font-size:7px;font-weight:800;color:#000}
+#certPrint .ci-t th.ci-vac{border:0!important}
+#certPrint .ci-t tfoot td{border:0!important}#certPrint .ci-t tfoot td.n,#certPrint .cc-t tfoot td{border:.8px solid #000!important}
+#certPrint .ci-t .ci-gr{background:#c8c8c8!important}#certPrint .cc-t th{background:#d6d6d6!important}#certPrint .cc-t tr.cc-rub td{background:#c8c8c8!important}
+#certPrint .ci-mem{border-bottom:1.6px solid #000}
+#certPrint .ci-p,#certPrint .ci-p2,#certPrint .ci-cen,#certPrint .ci-dest,#certPrint .ci-exp,#certPrint .cc-cab,#certPrint .cc-obra{color:#000;font-weight:500}
+#certPrint .cp-t th,#certPrint .cp-t td{border:.8px solid #000!important;color:#000}#certPrint .cp-t thead tr.h th,#certPrint .cp-t thead tr.g th{color:#000;background:#d9dee6}
+#certPrint .cp-res div{border-color:#000}#certPrint .cp-res span,#certPrint .cp-pie{color:#000}
+#certPrint .cf-v{border-color:#000}#certPrint .cf-c .cf-f{color:#000}#certPrint .cf-c img{border-color:#000}
 @media print{
   body.con-cert{overflow:visible!important;background:#fff!important;display:block!important;min-height:0!important}
   body.con-cert > *:not(#certPrint){display:none!important}
@@ -504,6 +518,7 @@ body:not(.ver-tablero) .tab-av{display:none!important}
 .det-cols button{border:1.5px solid var(--brand);background:var(--surface);color:var(--brand);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
 .det-cols button[aria-pressed="true"]{background:var(--brand);color:#fff}
 .tbl.sin-estado .c-estado,.tbl.sin-pliego .c-pliego,.tbl.sin-anio .c-anio{display:none}
+.tbl .c-obs{min-width:170px;max-width:340px;white-space:normal;font-size:12.5px;color:var(--ink2)}
 .fmini{all:unset;cursor:pointer;display:inline-block;width:38px;height:38px;border-radius:7px;overflow:hidden;vertical-align:middle;margin-right:8px;border:1px solid var(--tile-line)}.fmini img{width:100%;height:100%;object-fit:cover;display:block}
 .a-mapa{all:unset;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;margin-left:6px;vertical-align:middle;border-radius:8px;color:var(--brand);background:#e8f1fb}.a-mapa.a-mapa-t{width:auto;height:auto;padding:6px 12px;font-size:13.5px;font-weight:700;margin:4px 0 0 6px}.a-mapa:hover{background:var(--brand);color:#fff}.a-mapa svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .det-xlsx{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:7px;padding:0;width:40px;height:38px;justify-content:center;border-radius:10px;background:#1d6f42;color:#fff;font-weight:700;font-size:13.5px}.det-xlsx svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}.det-xlsx:hover{background:#185c37}
@@ -1882,7 +1897,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
       <div class="tbl"><table>
         <thead><tr>
           <th data-k="pliego" class="c-pliego">Pliego</th><th data-k="ced">Cédula</th><th data-k="dom">Domicilio</th><th data-k="cat">Catastro</th>
-          <th data-k="estado" class="c-estado">Estado</th><th data-k="anio" class="c-anio">Año pago</th>
+          <th data-k="estado" class="c-estado">Estado</th><th data-k="anio" class="c-anio">Año pago</th><th data-k="obs" class="c-obs">Observaciones</th>
         </tr></thead>
         <tbody id="tbody"></tbody>
       </table></div>
@@ -1920,7 +1935,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 18/11 15:48</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 20/11 08:36</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -2326,7 +2341,7 @@ function render(){
     return String(x).localeCompare(String(y),'es',{numeric:true})*sortDir;});
   setTimeout(()=>limFilas($('tbody').closest('.tbl'),'tbody tr',$('vistaDet').hidden?4:10,2),0);
   $('tbody').innerHTML=sorted.map(d=>`<tr data-id="${d.id}"><td class="n c-pliego">${esc(d.pliego)}</td><td class="n">${d.ced??'<span style="color:var(--muted)">s/d</span>'}</td><td>${esc(d.dom)}<button type="button" class="a-mapa" data-mapa="${d.id}" title="Ver en el mapa" aria-label="Ver en el mapa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.6-6-11a6 6 0 0 1 12 0c0 5.4-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/></svg></button>${d.prio?'<span class="flag">Prioridad</span>':''}${(d.por||d.porId)?`<span class="por">${d.mine&&CARGA?'Cargado por vos':'Cargado por '+esc(ONLINE?porName(d):d.por)}${(ONLINE||PWA)&&d.src==='alta'?' · nuevo':''}${PWA&&d.pend?' · sin enviar':''}</span>`:''}</td><td class="n">${esc(d.cat)}</td>
-    <td class="c-estado">${fotoMini(d)}<span class="est"><span class="sw" style="background:${col[d.estado]}"></span><select data-est="${d.id}" aria-label="Estado de ${esc(d.dom)}"${canEdit(d)?'':' disabled title="En la versión solo carga no se pueden cambiar registros existentes"'}>${EST_ORDEN.map(k=>`<option${k===d.estado?' selected':''}>${k}</option>`).join('')}</select></span>${CARGA?obraBtns(d):''}</td><td class="n c-anio">${d.anio??''}</td></tr>`).join('')
+    <td class="c-estado">${fotoMini(d)}<span class="est"><span class="sw" style="background:${col[d.estado]}"></span><select data-est="${d.id}" aria-label="Estado de ${esc(d.dom)}"${canEdit(d)?'':' disabled title="En la versión solo carga no se pueden cambiar registros existentes"'}>${EST_ORDEN.map(k=>`<option${k===d.estado?' selected':''}>${k}</option>`).join('')}</select></span>${CARGA?obraBtns(d):''}</td><td class="n c-anio">${d.anio??''}</td><td class="c-obs">${esc(d.obs||'')}</td></tr>`).join('')
     || '<tr><td colspan="10" class="empty">Sin registros para estos filtros.</td></tr>';
   document.querySelectorAll('th').forEach(th=>th.textContent=th.textContent.replace(/ [▲▼]$/,'')+(th.dataset.k===sortK?(sortDir>0?' ▲':' ▼'):''));
 
@@ -3117,7 +3132,7 @@ function ceXlsx(C){
     cab(rows,merges,ult,titulo,sub,true);
     const H=['Ítem','Descripción','Unidad','Cantidad Contratada','Precio Unitario','Valor Obra','Incidencia Total','Acumulado anterior'+(ceNumOrd(B[0].num)!=null?` al cert. N°${ceNumOrd(B[0].num)-1}`:'')];
     H.forEach((h,i)=>put(rows,4,CL(i),h,3,42));
-    B.forEach((b,k)=>{ const ca=CL(c0+k*2), cb=CL(c0+k*2+1); put(rows,3,ca,`CERTIFICADO ${b.num}${b.act?' (este)':''}`,18,30); put(rows,3,cb,'',18); merges.push(`${ca}3:${cb}3`); put(rows,4,ca,`Medición ${b.num}`,3); put(rows,4,cb,'% de Medición',3); });
+    B.forEach((b,k)=>{ const ca=CL(c0+k*2), cb=CL(c0+k*2+1); put(rows,3,ca,`CERTIFICADO ${b.num}`,18,30); put(rows,3,cb,'',18); merges.push(`${ca}3:${cb}3`); put(rows,4,ca,`Medición ${b.num}`,3); put(rows,4,cb,'% de Medición',3); });
     put(rows,4,CL(cT),'Total acumulado',3); put(rows,4,CL(cT+1),'Saldo de Obra',3); put(rows,4,CL(cT+2),'% acumulado',3);
     const r0=5, rN=r0+S.R.length-1, rT=rN+1;
     S.R.forEach((x,j)=>{ const r=r0+j; if(x.titulo){ put(rows,r,'A',x.item,13); put(rows,r,'B',x.desc,12); for(let i=2;i<=cT+2;i++) put(rows,r,CL(i),'',4); return; }
