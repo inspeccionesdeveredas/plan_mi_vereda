@@ -444,7 +444,7 @@ body.insp-app .wrap #detCard{display:none}
 .oa-ct{width:100%;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--ink2)}
 .oa-calles button{border:1.5px solid var(--s-enej);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 14px;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer}
 .oa-calles button span{color:var(--s-enej);font-weight:800;margin-left:2px}.oa-calles button small{font-size:11.5px;font-weight:700;color:var(--brand);background:#e6eef8;border-radius:999px;padding:2px 7px;margin-left:4px}.oa-calles button[aria-pressed="true"] small{background:rgba(255,255,255,.25);color:#fff}
-.oa-calles.eje button{border-color:var(--s-eje)}.oa-calles.eje button span{color:var(--s-eje)}.oa-calles.eje button[aria-pressed="true"]{background:var(--s-eje);color:#fff}.oa-calles.eje button[aria-pressed="true"] span{color:#fff}
+.oa-calles.pag button{border-color:var(--s-pag)}.oa-calles.pag button span:last-child{color:var(--s-pag)}.oa-calles.pag button[aria-pressed="true"]{background:var(--s-pag);color:#fff}.oa-calles.pag button[aria-pressed="true"] span{color:#fff}.oa-calles.eje button{border-color:var(--s-eje)}.oa-calles.eje button span{color:var(--s-eje)}.oa-calles.eje button[aria-pressed="true"]{background:var(--s-eje);color:#fff}.oa-calles.eje button[aria-pressed="true"] span{color:#fff}
 .oa-fila{display:flex;align-items:center;gap:10px;justify-content:space-between}.oa-fila .oa-chips{flex:1}.oa-fila .oa-xlsx{flex:none}
 .oa-pl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding-top:10px}.oa-pl:empty{display:none}
 .oa-pl button{border:1.5px solid var(--brand);background:var(--surface);color:var(--brand);border-radius:999px;padding:7px 14px;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer}.oa-pl button[aria-pressed="true"]{background:var(--brand);color:#fff}
@@ -1935,7 +1935,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 20/11 08:54</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 24/11 08:30</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -2567,18 +2567,19 @@ function renderObraAdm(){
   const DP=DATA.filter(d=>!oaPl||d.pliego===oaPl);
   const base=DP.filter(d=>d.enej||d.eje||ultimo[regId(d)]||conFoto.has(regId(d)));
   const k=(l,c,v)=>`<div class="oa-k"><span>${c?`<i style="background:${c}"></i>`:''}${l}</span><b>${v}</b></div>`;
-  $('oaKpis').innerHTML=k('En ejecución','var(--s-enej)',DP.filter(d=>d.enej).length)+k('Ejecutadas','var(--s-eje)',DP.filter(d=>d.eje).length);
-  if(oaFiltro==='fotos') oaFiltro=''; const chips=[['','Todas'],['enej','En ejecución'],['eje','Ejecutadas']];
+  const esPag=d=>d.estado==='Pagada, sin ejecutar', cPag=(ESTADOS.find(e=>e.k==='Pagada, sin ejecutar')||{}).c||'#2f6fd0';
+  $('oaKpis').innerHTML=k('Pagadas, por ejecutar',cPag,DP.filter(esPag).length)+k('En ejecución','var(--s-enej)',DP.filter(d=>d.enej).length)+k('Ejecutadas','var(--s-eje)',DP.filter(d=>d.eje).length);
+  if(oaFiltro==='fotos') oaFiltro=''; const chips=[['','Todas'],['pag','Pagadas, por ejecutar'],['enej','En ejecución'],['eje','Ejecutadas']];
   $('oaChips').innerHTML=chips.map(([v,l])=>`<button type="button" data-f="${v}" aria-pressed="${oaFiltro===v}">${l}</button>`).join('');
   $('oaChips').querySelectorAll('button').forEach(b=>b.onclick=()=>{ oaFiltro=b.dataset.f; oaCalle=''; renderObraAdm(); });
-  const fC=oaFiltro==='eje'?(d=>d.eje):(d=>d.enej); const cEnej={}, cPl={}; (oaFiltro?DP.filter(fC):[]).forEach(d=>callesDe(d).forEach(c=>{ cEnej[c]=(cEnej[c]||0)+1; (cPl[c]=cPl[c]||new Set()).add(String(d.pliego)); }));
+  const fC=oaFiltro==='eje'?(d=>d.eje):oaFiltro==='pag'?esPag:(d=>d.enej); const cEnej={}, cPl={}; (oaFiltro?DP.filter(fC):[]).forEach(d=>callesDe(d).forEach(c=>{ cEnej[c]=(cEnej[c]||0)+1; (cPl[c]=cPl[c]||new Set()).add(String(d.pliego)); }));
   const plTxt=c=>{ const ps=[...(cPl[c]||[])].sort(pliegoSort); return ps.length?`<small>${ps.length>1?'Pliegos':'Pliego'} ${ps.map(esc).join(', ')}</small>`:''; };
   const calles=Object.keys(cEnej).sort((a,b)=>cEnej[b]-cEnej[a]||a.localeCompare(b,'es'));
   if(oaCalle&&!calles.includes(oaCalle)) oaCalle='';
-  $('oaCalles').classList.toggle('eje',oaFiltro==='eje'); $('oaCalles').innerHTML=calles.length?`<span class="oa-ct">${oaFiltro==='eje'?'Calles ejecutadas':'Calles en ejecución'}</span><button type="button" data-c="" aria-pressed="${!oaCalle}">Todas</button>`+calles.map(c=>`<button type="button" data-c="${esc(c)}" aria-pressed="${oaCalle===c}">${esc(c)} ${plTxt(c)} <span>${cEnej[c]}</span></button>`).join(''):'';
+  $('oaCalles').classList.toggle('eje',oaFiltro==='eje'); $('oaCalles').classList.toggle('pag',oaFiltro==='pag'); $('oaCalles').innerHTML=calles.length?`<span class="oa-ct">${oaFiltro==='eje'?'Calles ejecutadas':oaFiltro==='pag'?'Calles pagadas, por ejecutar':'Calles en ejecución'}</span><button type="button" data-c="" aria-pressed="${!oaCalle}">Todas</button>`+calles.map(c=>`<button type="button" data-c="${esc(c)}" aria-pressed="${oaCalle===c}">${esc(c)} ${plTxt(c)} <span>${cEnej[c]}</span></button>`).join(''):'';
   $('oaCalles').querySelectorAll('button').forEach(b=>b.onclick=()=>{ oaCalle=b.dataset.c; renderObraAdm(); });
   const q=$('oaQ').value.trim().toLowerCase(), dig=q.replace(/\D/g,'');
-  let l=base.filter(d=>oaFiltro===''||(oaFiltro==='enej'&&d.enej)||(oaFiltro==='eje'&&d.eje));
+  let l=oaFiltro==='pag'?DP.filter(esPag):base.filter(d=>oaFiltro===''||(oaFiltro==='enej'&&d.enej)||(oaFiltro==='eje'&&d.eje));
   if(oaCalle) l=l.filter(d=>callesDe(d).includes(oaCalle));
   if(q) l=l.filter(d=>d.dom.toLowerCase().includes(q)||(dig&&(String(d.ced??'')===dig||String(d.cat??'').replace(/\D/g,'')===dig)));
   const tUlt=d=>{ const h=ultimo[regId(d)]||[]; const f=(PW.fotos||[]).filter(x=>x.registro===regId(d)); return Math.max(0,...h.map(o=>+o.fecha||0),...f.map(x=>+x.fecha||0)); };
@@ -3994,7 +3995,7 @@ $('oaXlsx').onclick=()=>{ const o=window.OA_ROWS; if(!o) return; const fotos=PW.
   const ult=d=>{ const h=(o.ultimo[regId(d)]||[]).slice().sort((a,b)=>(+b.fecha||0)-(+a.fecha||0))[0]; const ts=o.tUlt(d); return ts?fechaCorta(ts)+(h&&h.por?' · '+h.por:''):''; };
   const ft=d=>{ const f=fotos.filter(x=>x.registro===regId(d)); const a=f.filter(x=>x.tipo==='antes').length, du=f.filter(x=>x.tipo==='durante').length, b=f.length-a-du; return f.length?`${a} antes · ${du?du+' durante · ':''}${b} después`:''; };
   const cols=[{h:'Calle',w:22,v:d=>d.calle},{h:'Domicilio',w:38,v:d=>d.dom},{h:'Catastro',w:13,s:'cen',v:d=>d.cat==null?'':String(d.cat)},{h:'Cédula',w:10,s:'cen',v:d=>d.ced??'s/d'},{h:'Pliego',w:8,s:'cen',v:d=>String(d.pliego??'')},{h:'Estado',w:22,s:'est',v:d=>d.estado},{h:'Último movimiento',w:26,s:'cen',v:ult},{h:'Fotos',w:20,s:'cen',v:ft}];
-  const f=[oaPl?'pliego '+oaPl:'',oaFiltro==='enej'?'en ejecución':oaFiltro==='eje'?'ejecutadas':'',oaCalle?'calle '+oaCalle:''].filter(Boolean).join(' · ');
+  const f=[oaPl?'pliego '+oaPl:'',oaFiltro==='enej'?'en ejecución':oaFiltro==='eje'?'ejecutadas':oaFiltro==='pag'?'pagadas, por ejecutar':'',oaCalle?'calle '+oaCalle:''].filter(Boolean).join(' · ');
   const d=new Date(), st=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
   xlsxPorCalle(o.l,`datos_de_obra_${st}.xlsx`,f,{titulo:'PLAN MI VEREDA · DATOS DE OBRA POR CALLE',cols}); toast(`Descargado: ${o.l.length} vereda${o.l.length===1?'':'s'} separadas por calle`); };
 $('detXlsx').onclick=()=>{ const l=window.DET_ROWS||[]; const f=[tPl||F.pliego?'pliego '+(tPl||F.pliego):'',tCalle?'calle '+tCalle:'',tEst?'estado '+tEst:''].filter(Boolean).join(' · ');
