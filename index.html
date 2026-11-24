@@ -1935,7 +1935,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 24/11 08:30</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 24/11 09:53</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -3088,7 +3088,7 @@ function ceInformeHtml(C){
 // ---- registro fotográfico de las veredas del certificado (antes / durante / después) ----
 function ceFotosDe(r){ const d=(window.DATA_ALL||DATA).find(x=>(r.rid&&ceRid(x)===r.rid)||(r.vid!=null&&x.id===r.vid)); if(!d) return {d:null,l:[]};
   let l=[]; try{ l=fotosDe(d); }catch(e){}
-  l=l.map(f=>({...f,img:f.pend||String(f.full).startsWith('data:')?f.full:String(f.full).replace(/sz=w\d+/,'sz=w1000')}));
+  l=l.map(f=>({...f,img:f.pend||String(f.full).startsWith('data:')?f.full:String(f.full).replace(/sz=w\d+/,'sz=w640')}));   // 640 px alcanza para imprimir 3 fotos por fila y baja mucho más rápido
   return {d,l}; }
 function ceFotosHtml(C){ const n0=ceNIni(C), num=String(C.num||'').trim()||'—';
   const T=[['antes','Antes'],['durante','Durante'],['despues','Después']];
@@ -3098,12 +3098,14 @@ function ceFotosHtml(C){ const n0=ceNIni(C), num=String(C.num||'').trim()||'—'
       <div class="cf-g">${T.map(([k,t])=>{ const fs=l.filter(f=>f.tipo===k).slice(0,2); return `<div class="cf-c"><h5>${t}</h5>${fs.length?fs.map(f=>`<img src="${esc(f.img)}" alt="${t}">${fch(f)?`<div class="cf-f">${fch(f)}</div>`:''}`).join(''):'<div class="cf-sin">Sin foto</div>'}</div>`; }).join('')}</div></div>`; }).join('');
   return ciHoja(`<h2 class="cf-tit">REGISTRO FOTOGRÁFICO · CERTIFICADO PARCIAL N°${esc(num)}</h2><p class="cf-sub">Pliego ${esc(C.pliego||'')}${C.desde||C.hasta?` · Período ${esc(ceFechaTxt(C.desde))} al ${esc(ceFechaTxt(C.hasta))}`:''} · ${C.rows.length} vereda${C.rows.length===1?'':'s'}</p>${bloques}`,true); }
 async function ceFotosPdf(C){ if(!C.rows.length){ toast('Agregá al menos una vereda al certificado'); return; }
-  const urls=[...new Set(C.rows.flatMap(r=>ceFotosDe(r).l.map(f=>f.img)))];
+  // solo las fotos que van al archivo (hasta 2 por etapa y vereda), de a 6 a la vez, con el avance en pantalla
+  const urls=[...new Set(C.rows.flatMap(r=>{ const l=ceFotosDe(r).l; return ['antes','durante','despues'].flatMap(k=>l.filter(f=>f.tipo===k).slice(0,2).map(f=>f.img)); }))];
   if(!urls.length&&!confirm('Las veredas de este certificado no tienen fotos cargadas. ¿Generar igual el archivo?')) return;
-  if(urls.length){ toast(`Cargando ${urls.length} foto${urls.length===1?'':'s'}…`,8000);
-    await Promise.race([Promise.all(urls.map(u=>new Promise(ok=>{ const im=new Image(); im.onload=im.onerror=ok; im.src=u; }))),new Promise(ok=>setTimeout(ok,25000))]); }
+  if(urls.length){ let n=0; const avisar=()=>toast(`Preparando las fotos: ${n} de ${urls.length}…`,30000); avisar();
+    const cola=[...urls], una=u=>new Promise(ok=>{ const im=new Image(); let listo=false; const fin=()=>{ if(listo) return; listo=true; n++; avisar(); ok(); }; im.onload=im.onerror=fin; setTimeout(fin,15000); im.src=u; });
+    await Promise.race([Promise.all(Array.from({length:Math.min(6,cola.length)},async()=>{ while(cola.length) await una(cola.shift()); })),new Promise(ok=>setTimeout(ok,40000))]); }
   imprimirCert(ceFotosHtml(C),`Fotos - Certificado ${C.num||''} - Pliego ${C.pliego||''}`,'@page{size:A4 portrait;margin:10mm 12mm}');
-  setTimeout(()=>{},0); }
+}
 $('ceFotos').onclick=()=>ceFotosPdf(CE);
 const CE_PAG_INF='@page{size:A4 portrait;margin:10mm 12mm} @page horiz{size:A4 landscape;margin:10mm 12mm}';
 function ceInformePdf(C){ if(!C.rows.length){ toast('Agregá al menos una vereda al certificado'); return; }
