@@ -175,10 +175,33 @@ table.ce-sum-t td.n{text-align:right;font-weight:700;white-space:nowrap;width:1%
 .ce-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:10px}
 .ce-kpi div{background:#e9eef4;border-radius:10px;padding:8px 12px}.ce-kpi span{display:block;font-size:12px;color:#4a5a70}.ce-kpi b{font-size:19px;color:#004174}
 .ce-rt{width:100%;border-collapse:collapse;font-size:11.5px}
+/* Certificaciones: inicio (por pliego) y carga en una pantalla con secciones */
+#vistaCert:not(.m-ed) #ceEdit{display:none!important}#vistaCert.m-ed #ceAdmBox,#vistaCert.m-ed #ceHome,#vistaCert.m-ed #ceGuard{display:none!important}#ceGuard{margin-top:6px}
+#vistaCert:not(.m-ed) #ceBack,#vistaCert.ad-on #ceBack{display:none}#vistaCert.m-ed:not(.ad-on) #certCerrar{display:none}
+#vistaCert .obra-top{gap:10px}#vistaCert .obra-top h2{flex:1}.ce-back{font-size:26px;line-height:1}
+#vistaCert:not(.ls-on) .ce-adm-cab>.ce-nota,#vistaCert:not(.ls-on) .ce-adm-cab>.ce-acc,#vistaCert:not(.m-ed):not(.ls-on) #ceAdmBox .ce-ls{display:none}
+#vistaCert:not(.ls-on) .ce-adm-cab .oa-pl{margin:0}#vistaCert.m-ed .ce-pl-lab{display:none}
+.ceh-kp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.ceh-kp div{background:var(--surface);border:1px solid var(--grid);border-radius:12px;padding:8px 12px}.ceh-kp b{display:block;font-size:22px;color:#004174}.ceh-kp span{font-size:12.5px;color:var(--ink2)}
+.ceh-nuevo{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;border-radius:16px;padding:16px 18px;color:#fff;font:inherit;font-weight:700;font-size:17px;background:linear-gradient(120deg,#0b5cbf,#003f73);cursor:pointer;box-shadow:0 4px 14px rgba(0,65,116,.22)}.ceh-nuevo small{display:block;font-weight:500;font-size:13px;color:rgba(255,255,255,.88)!important}.ceh-nuevo i{font-style:normal;font-size:24px;width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.2);display:grid;place-items:center;flex:none}
+.ceh-c{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;color:inherit;background:var(--surface);border:1px solid var(--grid);border-radius:14px;padding:12px 14px;cursor:pointer;margin-top:10px}.ceh-c>span:not(.ceh-n):not(.ceh-ar){flex:1}.ceh-c b{font-size:15px}.ceh-c small{display:block;color:var(--ink2);font-size:13px}.ceh-c .ceh-ar{color:#0b5cbf;font-size:20px;flex:none}
+.ceh-n{width:42px;height:42px;border-radius:12px;background:#e8f1fc;color:#0b5cbf;font-weight:800;display:grid;place-items:center;font-size:16px;flex:none}
+.ceh-c.bor{border:1.5px dashed #e0b45a;background:#fffaf0}.ceh-c.bor .ceh-n{background:#fff3d6;color:#8a5a00}
+.ceh-tag{font-size:11.5px;font-weight:700;border-radius:999px;padding:2px 9px;margin-left:6px;vertical-align:2px}.ceh-tag.bo{background:#fff3d6;color:#8a5a00}.ceh-tag.ok{background:#e3f4ea;color:#1f7a45}.ceh-tag.ab{background:#e8f1fc;color:#0b5cbf}
+.ceh-t{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.ceh-t button{display:flex;align-items:center;gap:8px;font:inherit;font-weight:700;font-size:14.5px;color:#004174;background:var(--surface);border:1px solid var(--grid);border-radius:14px;padding:13px 14px;cursor:pointer;text-align:left}.ceh-t button.adic{color:#7a4b00}.ceh-t button[aria-pressed="true"]{border-color:#0b5cbf;background:#e8f1fc}.ceh-t .ico{font-size:17px}
+.ceh-pl{display:block;width:100%;text-align:left;font:inherit;color:inherit;background:var(--surface);border:1.5px solid #b9d4ef;border-radius:16px;padding:14px;cursor:pointer;margin-top:10px}.ceh-pl h4{margin:0 0 8px;font-size:18px;color:#0b5cbf;display:flex;justify-content:space-between}.ceh-pl h4 span{font-size:14px}.ceh-pl .ceh-kp{margin:0 0 6px}.ceh-pl small{color:var(--ink2)}
+#ceGuard .ce-g{cursor:default}#ceGuard .ce-gi{display:flex;align-items:center;gap:12px;cursor:pointer}#ceGuard .ce-gi>div{flex:1}#ceGuard .ce-gi .ceh-ar{color:#0b5cbf;font-size:18px;transition:transform .15s}#ceGuard .ce-g.abierto .ceh-ar{transform:rotate(180deg)}#ceGuard .ce-g:not(.abierto) .ce-gb{display:none}#ceGuard .ce-gb{margin-top:10px}
+details.ce-ac{background:var(--surface);border:1px solid var(--grid);border-radius:16px;margin-top:12px;box-shadow:0 1px 2px rgba(16,35,63,.04)}details.ce-ac>summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;gap:10px;font-size:16px}details.ce-ac>summary::-webkit-details-marker{display:none}
+details.ce-ac>summary b{color:#10233f}details.ce-ac>summary small{color:var(--ink2);font-size:13px;margin-left:auto;text-align:right}details.ce-ac>summary::after{content:"⌄";color:#0b5cbf;font-size:18px;margin-left:8px}details.ce-ac[open]>summary::after{content:"⌃"}details.ce-ac>summary .ce-pill{margin-left:auto}
+details.ce-ac[open]>summary{border-bottom:1px solid var(--grid)}details.ce-ac>*:not(summary){margin:0 12px}details.ce-ac>*:not(summary):last-child{margin-bottom:12px}details.ce-ac .obra-card{box-shadow:none;border:0;padding:12px 4px 0;margin:0 12px}
+details.ce-ac .ce-sec{display:none}details.ce-ac .obra-card.ce-rs,details.ce-ac #ceItBox .obra-card{padding-top:12px}
+.ce-pill{font-size:12px;background:#e8f1fc;color:#0b5cbf;border-radius:999px;padding:3px 10px;font-weight:700}
+details.ce-elegir{margin-top:12px;border:1.5px dashed #b9d4ef;border-radius:12px}details.ce-elegir>summary{cursor:pointer;padding:12px 14px;font-weight:700;color:#0b5cbf;list-style:none}details.ce-elegir>summary::-webkit-details-marker{display:none}details.ce-elegir>summary small{color:var(--ink2);font-weight:500;margin-left:6px}details.ce-elegir .obra-card{margin:0 8px 8px;padding:0;border:0;box-shadow:none}
+.ce-bar{position:sticky;bottom:0;z-index:5;margin-top:14px;background:var(--surface);border:1px solid var(--grid);border-radius:16px;padding:10px 14px;display:flex;align-items:center;gap:12px;box-shadow:0 -4px 16px rgba(16,35,63,.10)}.ce-bar>div{flex:1;font-size:12.5px;color:var(--ink2)}.ce-bar b{display:block;font-size:17px;color:#004174}
+.ce-gh{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.ce-gh .ce-sec{margin-bottom:10px}.ce-gh .btn{margin-top:12px}
 #adBox{display:none}#vistaCert #ceEdit.ad-on>*{display:none!important}#vistaCert #ceEdit.ad-on>#adBox{display:block!important}#vistaCert.ad-on #ceAdmBox{display:none!important}
 .btn.ce-adic{background:#7a4b00;border-color:#7a4b00;color:#fff}.btn.ce-adic svg{fill:none;stroke:currentColor;stroke-width:2.2;width:16px;height:16px;stroke-linecap:round}
 .ad-cab{margin-top:6px}.ad-top{display:flex;gap:12px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}.ad-top h3{margin:0 0 4px;font-size:19px;color:#7a4b00}.ad-top p{margin:0 0 10px}
-@media (min-width:701px){.ce-rh.ad-rh{grid-template-columns:auto minmax(0,2.2fr) minmax(0,.8fr) auto}}.ad-rub{font-weight:700;color:#10233f;background:#f3f6f9;border-radius:8px;padding:6px 10px;font-size:13px;margin-top:4px}
+@media (min-width:701px){.ce-rh.ad-rh{grid-template-columns:auto minmax(0,2.2fr) minmax(0,.8fr) minmax(0,.7fr) auto}}@media (max-width:700px){.ce-rh.ad-rh{grid-template-columns:auto 1fr 1fr auto!important;grid-template-areas:"n c c c" ". nro pl del"}.ad-rh>:nth-child(1){grid-area:n}.ad-rh>:nth-child(2){grid-area:c}.ad-rh>:nth-child(3){grid-area:nro}.ad-rh>:nth-child(4){grid-area:pl}.ad-rh>:nth-child(5){grid-area:del;align-self:end}}#adBox .ce-acc .btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;flex:none}.ad-rub{font-weight:700;color:#10233f;background:#f3f6f9;border-radius:8px;padding:6px 10px;font-size:13px;margin-top:4px}
 .ce-rs tr.ad-cero td{color:#8a94a3}
 .ce-rs .ce-at-w{max-height:300px}.ce-rs .ce-rt{font-size:11px}.ce-rs .ce-rt th{padding:4px;font-size:10.5px}.ce-rs .ce-rt td{padding:2px 4px}.ce-rs .ce-rt td.l{max-width:190px;min-width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ce-rs .ce-rt td small{display:inline;margin-left:4px}.ce-rs .ce-kpi{margin-bottom:8px}
 #certPrint .ct{font-size:11.5px;line-height:1.45;color:#000}#certPrint .ct p{margin:0 0 8px;text-align:justify}#certPrint .ct-tit{text-align:center;font-size:14px;font-weight:700;margin:6px 0 14px}#certPrint .ct-b{font-weight:700}#certPrint .ct-h{font-size:12px;font-weight:700;margin:14px 0 6px}#certPrint .ct-h2{font-size:13.5px;margin-top:18px}#certPrint .ct-l{margin:0 0 6px 22px;padding:0}#certPrint .ct-l li{margin:1px 0}#certPrint .ct-d{break-inside:avoid;page-break-inside:avoid}#certPrint .ct-d h4{font-size:11.5px;font-weight:700;margin:12px 0 5px}#certPrint .ct-sin{color:#777;font-style:italic}#certPrint .ct-fin{margin-top:16px!important}
@@ -1724,7 +1747,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
     <div class="obra-box" id="vistaCert" hidden>
       <div class="brand"><div class="brand-in"><!--BRAND--><span class="brand-logo"><svg viewBox="0 0 500 153" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Municipalidad de Salta"><title>Municipalidad de Salta</title><image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAACZCAYAAADZy8i6AAAbVUlEQVR42u2dTXLiyNqFTztqSuBeAfQKTK8AVWhIR1i9AvCwR8YrsLwCUyuwagVFDTRUlLyCghUUXsGF0AK+b8DLvTSBQALlr86JcLi7qoxFkplPvr/521//PMEXpUU4AHALYPd9XwsAawCrUSdboSVKi3B/PAZH/sluXBajTrYGRVEU5aR+cxnoaRFGAAL5uqvxoxsB2RxAPupkC48A3pfxiATgvZrjksvXvE0HH4qiKAJdP7ACABMA4wZf9gNAAiBxFWJpEU5kXIYNvuwSwEzgTuudoiiKQG8MWHFNi/MSfQUQuwB2cadP5aur8FdtBOwzgp2iKIpAv8Yin6GeS70JfRGwry0+4MwUg/wo2EedLObSoSiKItDrWJ8xgEeDj7EBMBl1srllMfIEzbrWcYErfuJT7gFFUZTrurE4W31hGOYQ6/dbWoQzi6zyhWGYA1tvyc+0CKdcQhRFUQT6KWjlUB8rr6PHtAgX4jUwNS4zAG+aXezn9JoWYcJlRFEURaAfg7lt0Nq3SnMTUBdoPlo6h8ZpEc5NHnYoiqIoi4C+B3ObpR3qAvOx5eNyb+qwQ1EURVkEdEdgrh3qjsDcuAeDoiiKsgDojsFcG7wcgzmhTlEU1WagOwpz5fByFOaEOkVRVBuB7jjMlcHLcZgT6hRFUW0CuicwbxxensCcUKcoimoD0D2DeWPw8gzmhDpFUZTPQPcU5lfDy1OYE+oURVE+At1zmF8ML89hTqhTFEX5BPSWwLw2vFoCc0KdoijKB6C3DOaV4dUymBPqFEVRLgO9pTA/C6+WwpxQpyiKchHoFsB8A+BdvqyBlwUwX8qYLAl1iqIof/TbX/88+QTzDYAZgGTUyVYHzxQBmMLMXeJLAIE8mwmYfwCIAcxHnWy9Nya3ACL5u56pcdl/JoqiKMoSoBuE+RJAdAjykuebQf8VrRtD18J+BTA9B820CGMAz4Q6RVEUgW4a5pWhkBbhAEBu6b3rjcJ81Mkmvn1+bZDM0QBAH8BAvvcqHBoXANbyfQFgce6QS1EUge40DFoA9VowJ9SNA3wX/ogE5N2GQy45tiGXObc9Jw5zs4ZebjHqZNOG9veJLc9DHdenNsIcAEadbJEWYeAp1C+CuYxLkhYhDHyeu0S5VkE9LcI+tjkMkcJ52MM2d2OcFuEGwBxATMvdWt3CTK7PKfUtfCYKDWe5u2zRjTrZQqyhDWH+b6gDeACz35WCXCoefglsdR0qu/L7fqVFmMuhlqKotgPdB/esZ1C/GuaEunrXelqEsz2Qm9QQwI+0COfiKaAoqo1A9ynW6gnUG4M5oa4M5gG2iWqPlj3aPYBFWoSMbVJU24DuY+KU41BvHOaEeuMwnwL4ATP1/qjoin8VNzwb/lBUG4Ducxa0o1BXBnNCvTGYJwBeHXncIYCVZFpTFOUr0NtQ0uQY1JXDnFC/Ol6ew72+/d1dxQG3SIryEOhtqk92BOraYE6oX6yZw6U+XWwT5iagKMofoLex2YjlUNcOc0K9tnU+8+RGvTe63ynKE6C3uXOYpVA3BnNLoD53JJv90aN9IifUKcpxoLMNqHVQNw5zC6A+lCQzm1u4Jp7tE10Ac2a/U5SjQG+4n7DTPb0tgbo1MLcA6mO5Hc5GTWFvaRqubB+bgKIot4AuJ/G5gR7n1l7QIVDPCXNroP5sWxa2rBufm7P02VGOotyz0GMDVobVt22Jm/eeMLcK6ollbuDI59v7ZH2uuG1SlCNAN5TQ4wLMx4S5dVDvyeETFrnbfdMGwMOok014Xz1FwbnrU2eEOWHu0NWrj2kRzkxbjuKKvlP8az6w7QW/KPn7ANtrLnsNrs2JhJsoinIJ6JLVfgfCnDB3C+oxANPjFSh2d8+qglXCEJF83V/xO6e0yikKzrrcY8KcMHfQ/T62IFlroGiN/CHu7kWN8V+POlky6mQRgN8BvKBehcYTXewU5TDQJXbeI8wJc0ehHsMvoC+bSEITuMfyfO8479L/c9TJZqAoymkLfUKYE+YOQz0y/Hb7DSeiNbpGRp1sNepkgVjrx/QdwIDxcoryA+hjwpwwdxjq3bQII8ONV5pSomqNiLX+cMTFHtHFTlEeAF3TRkiYtwzmBqAeeTJkcw2fxxPoYqco+JjlHrQc5n1DMPAe5pqz3wMu6cqfxwxmWjs3eQHOAMDt3vdjyve+L+iFoCpWiQz29pOy+bWWEtLdd+PzSwfQrYb5Lr4oG0QOfZ2+WgNzjVDvpUXYZzczLzfZAbZ5PgHqldbu7qN/ltf5wNYDkpzLF5Ay3j6aC6OsLBvTOu8vaLB9cFwzRKRjLCJ5j1HN8Nn9wess9+bXStf82o3Tp71rKVsJ8/1e7Rqh3jqYH0D9FsAr1GWbuw70gcF7A2zsjT9pMEehh20nzEeBeywhiGOa7B0IrlVu4bxs8v3VGf9nWFC9Ip7Z3fzqNnjF853cNfEu8yvXMP4xANwovOd4A8CpRBtNt6q1FuYH7t53uFMPXnW+g7kAzYBcrLiVbP6qyml7AN7SIlwZTqikNIdYJWfqlxzuVBlwQwA/0iLMFXIWh0lxqi63mLno+lQM9dbDXMPJ29RlLYuG73yPWrrZTvdA3tVoNX5LizDhne+tOCj+gt4E6CGAnzqufFYJ9MRhC1IF1Anzf49xjm1IxhcLfa3gJrmgZVZTjm0oxtSNdWMAOaHubQ7Goqa7HwqufE5UA13FBrhxPTGpYagT5jiZgeyDmm7I0sXWXRf7DhjxRiwMxHNREgPNuTS98/r8hP4rwcvaVCe670O3bXNzGeqEuT6r1sfDyTOAVVqEMwv61avKtP5m2T3ydzrco5S2/iKvlj3WWFVI7caBNpguQ50wR6tCCKqSKbvYJu/8kjhv5NFm+2bp4z37tI+1GOZjSx9vpgroa0X1wLcthzphjtY1gplDT5z3W1qEa5fhbvlmq6KdL8X5dTi3hiqAvmAbzsahTphXqzEeeubGn2v8Xd0jcB845GYfcxVQLT4swiWXO6Dv9jbboE6YV9MUnuVvjDrZHNv+6Lq1g/tPqame2Qp38Si8cfpTiuZX3ObDokoLfSjZhW2COmFevYRk6mmiXQzzrrxHgfsiLcKpLeEv+dwTrgBK4WHxuc1jcCOd3FRZFa/iXmsD1Anz6pt6rjCreWHBzXLvlgz3nWT4/kdc8oHh50ksy2an/ArhJbw+Vf0m+NYCqBPmdsAcJ/omQ3OP7I1lwz/Gtq59lRbhRLfVLq7QO64CiodF9UBXvQn6DPUBYW4HzG2xjKWp0tTi7No3bGvbtTStkfr5Z64CSqGr/Z4j8T+g68jO9RXqK04jK2CuO8u8iuv9xeKPpbvXtEY12BOuAgqO1XS7qE9794Evod4l9pYWIU5cV0gR5l4AfXdHsVinYwfAPk2LMJab8Jr8/APoben6jm0IcV3S92BA16x3nQZ7Gm9UXJzwaAem2xd/OjhFv2qy1Al1wrzxjdxGb8mok03k0hHbS7W6e0msEwknwZGs/3cASdU9Za/KImo53JMa4damYPXRsMdGx/z6CmAuZalVQwCRiYP8IdBjTROcUCfMW+PWHXWyJC3CtSOJO3fYlry9jDpZ3EDsXKXFsgQwrZsIKYeVXWLgrK11y3X2X0lqbOKzXF07rzRa5+9yuF1d0I9iLmOW6LTab/YeYq3ZZellTJ0yAvMP2w+HssgHFpW0ocJVj9deJaoyMfDLqJMNrqlqGHWytSS0foZ9VQkUjHYjfRh1suAar9+ok61GnSwA8GSqU1yseWIT6oQ5PGjmcskCdwEgQwCLK7rORQo322nDpY4Dsfgpd+rO7xXFyf9s0kCQvJQ/daz5myMZ27ozBgl1wvwaLV0L3cgC7wP44sDj9gDkdaEu/76nCOaJomqVgFBvtXW+ARA0mD/S9FXcF/Vyn0F/P2pCnTCHhW5dlVBfi5X5B7ZJN7A8Ya4u1FVsuE8qD28Sdgzofm8t0CMVMD8CdX1Al0ltAq6EOmGOC+KoORzvYyBx3D/EYt9YDPWkRky96Y3re9MldSegHnFVo21XL7/o2EsE6k9ab1uTN/ZCqFMWw3zZZBzVErBPR53sFsAD7Eyeu0P1kNzQVU+M7H9fuLqt3nO6DSfVxppDbu9ar0+VN/idUKcshPnGZytq1MkSSZ7bWe0fFj3e+NwlLwqubv1ioMdATNe7tep7kFQbm7gPfWIoSYRQJ8zPJa6s4H+d8M5q72NbWvXVEsgkZ/7+1vXWngbKeKnqavLAuDGRVCteoKVWoO8liRDqlE0wX6B9TUDyUSeb7Lnkvxt8nN6ZtRmg2dDKytKDC+W+hT63+GDcuIVOqFOEuZ0u+Qhbl/wTzMTbda3L3OQhiivee6Cb/Ixz7UAn1CnC3GqX/Ezi7b+L5a5rjQ6ltatqmf7M3znTvNbK8PXb+oFOqFOEuRN17cmokw2wjbe/G6wFDnzYcEVrzi6/Q1k+HRhvLmy8QKgT5oS53fH2AMDfipPoghYMJ+ce5YxucHk3JUKdMCfM7b8Qpg91CXQBR5miHAY6oU6YE+bOueIjqGkv273yNja0rESKouwDOqFOmBPmzoF9oshSHyjO3u0bHrpbzh6v97kA5m80NA90Qp0wJ8xrX/doWhMHu58NfNpwKfjeda7uPgtrgE6oE+aE+dnx7KdFmMOCrmOyVhO4FUcPDH52vKQF3peaBR5dMHM90Al1wpwwLx3PKbZZ0kNs67ZtuExm7ljDjDtN9e7QdEUnZRfQI8MeM/uATqgT5oT5v93raRHOAbwejOerCjcb7CvDWrt+eYaESAh0eF9K2DXBDond31kLdEKdMCfM/+umXQG4L7NeDVqcgIYkLwWf59jAmMUG1gNlptlQjJbctkaoE+aEeT2r/NuZsewCmBtMkhtospbeXb1xTaynR+4OsLViY9FwcmcvLcJYcyhu6ATQCXXCvIUwD85Y5Ye6E0t94EFceK3p4ol7HTkIctDitan2q+n59ayjhE3WfGxdHTqhTpi3HeZilc8A/LhgHHdQj3Rm3AMYw93ku1eVm67APKervZVAh3jOBi7vuTdQXyZDqBPmPsI8wNbdfI1rtgvgW1qEM9UueFWWZ9nlFvIZfyjadCOFML/jDuGEVBwYu6o8Z7r23BvoqX0l1Alzn2Aei1Xea+glHwGsVM1VhbBaGtp0vzUZ89wLmRDmcOfqYKi5UXAH9UmD82uia8+90djQglAnzH2AeQ7gWdFG8pYW4TotwriprG6Z+6pgtTCYyPacFuHiGhe8hEySC0MmlHklil53txbn16zDvaZSb7rm1w30dqki1AlzMHZ3djN5BvBLgDVLizCqs7GkRRjIz60Ubya5ISsKe3kIP9IizNMinFQNW8j4JHLQGYNy1UpPFLcyvpd1mNQJ88h6nQP4Bc2tgz/pbj0pJ+rcgHvrLS3C3SQgzAlzXFE+NUFz7vZzwLqDxOnTIoQciNcn+lL3YFccMxYLGIr7rQ9ljb+L52Bd0mpzQGvcK80Uecz2Nca2FwLkgHpsft3K3DLa+/8TDPSTJtQJc5evI5XyqW+GHsGWOO938bqdTZoTyOra6Ia8UKV1QJ9q3N+snl83MHdJRED3O2HuKNTniq4idW0jhcWduCi0wu2+FqBTpoBOqBPmHmgCNWVZLuijrFztRGnbF263lMJY+jtHwiDQCXXC3APLIHLwfnFTt0TFLT4AUeo1belatAfohDph7kFP6UnL9ozvdazzg3XetrGi9K7FmEC3x9oh1AlzV+PpDy15u5troCwHgSfih1K0FmcAvhLohLrzUCfMjcfw2gD1SZXMdm66FMy63pcg0Al1V6FOmFsD9b89juM9iDeiibGaEOqUhwwh0Al1wtwz93sA/5K/Hpru3eAQ1DdgiSKhrk7LJp/zhh+Iu1AnzK1Nzhl4BIEHVY2YHIH6BOd71lNkyDU5KWv4DHRCnTB3fTMZdbIIbrvgNwD+Vt1VUaD+5HuYgTK2DgeWHhqV7KM3PGW5B3XC3CkXfB/uNVV5BzDQBTNJlPsT9oQqtBxmKG3rcGLZ4VrZPnpD14lbUCfMnbQSpgD+cMC9/CFWaSA3pZkIVbzAfEwzoGXu7eHa9Br8DqCvah+9YTzEHagT5k5vKCuxFHZg31gI8r5Jq1QOP7Ghw88GwMuokw04z70+XE8AfIb+VrEf4vWJri39dB7ohDph7iHY+1K7bjJ57qtsMn2b3MsHh58vig8/H+IV6MthgvJ/DeajThZgG+ZRfbhe7h2W595dn8qrVwlz6r8H1ARAkhbhrRxWd193CjeXHEDugktZ3P5TANO0CCMZmwjX3/m+G4ek4tzOG3g7q5r/tqnQw6qh18kte57GWjfL+ov21l+vgRyUHMC84vxKmhrf3/7658nFRiq3hqAOlWU8hDm197kHYsX3sY0t38pfDU7MhQ3+V2K1lv9eAVhd0n/d8vU/kM0Xe9+PaTcOu+8LlS5Pyov5tVtzu3U3OHNAWdmyzpwEelugTphTFEVR8C2GjpbF1AlziqIoqhVA9xnqhDlFURTVKqD7CHXCnKIoimol0H2COmFOURRFtRroPkCdMKcoiqIIdMehTphTFEVRBLrjUCfMKYqiKALdcagT5hRFURSBbj/U59Jx6GhTnLQIY8KcoiiKQts7xcGNjnKQA8V+3+xdy8ouPLqHl6IoiiLQ2wB1G0SYUxRFgS530P1OmFMURVEEOqFOmFMURVEEOqFOmFMURVEEejuhTphTFEW1SJ/a+KZHnWydFmEAfxPlCHMoS7CMD/5ofsk4p0UYYVvxsNNq1MmSGr8XAPJRJ8trPu/Znzv2M6NOFld4TxMA/YM/Pve+av/MidfqA4jkwH57+Jqy3udyqL/0875o/E5oDWBx7nNUMfY6X8+18TzyDIHMq9rros7rndBC3teKQG8X1AlztXo++P8oLcKgJiQGAL4d/PE7gKTG7/3vZljzeav83PMxWI462eTM75oAGNZ8X5f8zLHxnB15nX0NAYwBzNIinAGYVfzMGhm/Cu/hA0B84UHmFsBbyd/l5yCg6nMxPJ4A8BVA0hDcZ8c4kRbhpYec4Ip5MpP3tW69y91z9zthrl93B30GqnYHdE3jpq8KbtBj8vMMzPfVlY10IZ+FLepJQ6pL4DC98O981xjAj7QIEzn0XGOd3504+OieJ68yfwMC3V+oE+bmNKyyEcumkhhqKoSGOiAOLIJ5comVs7cx5pZBfXdwii+wpkv/7hqYeQT2/IpxmJxZ+wNDB8Afh4fs1gPdE6gT5nZsxOesodyD8E5uAyBkrMeezqVp1TGWDb13xiMRcXnW86Qd5GWMr/CQaD1kf+Ln7HxMnTC3R69pEa6PxdTEmvQhV6Mra2RgEOZ9AKes2HfZvHdrIpKvnsF1834k1FIGix2Ekyutx53iBmLftum9JHTVF+OsV2JNT2rGvCdVD/N18mhO6KXkz6MT+8d8l8BIoLsNdcLcPs3SIlzsfybiQvXJmrxLizCpkCSnSnFJ2GIDIDqSBJWL1Rtj66I3sW7yYxnRctD7ceTfDyrmY1TJHehJ4mbu0RzMT2WYy7iOGzjcTGv8u7gBBpW9Rixsmh+Z+73dQYUud3fd74S5xRbs7qY9cYk+w88Qgymgl7mQo1PQks3yb5vWjTzv5hKgl8Dmo2TvmrZsH5+IFX/scDOoEc44dnD8aiI5TuZKdGpNEOinof5OmFMXQn2+V07lq7QnyYmVcnSTrWKBjjrZ3MJ1s76wVG1cUl51bM7dl13n7LFmNQ+EVQ5B30ss8Z6OA67M8WVJGRyBfgrqo04WlJzGTGoJYECYW3fAwpEknPyEa9g1LS1JkhuciCPCwUZF/ZJ47+pCV/Bcvja00rOyOdG/olQtkbr+pcEStrzEiCDQK7pu/rZkE/4y6mSDCxtFUOqUlCzwMnedi4exOY4n7HQ119XfNmXlWnKt8/xEZzDUTNb6PupkK/EwzlnCVqr+hclwH3uHhJnBErZ1WU4FgV79pNcXd4sp6+jzqJNN+WlYqTW2brxzh753g4lkaChh53tZkpxrbmvNmqRFmO99LQD850TybXJBqVpyxt3MErbrStWSgwOubV6QWwK9ngs+AvBZY2z9A8CDWOU5PwWr58fqzGb54clmOinxRoxhsJStotUFw53ghntfp6poXs6UQJ2zHiEhuWVJlnfbtbqwVC05yLOalySL3ppKsCTQLxg0ia1/hrr4+lJA3r/2MgRKe8byE8rLqdYNx+kHFVy6KhJGJyXP0zUUP4RHluf3M+VYZaVqScU/6x1rGeqppT24EOjTEu/aqmLSnWorPeD1qWrAPgHwO4AHcUVuroT4C4A/xCInyN2cF7MjB71pA0mMx34+OAPt6MIN7dx7XBjoYX0utjyuUY4UWxpL/iJewEuS4Z7TIvy//S9se363ub/7tO5FMCdK1YZHxven7v7uEg4YljTaIdAbcsUno04WjTrZLYA/BfAvAvn3kq8vYs19BvC7QDxmwps3iZTLPfdpoghkXZS4UAVY8YUJV1XzSl4MlZR+PZFxPzjlsUiLMJe+ADa0sN3s7QV/nMuROVGqVlfel7AJmI+N1eZM+LKJw46SErYzSZQJwE5xKjachaNZzFSz82CgwNX8eOTPH3etUHdeALlrfVaSOPXRVMnjqJPFAtB76K8vLmuZ+jMtwi9y73m+53qdyFf3oLd3oOmZXy69O1uRZT294PVuK7rrVxoMk37Js9xi65ka16xNP3erGi7INUku7LOAkvBafKIMdk6gU5RDlRZyF/IxSN+L1YWKJXZoOEku19kqedTJFgLtx5J/8igHHVS5Jc+hyoNJw1n3cc28jjscb1N7rB95DPU3qI0vSDKeaRrfYVqEl/QL+XHJZ7n7HAl0ioJTGeY/rvj5ZQNW4rH7DyYnmuiogvq0IYtqBXdcyL0SSK0q1O7fXXEBDDxp/lSamHqiVO2j4hwZlnhBVB8Wv+5XNxDoFOVQImZahA8A3nBZCWSg0GKeAPimeUgCAdKlLv8nSWJ02ToPzrm3BVa/0I5b2EpLRs9Yy2XjG1fJgUmLcHXkwNXkLWyoEsZhUhxFuQX1BNvOhR+od9XkQOHGYiRJbq83xEPNCpNdo6aZQ+VXw4qlVGU9Er63sIRtI3Oyiut7WpJAl1zZN36q6OrYz8e8bbTQKar+YsKVbtsFrsg8l3h6Li7TSclmv0uUSS5oSnTRe5QkuduD+viFyrHYHXLSIpzv3Xt+f2I85id6fDc1Fu8Nu/aDktescyCZ4Xjb3ADHy7gWisIYTY0nziSQLqp+znKoWdQpb8Px1shRjYZHq5rvayXPOD91iPvtr3+euEVTFLxoV7nbPBYqrXGH+qQP9hr+UJT3+n/atX/Q9ntKegAAAABJRU5ErkJggg==" width="500" height="153"/></svg></span><span class="brand-sep" aria-hidden="true"></span><!--/BRAND--><span class="brand-name">Plan Mi Vereda<small>Control urbano</small></span></div></div>
       <div class="obra-in">
-        <div class="obra-top"><h2>Certificaciones</h2><button type="button" class="obra-x" id="certCerrar" aria-label="Cerrar">×</button></div>
+        <div class="obra-top"><button type="button" class="obra-x ce-back" id="ceBack" aria-label="Volver">‹</button><h2>Certificaciones</h2><button type="button" class="obra-x" id="certCerrar" aria-label="Cerrar">×</button></div>
         <div id="ceAdmBox" hidden>
           <div class="obra-card ce-adm-cab">
             <p class="ce-nota" style="font-size:14px">Veredas <b>ejecutadas</b>, con sus datos y los trabajos registrados. Elegí el pliego y descargá el listado en Excel o PDF.</p>
@@ -1735,13 +1758,15 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
               <button type="button" class="btn ce-adic ce-cert" id="ceaAdic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Adicionales</button>
             </div>
           </div>
-          <div class="obra-card"><div id="ceaRes"></div></div>
+          <div class="obra-card ce-ls"><div id="ceaRes"></div></div>
         </div>
+        <div id="ceHome"></div>
         <div id="ceEdit">
-        <h3 class="ce-sec ce-cert">Cargar certificado</h3><h3 class="ce-sec ce-solo-adm">Datos de obra (orden de compra / servicio)</h3>
+        <details class="ce-ac" id="ceAcIt"><summary><b>Ítems del pliego</b><small id="ceSumIt"></small></summary><div id="ceItBox"></div></details>
+        <details class="ce-ac" id="ceAcDatos"><summary><b class="ce-cert">Datos del certificado</b><b class="ce-solo-adm">Datos de obra (orden de compra / servicio)</b><small id="ceSumDatos"></small></summary>
         <div class="obra-card ce-cab">
           <label class="ce-cert">Certificado N°<input id="ceNum" type="text" inputmode="numeric" placeholder="Ej: 9"></label>
-          <label>Pliego<select id="cePl"></select></label>
+          <label class="ce-pl-lab">Pliego<select id="cePl"></select></label>
           <label class="ce-cert">Fecha<input id="ceFecha" type="date"></label>
           <label class="ce-cert">Período desde<input id="ceDesde" type="date"></label>
           <label class="ce-cert">Período hasta<input id="ceHasta" type="date"></label>
@@ -1765,24 +1790,26 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
             <p class="ce-nota ce-solo-adm">Estos datos los usan todos los certificados del pliego (nota, cuadro del certificado y Excel). El inspector de obra solo carga las mediciones.</p>
             <div class="ce-acc ce-solo-adm" style="margin-top:8px"><button type="button" class="btn ce-save" id="ceObraGuardar">Guardar datos de obra</button></div>
           </details>
-          <div class="ce-acc ce-cert">
-            <button type="button" class="btn primary" id="ceAdd">＋ Agregar vereda</button>
-            <button type="button" class="btn" id="ceEje">Agregar las ejecutadas del pliego</button>
-            <button type="button" class="btn ce-xls" id="ceXls"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>Descargar Excel</button>
-            <button type="button" class="btn ce-pdf" id="cePdf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>Informe completo (PDF)</button>
-            <button type="button" class="btn ce-pdf" id="ceFotos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Fotos de las veredas (PDF)</button>
-            <button type="button" class="btn ce-pdf" id="ceTec"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg>Informe técnico (PDF)</button>
-            <button type="button" class="btn ce-adic" id="ceAdic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Adicionales</button>
-            <button type="button" class="btn ce-save" id="ceGuardarPl">Guardar en la planilla</button>
-            <button type="button" class="btn ce-new" id="ceNuevo">Nuevo certificado</button>
+          <div class="ce-acc ce-cert" hidden>
+            <button type="button" class="btn primary" id="ceAdd" style="display:none">＋ Agregar vereda</button>
+            <button type="button" class="btn" id="ceEje" style="display:none">Agregar las ejecutadas del pliego</button>
+            <button type="button" class="btn ce-xls" id="ceXls" style="display:none"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>Descargar Excel</button>
+            <button type="button" class="btn ce-pdf" id="cePdf" style="display:none"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>Informe completo (PDF)</button>
+            <button type="button" class="btn ce-pdf" id="ceFotos" style="display:none"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Fotos de las veredas (PDF)</button>
+            <button type="button" class="btn ce-pdf" id="ceTec" style="display:none"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg>Informe técnico (PDF)</button>
+            <button type="button" class="btn ce-adic" id="ceAdic" style="display:none"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Adicionales</button>
+            <button type="button" class="btn ce-new" id="ceNuevo" style="display:none">Nuevo certificado</button>
           </div>
           <p class="ce-nota ce-cert">Completá las medidas de cada vereda: el certificado por ítem, el acumulado y las economías y demasías se calculan solos. Lo cargado queda en este dispositivo; al terminar tocá “Guardar en la planilla” para que quede el acumulado para el próximo certificado.</p>
         </div>
-        <div id="ceItBox"></div>
-        <div id="ceRes" class="ce-cert"></div>
-        <h3 class="ce-sec ce-cert" id="ceSecMed">Medición por vereda</h3>
-        <div id="ceRows" class="ce-cert"></div>
+        </details>
+        <details class="ce-ac ce-cert" id="ceAcVer" open><summary><b>Veredas</b><span class="ce-pill" id="ceSumVer"></span></summary>
+          <div id="ceRows"></div>
+          <details class="ce-elegir" id="ceElegir"><summary>＋ Elegir veredas ejecutadas <small id="ceSumEle"></small></summary><div id="ceElegirIn"></div></details>
+        </details>
+        <details class="ce-ac ce-cert" id="ceAcRes"><summary><b>Certificado por ítem</b><small id="ceSumRes"></small></summary><div id="ceRes"></div></details>
         <div id="adBox" class="ce-cert"></div>
+        <div class="ce-bar ce-cert" id="ceBar"><div>Este certificado<b id="ceBarRes">—</b></div><button type="button" class="btn ce-save" id="ceGuardarPl">Guardar en la planilla</button></div>
         </div>
         <div id="ceGuard"></div>
       </div>
@@ -1961,7 +1988,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 25/11 13:44</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 25/11 17:58</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -2765,7 +2792,7 @@ const CERT_BALD=0.16; const ceHoy=()=>{ const d=new Date(); return d.getFullYear
 let CE=null;
 function ceCargar(){ try{ CE=JSON.parse(localStorage.getItem('pmv-cert')||'null'); }catch(e){ CE=null; } if(!CE||!Array.isArray(CE.rows)) CE={num:'',pliego:'',fecha:ceHoy(),rows:[]}; if(!CE.nota) CE.nota={}; }
 let ceT=null;
-function ceGuardar(){ try{ localStorage.setItem('pmv-cert',JSON.stringify(CE)); }catch(e){} clearTimeout(ceT); ceT=setTimeout(()=>{ if(!$('vistaCert').hidden){ renderCertAdm(); renderCertRes(); } },300); }
+function ceGuardar(){ try{ localStorage.setItem('pmv-cert',JSON.stringify(CE)); }catch(e){} ceSumUpd(); clearTimeout(ceT); ceT=setTimeout(()=>{ if(!$('vistaCert').hidden){ renderCertAdm(); renderCertRes(); } },300); }
 function ceHist(){ try{ return JSON.parse(localStorage.getItem('pmv-cert-hist')||'[]'); }catch(e){ return []; } }
 const ceConDatos=r=>Object.entries(r.v||{}).some(([k,v])=>k!=='Z'&&k!=='AL'&&k!=='WP'&&k!=='AD'&&(numTrab(v)||0)>0);
 const ceRid=d=>d?regId(d):'';
@@ -2828,7 +2855,7 @@ function abrirCert(modo){ const adm=modo==='adm'; CE_ADM=adm; $('vistaCert').cla
   $('vistaCert').hidden=false; document.body.style.overflow='hidden';
   const pls=[...new Set((window.DATA_ALL||DATA).map(d=>d.pliego))].sort(pliegoSort); if(!CE.pliego&&pls.length) CE.pliego=pls[pls.length-1];
   $('cePl').innerHTML=pls.map(p=>`<option value="${esc(p)}">Pliego ${esc(p)}</option>`).join(''); $('cePl').value=CE.pliego;
-  $('ceEdit').classList.remove('ad-on'); $('vistaCert').classList.remove('ad-on'); cePrecargar(); ceCabecera(); renderCert(); $('vistaCert').scrollTop=0; }
+  $('ceEdit').classList.remove('ad-on'); $('vistaCert').classList.remove('ad-on'); cePrecargar(); ceCabecera(); renderCert(); ceaPl=CE.pliego||ceaPl||''; ceModo('home'); }
 // certificado nuevo: N°, período y datos de la nota a partir del último guardado del pliego
 function cePrecargar(){ if(CE.rows.length||String(CE.num||'').trim()) return; const l=ceCertsPl(CE.pliego), u=l[l.length-1]; if(!u) return;
   const n=ceNumOrd(u.numero); if(n!=null) CE.num=String(n+1);
@@ -2868,7 +2895,7 @@ function renderCert(){
       <button type="button" class="ce-del" data-del="${r.id}">Quitar</button></div>
       <div class="ce-sum" data-sum>${ceResVereda(r,G)}</div>
       <div class="ce-items"${CE_EDIT.has(r.id)?'':' hidden'}><label class="ce-det">Detalle de trabajos<textarea data-k="det" rows="3" placeholder="Ej: demolición y retiro de vereda existente, nivelación, contrapiso de 10 cm y colocación de baldosas vainilla 20x20…">${esc(r.det||'')}</textarea></label>${G.map(g=>ceItHtml(r,g)).join('')}<div class="ce-items-f"><button type="button" class="btn pri" data-editar="1">Listo, cerrar ítems</button></div></div></div>`).join('')
-    :'<div class="ce-vacio">Todavía no agregaste veredas a este certificado.<br>Tocá <b>＋ Agregar vereda</b> o <b>Agregar las ejecutadas del pliego</b>.</div>';
+    :'<div class="ce-vacio">Todavía no agregaste veredas a este certificado.<br>Tocá <b>＋ Seleccionar</b> en el listado de veredas ejecutadas (arriba).</div>';
   renderCertRes(); if($('ceEdit').classList.contains('ad-on')) renderAdic(); }
 // resumen del certificado (en pantalla)
 // lee un Excel de certificación o de una Orden de Compra (hoja con Ítem / Descripción o Detalle / Unidad / Cantidad / Precio Unitario / Valor Obra o Precio Total …)
@@ -2944,7 +2971,7 @@ function renderCeItems(){ const box=$('ceItBox'); if(!box||$('ceEdit').hidden) r
       <details class="ce-itv"><summary>Ver ítems</summary><div class="ce-at-w"><table class="ce-rt"><thead><tr><th>Ítem</th><th>Descripción</th><th>Un.</th><th>Cant. contratada</th><th>Precio unitario</th><th>Valor obra</th><th>Ya certificado</th></tr></thead><tbody>${it.map(x=>x.unidad?`<tr><td>${esc(x.item)}</td><td class="l">${esc(x.desc)}</td><td>${esc(x.unidad)}</td><td class="n">${ceF(x.D)}</td><td class="n">${ce$(x.PU)}</td><td class="n">${ce$(x.F||x.D*x.PU)}</td><td class="n">${ceF(x.prev0)}</td></tr>`:`<tr class="ce-rub"><td>${esc(x.item)}</td><td colspan="6">${esc(x.desc)}</td></tr>`).join('')}</tbody></table></div></details>`
     :`<p class="ce-nota" style="font-size:14px"><strong>Primer paso:</strong> cargá los ítems del pliego ${esc(CE.pliego||'')} con su <strong>cantidad contratada</strong>, <strong>precio unitario</strong>, <strong>valor obra</strong> y lo <strong>ya certificado</strong>. Se cargan una sola vez por pliego (se pueden pegar desde el Excel del certificado).</p><div class="ce-acc" style="margin-top:10px">${ceImpBtn('primary')}<button type="button" class="btn" id="ceItEd">Cargarlos a mano</button></div><p class="ce-nota" style="margin-top:8px">Con <strong>Importar orden de compra o certificación</strong> elegís el Excel de la <strong>orden de compra</strong> (obra nueva: toma los ítems, cantidades, precios y los datos de la orden) o de una <strong>certificación ya hecha</strong> (además toma el total acumulado del último certificado).</p>`}</div>`;
   $('ceItEd').onclick=ceItemsEditar; }
-function renderCertRes(){ renderCeItems(); const box=$('ceRes'); if(!box||$('ceEdit').hidden) return; const S=ceResumen(CE);
+function renderCertRes(){ renderCeItems(); const box=$('ceRes'); if(!box||$('ceEdit').hidden) return; const S=ceResumen(CE); { const t=S?`${cePc(S.pct)} · ${ce$(S.monto)}`:'—'; if($('ceSumRes')) $('ceSumRes').textContent=t; if($('ceBarRes')) $('ceBarRes').textContent=t; } ceSumUpd();
   if(!S){ box.innerHTML=`<h3 class="ce-sec">Certificado por ítem</h3><div class="obra-card"><p class="ce-nota" style="font-size:14px">El certificado por ítem (acumulado, saldo, % y economías y demasías) se calcula cuando estén cargados los <b>ítems del pliego ${esc(CE.pliego||'')}</b> (arriba, antes de las veredas).</p></div>`; return; }
   const filas=S.R.map(x=>x.titulo?`<tr class="ce-rub"><td>${esc(x.item)}</td><td colspan="9">${esc(x.desc)}</td></tr>`
     :`<tr${x.dem>1e-9?' class="ce-dem"':''}><td>${esc(x.item)}</td><td class="l" title="${esc(x.desc)}">${esc(x.desc)}</td><td>${esc(x.unidad)}</td><td class="n">${ceF(x.D)}</td><td class="n">${ceF(x.prev)}</td><td class="n b">${ceF(x.med)}${x.econ>1e-9?'<small>compensa</small>':''}${x.dem>1e-9?`<small>demasía ${ceF(x.dem)}</small>`:''}</td><td class="n ${ceAcCl(x)}">${ceF(x.acum)}</td><td class="n">${ceF(x.saldo)}</td><td class="n">${cePc(x.pct)}</td><td class="n">${x.monto>0?'$ '+Math.round(x.monto).toLocaleString('es-AR'):''}</td></tr>`).join('');
@@ -2997,7 +3024,8 @@ $('ceObraGuardar').onclick=async()=>{ const pl=CE.pliego; if(!pl){ toast('Elegí
   }catch(e){ toast(e.message||'No se pudo guardar'); } finally{ b.disabled=false; b.textContent=t0; } };
 $('cePl').onchange=()=>{ CE.pliego=$('cePl').value; ceGuardar(); cePrecargar(); ceCabecera(); renderCert(); };
 document.addEventListener('click',e=>{ const b=e.target.closest('[data-cert]'); if(b) abrirCert(b.closest('#obraAdm')?'adm':''); });
-$('certCerrar').onclick=cerrarCert;
+$('certCerrar').onclick=()=>{ if($('ceEdit').classList.contains('ad-on')) adAbrir(false); else cerrarCert(); };
+$('ceBack').onclick=()=>ceModo('home');   // desde Adicionales, la × vuelve a Certificaciones
 
 // ---- ítems del pliego: los carga el inspector de obra o el administrador desde la app (o se pegan del Excel) ----
 let CEI=null;
@@ -3333,16 +3361,19 @@ function certExcel(C){ C=C||CE; const blob=XZ(ceXlsx(C));
 $('ceXls').onclick=()=>{ if(!CE.rows.length){ toast('Agregá al menos una vereda al certificado'); return; } certExcel(CE); };
 
 // ---- certificados guardados (los ven el inspector de obra y el administrador) ----
-function renderCertGuard(){ const box=$('ceGuard'); if(!box) return; const sec=$('ceSecMed'); if(sec&&!$('ceEdit').hidden){ if(box.nextElementSibling!==sec) sec.before(box); } else if(box.parentNode===$('ceEdit')) $('ceEdit').after(box); const p=$('ceEdit').hidden?ceaPl:CE&&CE.pliego;
+const CE_GAB=new Set(); let CE_GAB0=null;   // certificados guardados desplegados
+function renderCertGuard(){ const box=$('ceGuard'); if(!box) return; if(box.previousElementSibling!==$('ceHome')) $('ceHome').after(box);
+  const ed=$('vistaCert').classList.contains('m-ed'), p=ed?CE&&CE.pliego:ceaPl; box.hidden=!p||ed;
   const l=((typeof PW!=='undefined'&&PW.certs)||[]).filter(c=>!p||ceNormPl(c.pliego)===ceNormPl(p)).sort((a,b)=>pliegoSort(String(a.pliego),String(b.pliego))||(ceNumOrd(b.numero)??0)-(ceNumOrd(a.numero)??0));
-  const obra=!$('ceEdit').hidden&&!CE_ADM;
-  box.innerHTML=`<h3 class="ce-sec">Certificados guardados${p?' · pliego '+esc(p):''}</h3><div class="obra-card">${l.length?`<div class="ce-gl">${l.map(c=>`<div class="ce-g" data-gid="${esc(c.id)}"><div><b>Certificado N° ${esc(c.numero)}</b> · Pliego ${esc(c.pliego)}<small>${c.desde||c.hasta?`Período ${esc(ceFechaTxt(c.desde))} al ${esc(ceFechaTxt(c.hasta))} · `:''}${(+c.porcentaje*100).toFixed(2)} % · ${(ceDatos(c).veredas||[]).length} veredas${c.por?' · '+esc(c.por):''}</small></div>
-    <div class="ce-gb"><button type="button" class="btn ce-pdf" data-ga="pdf">PDF</button><button type="button" class="btn ce-xls" data-ga="xls">Excel</button><button type="button" class="btn ce-pdf" data-ga="fotos">Fotos</button><button type="button" class="btn ce-pdf" data-ga="tec">Informe técnico</button>${obra?'<button type="button" class="btn" data-ga="abrir">Abrir</button>':''}</div></div>`).join('')}</div>`
-    :`<p class="ce-nota">Todavía no hay certificados guardados${p?' de este pliego':''}. ${obra?'Cuando termines uno, tocá “Guardar en la planilla”: así queda el acumulado para el siguiente y el administrador lo puede descargar.':'Los guarda el inspector de obra desde la app.'}</p>`}</div>`; }
-$('ceGuard').addEventListener('click',e=>{ const b=e.target.closest('[data-ga]'); if(!b) return; const id=b.closest('[data-gid]').dataset.gid; const c=(PW.certs||[]).find(x=>String(x.id)===id); if(!c) return; const C=ceDeGuardado(c);
+  if(l[0]&&CE_GAB0!==p){ CE_GAB0=p; CE_GAB.add(String(l[0].id)); }   // el último, abierto
+  const obra=!CE_ADM;
+  box.innerHTML=`<h3 class="ce-sec">Certificados guardados</h3>${l.length?`<div class="ce-gl">${l.map(c=>`<div class="ce-g${CE_GAB.has(String(c.id))?' abierto':''}" data-gid="${esc(c.id)}"><div class="ce-gi"><span class="ceh-n">${esc(c.numero)}</span><div><b>Certificado N° ${esc(c.numero)}</b><span class="ceh-tag ok">Guardado</span><small>${c.desde||c.hasta?`${esc(ceFechaTxt(c.desde))} al ${esc(ceFechaTxt(c.hasta))} · `:''}${(ceDatos(c).veredas||[]).length} veredas · ${(+c.porcentaje*100).toFixed(2)} %${c.por?' · '+esc(c.por):''}</small></div><span class="ceh-ar">⌄</span></div>
+    <div class="ce-gb"><button type="button" class="btn ce-pdf" data-ga="pdf">Informe (PDF)</button><button type="button" class="btn ce-xls" data-ga="xls">Excel</button><button type="button" class="btn ce-pdf" data-ga="fotos">Fotos</button><button type="button" class="btn ce-pdf" data-ga="tec">Informe técnico</button>${obra?'<button type="button" class="btn" data-ga="abrir">Abrir para corregir</button>':''}</div></div>`).join('')}</div>`
+    :`<div class="obra-card"><p class="ce-nota">Todavía no hay certificados guardados de este pliego. ${obra?'Cuando termines uno, tocá “Guardar en la planilla”: así queda el acumulado para el siguiente y el administrador lo puede descargar.':'Los guarda el inspector de obra desde la app.'}</p></div>`}`; }
+$('ceGuard').addEventListener('click',e=>{ const gi=e.target.closest('.ce-gi'); if(gi){ const g=gi.closest('[data-gid]'), id=g.dataset.gid; if(CE_GAB.has(id)) CE_GAB.delete(id); else CE_GAB.add(id); g.classList.toggle('abierto',CE_GAB.has(id)); return; } const b=e.target.closest('[data-ga]'); if(!b) return; const id=b.closest('[data-gid]').dataset.gid; const c=(PW.certs||[]).find(x=>String(x.id)===id); if(!c) return; const C=ceDeGuardado(c);
   if(b.dataset.ga==='pdf') ceInformePdf(C); else if(b.dataset.ga==='xls') certExcel(C); else if(b.dataset.ga==='fotos') ceFotosPdf(C); else if(b.dataset.ga==='tec') ceInformeTecPdf(C);
   else if(b.dataset.ga==='abrir'){ if(CE.rows.length&&String(CE.num).trim()!==String(c.numero)&&!confirm(`¿Abrir el certificado N° ${c.numero}? Lo que tenés cargado ahora (N° ${CE.num||'sin número'}) se reemplaza en este dispositivo.`)) return;
-    CE=Object.assign(C,{rows:C.rows.map(r=>{ const d=(window.DATA_ALL||DATA).find(x=>ceRid(x)===r.rid); return Object.assign(r,{id:'c'+Math.random().toString(36).slice(2,9),vid:d?d.id:null}); })}); ceGuardar(); abrirCert(CE_ADM?'adm':''); toast(`Certificado N° ${c.numero} abierto para editar`); } });
+    CE=Object.assign(C,{rows:C.rows.map(r=>{ const d=(window.DATA_ALL||DATA).find(x=>ceRid(x)===r.rid); return Object.assign(r,{id:'c'+Math.random().toString(36).slice(2,9),vid:d?d.id:null}); })}); ceGuardar(); abrirCert(CE_ADM?'adm':''); ceModo('ed'); toast(`Certificado N° ${c.numero} abierto para corregir`); } });
 
 // --- vista de administración: solo veredas ejecutadas, con Excel y PDF ---
 function ceaLista(){ const all=window.DATA_ALL||DATA; return all.filter(d=>d.eje&&(!ceaPl||d.pliego===ceaPl)).sort((a,b)=>pliegoSort(a.pliego,b.pliego)||a.calle.localeCompare(b.calle,'es')||a.dom.localeCompare(b.dom,'es',{numeric:true})); }
@@ -3351,19 +3382,19 @@ const CEA_COLS=[['N°',d=>d._i,'n'],['Pliego',d=>d.pliego],['Calle',d=>callesDe(
   ['Nivelación (m²)',d=>d.niv,'q'],['Provisión (m²)',d=>d.prov,'q'],['Contrapiso (m²)',d=>d.contra,'q'],['Juntas (ml)',d=>d.juntas,'q'],['Cazuelas (u.)',d=>d.caz,'q'],['Monto pagado',d=>typeof d.monto==='number'?d.monto:null,'$'],['Observación',d=>d.obs||'']];
 function ceaDatos(){ return ceaLista().map((d,i)=>Object.assign(Object.create(d),{_i:i+1,_e:ceaEje(d)})); }
 // para descargar: el inspector de obra baja solo las veredas seleccionadas o cargadas en un certificado; el administrador, todas
-function ceaDatosDesc(){ const carga=!$('ceEdit').hidden&&!CE_ADM; /* el administrador descarga todas las ejecutadas */ let l=ceaLista(); if(carga) l=l.filter(d=>ceaMarca(d)); return l.map((d,i)=>Object.assign(Object.create(d),{_i:i+1,_e:ceaEje(d)})); }
-function renderCertAdm(){ if($('ceaAdic')) $('ceaAdic').hidden=$('ceEdit').hidden||CE_ADM; const all=window.DATA_ALL||DATA, pls=[...new Set(all.filter(d=>d.eje).map(d=>d.pliego))].sort(pliegoSort); if(ceaPl&&!pls.includes(ceaPl)) ceaPl='';
+function ceaDatosDesc(){ const carga=$('vistaCert').classList.contains('m-ed')&&!CE_ADM; /* el administrador descarga todas las ejecutadas */ let l=ceaLista(); if(carga) l=l.filter(d=>ceaMarca(d)); return l.map((d,i)=>Object.assign(Object.create(d),{_i:i+1,_e:ceaEje(d)})); }
+function renderCertAdm(){ if($('ceaAdic')) $('ceaAdic').hidden=true; const all=window.DATA_ALL||DATA, pls=[...new Set(all.filter(d=>d.eje).map(d=>d.pliego))].sort(pliegoSort); if(ceaPl&&!pls.includes(ceaPl)) ceaPl='';
   $('ceaPl').innerHTML=`<button type="button" data-p="" aria-pressed="${!ceaPl}">Todos los pliegos</button>`+pls.map(p=>`<button type="button" data-p="${esc(p)}" aria-pressed="${ceaPl===p}">Pliego ${esc(p)}</button>`).join('');
-  $('ceaPl').querySelectorAll('button').forEach(b=>b.onclick=()=>{ ceaPl=b.dataset.p; renderCertAdm(); });
+  $('ceaPl').querySelectorAll('button').forEach(b=>b.onclick=()=>ceElegirPl(b.dataset.p));
   const L=ceaDatos(); const fmt=(v,k)=>v==null||v===''?'':k==='$'?'$ '+Math.round(v).toLocaleString('es-AR'):k==='q'?String(v).replace('.',','):esc(v);
   const tot=CEA_COLS.map(([h,f,k])=>k==='q'||k==='$'?L.reduce((s,d)=>s+(+f(d)||0),0):null);
-  const carga=!$('ceEdit').hidden&&!CE_ADM;
+  const carga=$('vistaCert').classList.contains('m-ed')&&!CE_ADM;
   const marca=d=>{ const m=ceaMarca(d); return m?`<span class="cea-m ${m.c}">${esc(m.t)}</span>`:`<button type="button" class="cea-sel" data-sel="${d.id}">＋ Seleccionar</button>`; };
   $('ceaRes').innerHTML=L.length?`<p class="ce-cnt"><b>${L.length}</b> vereda${L.length===1?'':'s'} ejecutada${L.length===1?'':'s'}${ceaPl?' en el pliego '+esc(ceaPl):''}. ${carga?'Tocá <b>＋ Seleccionar</b> para sumarla al certificado, o la vereda para ver su ficha. En el Excel y el PDF salen solo las seleccionadas.':'Tocá una para ver su ficha completa.'}</p>
     <div class="ce-at-w"><table class="ce-at"><thead><tr>${carga?'<th>Certificado</th>':''}${CEA_COLS.map(([h,,k])=>`<th${k?' class="n"':''}>${h}</th>`).join('')}</tr></thead>
     <tbody>${L.map(d=>`<tr data-ficha="${d.id}">${carga?`<td class="cea-c">${marca(d)}</td>`:''}${CEA_COLS.map(([,f,k])=>`<td${k?' class="n"':''}>${fmt(f(d),k)}</td>`).join('')}</tr>`).join('')}</tbody>
     <tfoot><tr>${carga?'<td></td>':''}${CEA_COLS.map(([h,,k],i)=>`<td${k?' class="n"':''}>${i===0?'':i===1?'Totales':tot[i]==null?'':k==='$'?'$ '+Math.round(tot[i]).toLocaleString('es-AR'):(Math.round(tot[i]*100)/100).toLocaleString('es-AR')}</td>`).join('')}</tr></tfoot></table></div>`
-    :'<p class="ce-cnt">Todavía no hay veredas ejecutadas'+(ceaPl?' en este pliego':'')+'.</p>'; renderCertGuard(); }
+    :'<p class="ce-cnt">Todavía no hay veredas ejecutadas'+(ceaPl?' en este pliego':'')+'.</p>'; renderCeHome(); renderCertGuard(); }
 $('ceaRes').addEventListener('click',e=>{ const s=e.target.closest('[data-sel]');
   if(s){ e.stopPropagation(); const d=(window.DATA_ALL||DATA).find(x=>x.id===+s.dataset.sel); if(!d) return; if(CE.rows.some(r=>r.vid===d.id)) return;
     const r=ceFila(); r.vid=d.id; r.calle=callesDe(d)[0]||d.calle; r.nro=ceNumDom(d.dom); CE.rows.push(r); if(!CE.pliego) CE.pliego=d.pliego; ceGuardar(); renderCert(); renderCertAdm();
@@ -3442,39 +3473,43 @@ function adCampos(x){ return x.tipo?MT[x.tipo].f:[['Q','Cantidad',x.unidad]]; }
 const AD_DEF={Z:String(CERT_BALD).replace('.',','),AL:String(CERT_BALD).replace('.',',')};   // tamaño de baldosa por defecto, como en el certificado
 const adS=(r,x)=>{ const s=(r.v||{})[x.item]||{}, o={}; adCampos(x).forEach(([k])=>{ if(AD_DEF[k]!=null) o[k]=AD_DEF[k]; }); return Object.assign(o,s); };
 function adVals(r,x){ const s=adS(r,x), v={}; adCampos(x).forEach(([k])=>v[k]=ceN(s[k])); return v; }
-function adCant(r,x){ const v=adVals(r,x); if(!x.tipo) return ceR2(v.Q); const m=MT[x.tipo], fr={v:adS(r,x)}, c={}; m.r.forEach(([k,,,fn])=>c[k]=ceR2(fn(v,fr))); return ceR2(m.q(c,v)||0); }
-const adCarg=(r,x)=>adCampos(x).some(([k])=>!['WP','Z','AL','AD'].includes(k)&&ceN(((r.v||{})[x.item]||{})[k])>0);
+const adQImp=(r,x)=>{ const s=(r.v||{})[x.item]||{}; return s._q!=null&&String(s._q).trim()!==''?ceN(s._q):null; };   // cantidad directa (importada del Excel)
+const adDims=(r,x)=>x.tipo&&MT[x.tipo].f.some(([k])=>!['WP','Z','AL','AD'].includes(k)&&ceN(((r.v||{})[x.item]||{})[k])>0);
+function adCant(r,x){ const v=adVals(r,x); if(!x.tipo) return ceR2(v.Q); if(!adDims(r,x)&&adQImp(r,x)!=null) return ceR2(adQImp(r,x)); const m=MT[x.tipo], fr={v:adS(r,x)}, c={}; m.r.forEach(([k,,,fn])=>c[k]=ceR2(fn(v,fr))); return ceR2(m.q(c,v)||0); }
+const adCarg=(r,x)=>adCampos(x).some(([k])=>!['WP','Z','AL','AD'].includes(k)&&ceN(((r.v||{})[x.item]||{})[k])>0)||(adQImp(r,x)||0)>0;
 const adU=x=>x.tipo?MT[x.tipo].u:(x.unidad||'');
 function adTotales(){ const it=adItems().filter(x=>x.unidad), rows=adPl().rows; return it.map(x=>({x,q:ceR2(rows.reduce((s,r)=>s+adCant(r,x),0))})); }
-function adSum(r){ const it=adItems().filter(x=>x.unidad&&adCarg(r,x)), ab=AD_EDIT.has(r.id), det=String(r.det||'').trim();
-  return `<div class="ce-sum-h"><b>Ítems cargados${it.length?` (${it.length})`:''}</b><button type="button" class="btn ce-sum-b${ab?'':' pri'}" data-adeditar="1">${ab?'Cerrar ítems':it.length?'Editar ítems':'Cargar ítems'}</button></div>`+
-    (it.length?`<table class="ce-sum-t"><thead><tr><th>Ítem</th><th>Descripción</th><th>Cantidad</th></tr></thead><tbody>${it.map(x=>`<tr><td>${esc(x.item)}</td><td>${esc(ceCap(x.desc))}</td><td class="n">${ceF4n(adCant(r,x))} ${esc(adU(x))}</td></tr>`).join('')}</tbody></table>`:'<p class="ce-sum-v">Todavía no hay ítems cargados en esta vereda.</p>')+
+function adSum(r){ const it=adItems().filter(x=>x.unidad&&adCarg(r,x)), ab=AD_EDIT.has(r.id);
+  return `<div class="ce-sum-h"><b data-asn>Ítems cargados${it.length?` (${it.length})`:''}</b><button type="button" class="btn ce-sum-b${ab?'':' pri'}" data-adeditar="1">${ab?'Cerrar ítems':it.length?'Editar ítems':'Cargar ítems'}</button></div><div data-asb>${adSumBody(r)}</div>`; }
+function adSumBody(r){ const it=adItems().filter(x=>x.unidad&&adCarg(r,x)), det=String(r.det||'').trim();
+  return (it.length?`<table class="ce-sum-t"><thead><tr><th>Ítem</th><th>Descripción</th><th>Cantidad</th></tr></thead><tbody>${it.map(x=>`<tr><td>${esc(x.item)}</td><td>${esc(ceCap(x.desc))}</td><td class="n">${ceF4n(adCant(r,x))} ${esc(adU(x))}</td></tr>`).join('')}</tbody></table>`:'<p class="ce-sum-v">Todavía no hay ítems cargados en esta vereda.</p>')+
     `<p class="ce-sum-det"${det?'':' hidden'}><b>Detalle de trabajos:</b> <span>${esc(det)}</span></p>`; }
 function adItHtml(r,x){ if(!x.unidad) return `<div class="ad-rub">${esc(x.item)} · ${esc(x.desc)}</div>`;
   const s=adS(r,x), campos=adCampos(x).map(([k,l,u])=>k==='WP'?`<label class="ce-pct">${l} *<select data-av="WP">${CE_PCTS.map(p=>`<option value="${p}"${p===cePct({v:s})?' selected':''}>${p} %</option>`).join('')}</select></label>`
     :`<label>${l}${u?` (${esc(u)})`:''}<input data-av="${k}" value="${esc(s[k]??'')}" inputmode="decimal" placeholder="0"></label>`).join('');
-  return `<div class="ce-it${adCarg(r,x)?' carg':''}" data-ai="${esc(x.item)}"><h4>Ítem ${esc(x.item)} · ${esc(ceCap(x.desc))}</h4><div class="ce-f">${campos}</div>${x.tipo==='contrapiso'?'<p class="ce-pnota">* El % a certificar depende del espesor que realice la empresa.</p>':''}<div class="ce-r"><span data-aq>Cantidad: ${ceF4n(adCant(r,x))} ${esc(adU(x))}</span></div></div>`; }
+  return `<div class="ce-it${adCarg(r,x)?' carg':''}" data-ai="${esc(x.item)}"><h4>Ítem ${esc(x.item)} · ${esc(ceCap(x.desc))}</h4><div class="ce-f">${campos}</div>${x.tipo==='contrapiso'?'<p class="ce-pnota">* El % a certificar depende del espesor que realice la empresa.</p>':''}${x.tipo&&adQImp(r,x)!=null?`<p class="ce-pnota">Cantidad del Excel: ${ceF4n(adQImp(r,x))} ${esc(adU(x))}. Si cargás las medidas, se usan las medidas.</p>`:''}<div class="ce-r"><span data-aq>Cantidad: ${ceF4n(adCant(r,x))} ${esc(adU(x))}</span></div></div>`; }
 function adTotHtml(){ const T=adTotales(), con=T.filter(t=>t.q>0), imp=T.reduce((s,t)=>s+t.q*t.x.PU,0);
   return `<h3 class="ce-sec">Total de adicionales por ítem</h3><div class="obra-card ce-rs"><div class="ce-kpi"><div><span>Veredas</span><b>${adPl().rows.length}</b></div><div><span>Ítems con cantidad</span><b>${con.length} de ${T.length}</b></div><div><span>Importe (a precio de la orden de compra)</span><b>${ce$(imp)}</b></div></div>
     <div class="ce-at-w"><table class="ce-rt"><thead><tr><th>Ítem</th><th>Descripción</th><th>Un.</th><th>Cantidad total</th><th>Precio unitario</th><th>Importe</th></tr></thead><tbody>${T.map(t=>`<tr${t.q>0?'':' class="ad-cero"'}><td>${esc(t.x.item)}</td><td class="l" title="${esc(t.x.desc)}">${esc(t.x.desc)}</td><td>${esc(t.x.unidad)}</td><td class="n b">${ceF4n(t.q)}</td><td class="n">${ce$(t.x.PU)}</td><td class="n">${t.q>0?ce$(t.q*t.x.PU):''}</td></tr>`).join('')}</tbody>
     <tfoot><tr><td colspan="5" class="l">Total</td><td class="n">${ce$(imp)}</td></tr></tfoot></table></div></div>`; }
 function renderAdic(){ const box=$('adBox'); if(!box) return; const A=adPl(), it=adItems(), hay=it.some(x=>x.unidad);
   box.innerHTML=`<div class="obra-card ad-cab"><div class="ad-top"><div><h3>Adicionales · pliego ${esc(CE.pliego||'')}</h3><p class="ce-nota">Medición por vereda con todos los ítems de la orden de compra. Se suma por ítem y se descarga en un Excel con el total de cada uno. Lo cargado queda en este dispositivo.</p></div>
-      <button type="button" class="btn" id="adVolver">← Volver al certificado</button></div>
-    ${hay?`<div class="ce-acc"><button type="button" class="btn primary" id="adAdd">＋ Agregar vereda</button><button type="button" class="btn ce-xls" id="adXls"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>Excel de adicionales</button>${A.rows.length?'<button type="button" class="btn ce-new" id="adVaciar">Vaciar adicionales</button>':''}</div>`
+      <button type="button" class="btn" id="adVolver">← Volver a Certificaciones</button></div>
+    ${hay?`<div class="ce-acc"><button type="button" class="btn primary" id="adAdd">＋ Agregar vereda</button><button type="button" class="btn ce-xls" id="adXls"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>Excel de adicionales</button><button type="button" class="btn" id="adImp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V8M7 13l5-5 5 5M5 5h14"/></svg>Cargar desde Excel</button><button type="button" class="btn" id="adModelo">Planilla modelo</button><input type="file" id="adFile" accept=".xlsx,.xls,.xlsm,.ods,.csv" hidden>${A.rows.length?'<button type="button" class="btn ce-new" id="adVaciar">Vaciar adicionales</button>':''}</div>`
       :`<p class="ce-nota" style="font-size:14px">Primero cargá los <b>ítems del pliego ${esc(CE.pliego||'')}</b> (en el certificado, “Ítems del pliego” → Importar orden de compra o Editar ítems).</p>`}</div>
     ${hay?`${A.rows.length?adTotHtml():''}<h3 class="ce-sec">Medición por vereda · adicionales</h3>`+(A.rows.length?A.rows.map((r,i)=>`<div class="ce-row ad-row" data-ar="${r.id}"><div class="ce-rh ad-rh"><span class="ce-n">${i+1}</span>
       <label>Calle<input data-ak="calle" value="${esc(r.calle||'')}" list="callesList" placeholder="Calle"></label>
       <label>N°<input data-ak="nro" value="${esc(r.nro||'')}" inputmode="numeric" placeholder="Altura"></label>
+      <label>Pliego<input data-ak="pl" value="${esc(r.pl||'')}" placeholder="${esc(CE.pliego||'')}"></label>
       <button type="button" class="ce-del" data-adel="${r.id}">Quitar</button></div>
       <div class="ce-sum" data-asum>${adSum(r)}</div>
       <div class="ce-items"${AD_EDIT.has(r.id)?'':' hidden'}><label class="ce-det">Detalle de trabajos<textarea data-ak="det" rows="3" placeholder="Qué trabajos adicionales se hicieron en esta vereda…">${esc(r.det||'')}</textarea></label>${it.map(x=>adItHtml(r,x)).join('')}<div class="ce-items-f"><button type="button" class="btn pri" data-adeditar="1">Listo, cerrar ítems</button></div></div></div>`).join('')
       :'<div class="ce-vacio">Todavía no hay veredas con adicionales.<br>Tocá <b>＋ Agregar vereda</b>.</div>'):''}`;
   if($('adVolver')) $('adVolver').onclick=()=>adAbrir(false);
   if($('adAdd')) $('adAdd').onclick=()=>{ const r={id:'a'+Math.random().toString(36).slice(2,9),calle:'',nro:'',det:'',v:{}}; adPl().rows.push(r); AD_EDIT.add(r.id); adGuardar(); renderAdic(); setTimeout(()=>{ const e=document.querySelector(`[data-ar="${r.id}"] [data-ak="calle"]`); if(e){ e.scrollIntoView({block:'center'}); e.focus(); } },50); };
-  if($('adXls')) $('adXls').onclick=adExcel;
+  if($('adXls')) $('adXls').onclick=adExcel; if($('adImp')) $('adImp').onclick=()=>$('adFile').click(); if($('adFile')) $('adFile').onchange=e=>{ adImportar(e.target.files[0]); e.target.value=''; }; if($('adModelo')) $('adModelo').onclick=adModelo;
   if($('adVaciar')) $('adVaciar').onclick=()=>{ if(!confirm(`¿Borrar todos los adicionales cargados del pliego ${CE.pliego}? (${adPl().rows.length} veredas)`)) return; adPl().rows=[]; adGuardar(); renderAdic(); }; }
-function adAbrir(si){ adCargar(); $('ceEdit').classList.toggle('ad-on',!!si); $('vistaCert').classList.toggle('ad-on',!!si); if(si) renderAdic(); else renderCert(); $('vistaCert').scrollTop=0; }
+function adAbrir(si){ adCargar(); $('certCerrar').setAttribute('aria-label',si?'Volver a Certificaciones':'Cerrar'); if(!si){ ceModo('home'); return; } if(ceaPl&&CE.pliego!==ceaPl&&!CE.rows.length){ CE.pliego=ceaPl; ceGuardar(); } $('vistaCert').classList.add('m-ed','ad-on'); $('ceEdit').classList.add('ad-on'); $('vistaCert').querySelector('.obra-top h2').textContent='Adicionales'; renderAdic(); $('vistaCert').scrollTop=0; }
 $('ceAdic').onclick=()=>adAbrir(true); $('ceaAdic').onclick=()=>adAbrir(true);
 let adT=null; const adTot=()=>{ clearTimeout(adT); adT=setTimeout(()=>{ const b=document.querySelector('#adBox .ce-rs'); if(!b) return; const h=document.createElement('div'); h.innerHTML=adTotHtml(); b.replaceWith(h.querySelector('.ce-rs')); },400); };
 $('adBox').addEventListener('input',e=>{ const box=e.target.closest('[data-ar]'); if(!box) return; const r=adPl().rows.find(x=>x.id===box.dataset.ar); if(!r) return;
@@ -3482,7 +3517,8 @@ $('adBox').addEventListener('input',e=>{ const box=e.target.closest('[data-ar]')
   else if(e.target.dataset.av){ const it=e.target.closest('[data-ai]'), x=adItems().find(z=>z.item===it.dataset.ai); if(!x) return; r.v=r.v||{}; r.v[x.item]=r.v[x.item]||{}; r.v[x.item][e.target.dataset.av]=e.target.value;
     it.querySelector('[data-aq]').textContent=`Cantidad: ${ceF4n(adCant(r,x))} ${adU(x)}`; it.classList.toggle('carg',adCarg(r,x)); adTot(); }
   adGuardar(); });
-$('adBox').addEventListener('change',e=>{ const box=e.target.closest('[data-ar]'); if(!box) return; const r=adPl().rows.find(x=>x.id===box.dataset.ar); if(r) box.querySelector('[data-asum]').innerHTML=adSum(r); });
+$('adBox').addEventListener('change',e=>{ const box=e.target.closest('[data-ar]'); if(!box) return; const r=adPl().rows.find(x=>x.id===box.dataset.ar); if(!r) return; const n=adItems().filter(x=>x.unidad&&adCarg(r,x)).length;
+  box.querySelector('[data-asn]').textContent='Ítems cargados'+(n?` (${n})`:''); box.querySelector('[data-asb]').innerHTML=adSumBody(r); });   // sin tocar el botón: si no, el toque en “Cerrar ítems” se pierde
 $('adBox').addEventListener('click',e=>{ const d=e.target.closest('[data-adel]'); if(d){ const l=adPl().rows, i=l.findIndex(x=>x.id===d.dataset.adel); if(i<0) return; const r=l[i]; if(Object.keys(r.v||{}).length&&!confirm(`¿Quitar ${(r.calle||'esta vereda')+' '+(r.nro||'')} de los adicionales?`)) return; l.splice(i,1); adGuardar(); renderAdic(); return; }
   const b=e.target.closest('[data-adeditar]'); if(!b) return; const box=b.closest('[data-ar]'), id=box.dataset.ar, r=adPl().rows.find(x=>x.id===id); if(!r) return;
   const ab=!AD_EDIT.has(id); if(ab) AD_EDIT.add(id); else AD_EDIT.delete(id); box.querySelector('.ce-items').hidden=!ab; box.querySelector('[data-asum]').innerHTML=adSum(r);
@@ -3498,11 +3534,11 @@ function adXlsx(){ const it=adItems().filter(x=>x.unidad), rows=adPl().rows, pl=
   const put=(R,r,c,v,s,ht)=>{ R[r]=R[r]||{c:{}}; R[r].c[c]=[v,s]; if(ht) R[r].ht=ht; };
   const n=ceNotaDe(CE), sub=`Municipalidad de Salta · Pliego ${pl}${n.obra?' · '+ceUpper(n.obra):''}${n.oc?' · O.C. N° '+n.oc:''} · ${ceFechaTxt(ceHoy())}`;
   // 2) Detalle por vereda
-  const D={}, dm=[], c0=4, uc=CL(c0+it.length-1), f1=5, fN=f1+Math.max(rows.length,1)-1, fT=fN+1;
+  const D={}, dm=[], c0=5, uc=CL(c0+it.length-1), f1=5, fN=f1+Math.max(rows.length,1)-1, fT=fN+1;
   put(D,1,'A','ADICIONALES · DETALLE POR VEREDA',1,26); put(D,2,'A',sub,2,20); dm.push(`A1:${uc}1`,`A2:${uc}2`);
-  ['N°','Calle','N°','Detalle de trabajos'].forEach((h,i)=>put(D,4,CL(i),h,3,58)); it.forEach((x,j)=>put(D,4,CL(c0+j),`${x.item} · ${x.desc} (${x.unidad})`,3));
-  rows.forEach((r,i)=>{ const f=f1+i; put(D,f,'A',i+1,10); put(D,f,'B',r.calle||'',4); put(D,f,'C',r.nro||'',10); put(D,f,'D',r.det||'',4); it.forEach((x,j)=>{ const q=adCant(r,x); put(D,f,CL(c0+j),q||null,5); }); });
-  put(D,fT,'A','TOTAL',7); dm.push(`A${fT}:D${fT}`); ['B','C','D'].forEach(c=>put(D,fT,c,'',7));
+  ['N°','Calle','N°','Pliego','Detalle de trabajos'].forEach((h,i)=>put(D,4,CL(i),h,3,58)); it.forEach((x,j)=>put(D,4,CL(c0+j),`${x.item} · ${x.desc} (${x.unidad})`,3));
+  rows.forEach((r,i)=>{ const f=f1+i; put(D,f,'A',i+1,10); put(D,f,'B',r.calle||'',4); put(D,f,'C',r.nro||'',10); put(D,f,'D',r.pl||pl,10); put(D,f,'E',r.det||'',4); it.forEach((x,j)=>{ const q=adCant(r,x); put(D,f,CL(c0+j),q||null,5); }); });
+  put(D,fT,'A','TOTAL',7); dm.push(`A${fT}:E${fT}`); ['B','C','D','E'].forEach(c=>put(D,fT,c,'',7));
   const tot=adTotales(); it.forEach((x,j)=>{ const c=CL(c0+j); put(D,fT,c,{f:`SUM(${c}${f1}:${c}${fN})`,v:tot[j].q},8); });
   // 1) Total por ítem
   const T={}, tm=[];
@@ -3515,8 +3551,8 @@ function adXlsx(){ const it=adItems().filter(x=>x.unidad), rows=adPl().rows, pl=
   const M={}, mm=[]; put(M,1,'A','ADICIONALES · MEDIDAS CARGADAS',1,26); put(M,2,'A',sub,2,20); mm.push('A1:F1','A2:F2');
   ['N°','Domicilio','Ítem','Descripción','Medidas','Cantidad'].forEach((h,i)=>put(M,4,CL(i),h,3,24)); let g=5;
   rows.forEach((r,i)=>it.filter(x=>adCarg(r,x)).forEach(x=>{ const s=adS(r,x); put(M,g,'A',i+1,10); put(M,g,'B',`${r.calle||''} ${r.nro||''}`.trim(),4); put(M,g,'C',x.item,10); put(M,g,'D',x.desc,4);
-    put(M,g,'E',adCampos(x).filter(([k])=>s[k]!=null&&String(s[k]).trim()!=='').map(([k,l,u])=>`${l}: ${k==='WP'?cePct({v:s})+' %':String(s[k]).replace('.',',')+(u?' '+u:'')}`).join(' · '),4); put(M,g,'F',adCant(r,x),5); g++; }));
-  const sheets=[{name:'Total por ítem',xml:hoja(T,[8,58,9,15,17,19],tm,4,false)},{name:'Detalle por vereda',xml:hoja(D,[6,22,8,40,...it.map(()=>15)],dm,4,true)},{name:'Medidas cargadas',xml:hoja(M,[6,26,8,44,52,13],mm,4,true)}];
+    put(M,g,'E',adDims(r,x)||!x.tipo?adCampos(x).filter(([k])=>s[k]!=null&&String(s[k]).trim()!=='').map(([k,l,u])=>`${l}: ${k==='WP'?cePct({v:s})+' %':String(s[k]).replace('.',',')+(u?' '+u:'')}`).join(' · '):`Cantidad del Excel: ${String(s._q).replace('.',',')}`,4); put(M,g,'F',adCant(r,x),5); g++; }));
+  const sheets=[{name:'Total por ítem',xml:hoja(T,[8,58,9,15,17,19],tm,4,false)},{name:'Detalle por vereda',xml:hoja(D,[6,22,8,8,40,...it.map(()=>15)],dm,4,true)},{name:'Medidas cargadas',xml:hoja(M,[6,26,8,44,52,13],mm,4,true)}];
   const B='<border><left style="thin"><color rgb="FFB7C3D1"/></left><right style="thin"><color rgb="FFB7C3D1"/></right><top style="thin"><color rgb="FFB7C3D1"/></top><bottom style="thin"><color rgb="FFB7C3D1"/></bottom><diagonal/></border>';
   const X=(nf,fo,fi,b,al)=>`<xf numFmtId="${nf}" fontId="${fo}" fillId="${fi}" borderId="${b}" xfId="0"${nf?' applyNumberFormat="1"':''} applyFont="1" applyFill="1" applyBorder="1"${al?' applyAlignment="1"><alignment '+al+'/></xf>':'/>'}`;
   const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="2"><numFmt numFmtId="165" formatCode="&quot;$&quot; #,##0.00"/><numFmt numFmtId="167" formatCode="#,##0.00##"/></numFmts>
@@ -3531,6 +3567,77 @@ function adXlsx(){ const it=adItems().filter(x=>x.unidad), rows=adPl().rows, pl=
     ['xl/styles.xml',styles],...sheets.map((s,i)=>[`xl/worksheets/sheet${i+1}.xml`,s.xml])]; }
 function adExcel(){ if(!adPl().rows.length){ toast('Agregá al menos una vereda a los adicionales'); return; }
   download(`adicionales_pliego${String(CE.pliego||'').replace(/[^\w-]+/g,'')}_${ceHoy()}.xlsx`,XZ(adXlsx())); toast('Excel de adicionales descargado'); }
+
+// ---------- Certificaciones: inicio por pliego + carga en una sola pantalla ----------
+function ceModo(m){ const v=$('vistaCert'), ed=m==='ed'; v.classList.toggle('m-ed',ed); v.classList.remove('ad-on'); $('ceEdit').classList.remove('ad-on'); if(ed) v.classList.remove('ls-on');
+  const card=document.querySelector('#vistaCert .ce-ls'); if(card){ if(ed){ ceaPl=CE.pliego||ceaPl; $('ceElegirIn').appendChild(card); } else $('ceAdmBox').appendChild(card); }
+  $('certCerrar').setAttribute('aria-label','Cerrar');
+  if(ed){ $('ceAcDatos').open=CE_ADM||!String(CE.num||'').trim(); $('ceAcIt').open=CE_ADM||!ceConItems(CE.pliego); $('ceElegir').open=!CE.rows.length; ceCabecera(); renderCert(); }
+  renderCertAdm(); ceSumUpd(); v.scrollTop=0; }
+function ceSumUpd(){ const v=$('vistaCert'); if(!v||!CE) return; const t=(id,x)=>{ const e=$(id); if(e) e.textContent=x; };
+  t('ceSumDatos',CE_ADM?'':`N° ${String(CE.num||'').trim()||'—'}${CE.desde||CE.hasta?` · ${ceFechaTxt(CE.desde)||'…'} al ${ceFechaTxt(CE.hasta)||'…'}`:''}`);
+  if(v.classList.contains('m-ed')&&!CE_ADM){ const n=ceaLista().filter(d=>!ceaMarca(d)).length; t('ceSumEle',n?`· ${n} disponible${n===1?'':'s'}`:'· no quedan sin certificar'); }
+  t('ceSumVer',`${CE.rows.length} vereda${CE.rows.length===1?'':'s'}`);
+  { const n=ceItemsPl(CE.pliego).filter(x=>x.unidad).length; t('ceSumIt',n?`${n} ítems cargados`:'sin cargar'); }
+  if(v.classList.contains('m-ed')&&!v.classList.contains('ad-on')) v.querySelector('.obra-top h2').textContent=CE_ADM?`Pliego ${CE.pliego||''}`:`Certificado N° ${String(CE.num||'').trim()||'nuevo'}`;
+  else if(!v.classList.contains('ad-on')) v.querySelector('.obra-top h2').textContent='Certificaciones'; }
+function ceElegirPl(p){ ceaPl=p||''; if(ceaPl&&CE.pliego!==ceaPl&&!CE.rows.length){ CE={num:'',pliego:ceaPl,fecha:ceHoy(),rows:[],nota:{}}; ceGuardar(); cePrecargar(); ceCabecera(); } $('vistaCert').classList.remove('ls-on'); renderCertAdm(); }
+function cePlKpi(p){ const all=window.DATA_ALL||DATA, eje=all.filter(d=>d.eje&&d.pliego===p), cert=ceRidCert(); return {eje:eje.length,sin:eje.filter(d=>!cert.has(ceRid(d))).length,certs:ceCertsPl(p)}; }
+const ceKpHtml=k=>`<div class="ceh-kp"><div><b>${k.eje}</b><span>ejecutadas</span></div><div><b>${k.sin}</b><span>sin certificar</span></div><div><b>${k.certs.length}</b><span>certificado${k.certs.length===1?'':'s'}</span></div></div>`;
+function renderCeHome(){ const box=$('ceHome'); if(!box) return; const v=$('vistaCert'); if(v.classList.contains('m-ed')) return;
+  const all=window.DATA_ALL||DATA, pls=[...new Set(all.map(d=>d.pliego).filter(Boolean))].sort(pliegoSort), p=ceaPl;
+  if(!p){ box.innerHTML=pls.map(x=>{ const k=cePlKpi(x), u=k.certs[k.certs.length-1]; return `<button type="button" class="ceh-pl" data-hp="${esc(x)}"><h4>Pliego ${esc(x)}<span>Entrar ›</span></h4>${ceKpHtml(k)}<small>${u?`Último: Certificado N° ${esc(u.numero)}${u.hasta?' · hasta '+esc(ceFechaTxt(u.hasta)):''} · ${(+u.porcentaje*100).toFixed(2)} %`:'Todavía sin certificados'}</small></button>`; }).join(''); return; }
+  const k=cePlKpi(p), obra=!CE_ADM, ls=v.classList.contains('ls-on');
+  let h=ceKpHtml(k);
+  if(obra){ const u=k.certs[k.certs.length-1], n=u&&ceNumOrd(u.numero)!=null?ceNumOrd(u.numero)+1:1; let desde=''; { const f=u&&ceFechaIso(u.hasta); if(f){ const d=new Date(f+'T12:00:00'); d.setDate(d.getDate()+1); desde=ceFechaTxt(d.toISOString().slice(0,10)); } }
+    const mio=ceNormPl(CE.pliego)===ceNormPl(p)&&(CE.rows.length>0), guardado=mio&&k.certs.some(c=>String(c.numero)===String(CE.num).trim());
+    h+=`<button type="button" class="ceh-nuevo" data-h="nuevo"><i>＋</i><span>Nuevo certificado<small>Certificado N° ${n}${desde?' · desde '+desde:''}</small></span></button>`;
+    if(mio) h+=`<button type="button" class="ceh-c bor" data-h="seguir"><span class="ceh-n">${esc(String(CE.num||'').trim()||'?')}</span><span><b>Certificado N° ${esc(String(CE.num||'').trim()||'sin número')}</b><span class="ceh-tag ${guardado?'ab':'bo'}">${guardado?'Abierto':'Borrador'}</span><small>${CE.rows.length} vereda${CE.rows.length===1?'':'s'} cargada${CE.rows.length===1?'':'s'} · ${guardado?'para corregir':'sin guardar'}</small></span><span class="ceh-ar">›</span></button>`;
+    h+=`<div class="ceh-t"><button type="button" class="adic" data-h="adic"><span class="ico">＋</span>Adicionales</button><button type="button" data-h="ls" aria-pressed="${ls}"><span class="ico">⬇</span>Listado ejecutadas</button></div>`; }
+  else h+=`<div class="ceh-t"><button type="button" data-h="obra"><span class="ico">📄</span>Datos de obra (orden de compra)</button><button type="button" data-h="items"><span class="ico">☰</span>Ítems del pliego (${ceItemsPl(p).filter(x=>x.unidad).length||'sin cargar'})</button></div><div class="ceh-t" style="grid-template-columns:1fr"><button type="button" data-h="ls" aria-pressed="${ls}"><span class="ico">⬇</span>Listado de veredas ejecutadas (Excel / PDF)</button></div>`;
+  box.innerHTML=h; }
+$('ceHome').addEventListener('click',e=>{ const pl=e.target.closest('[data-hp]'); if(pl){ ceElegirPl(pl.dataset.hp); return; }
+  const b=e.target.closest('[data-h]'); if(!b) return; const a=b.dataset.h, p=ceaPl;
+  if(a==='nuevo'){ const C0=CE; if(CE.rows.length){ $('ceNuevo').click(); if(CE===C0) return; } CE={num:'',pliego:p,fecha:ceHoy(),rows:[],nota:{}}; ceGuardar(); cePrecargar(); ceModo('ed'); }
+  else if(a==='seguir') ceModo('ed');
+  else if(a==='adic') adAbrir(true);
+  else if(a==='ls'){ $('vistaCert').classList.toggle('ls-on'); renderCertAdm(); if($('vistaCert').classList.contains('ls-on')) $('ceAdmBox').scrollIntoView({block:'start'}); }
+  else if(a==='obra'||a==='items'){ CE.pliego=p; ceGuardar(); ceModo('ed'); if(a==='items'){ $('ceAcIt').open=true; $('ceAcDatos').open=false; setTimeout(()=>$('ceAcIt').scrollIntoView({block:'start'}),50); } } });
+
+// ---- adicionales desde Excel: planilla con una fila por vereda y una columna por ítem (como “Detalle por vereda”), o una fila por vereda e ítem (Domicilio / Ítem / Cantidad)
+function adParse(wb){ const it=adItems().filter(x=>x.unidad), norm=v=>String(v==null?'':v).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,' ').trim();
+  const num=v=>{ if(v==null||v==='') return null; if(typeof v==='number') return isFinite(v)?v:null; let t=String(v).replace(/\s/g,'').replace(/[^\d.,-]/g,''); if(!t) return null; if(t.includes(',')) t=t.replace(/\./g,'').replace(',','.'); const n=parseFloat(t); return isFinite(n)?n:null; };
+  const itemDe=h=>{ const t=norm(h); if(!t) return null; const m=t.match(/^(\d+(?:\.\d+)*)/); if(m){ const x=it.find(z=>norm(z.item)===m[1]); if(x) return x; } return it.find(z=>z.desc&&norm(z.desc).length>5&&t.includes(norm(z.desc)))||null; };
+  const domPartes=d=>{ const m=String(d||'').trim().match(/^(.*?)[\s,]+(?:n[°º.]?\s*)?(\d+[a-z]?)\b(.*)$/i); return m?{calle:m[1].trim(),nro:(m[2]+(m[3]||'')).trim()}:{calle:String(d||'').trim(),nro:''}; };
+  let mejor=null;
+  wb.SheetNames.forEach(nom=>{ const A=XLSX.utils.sheet_to_json(wb.Sheets[nom],{header:1,raw:true,defval:null,blankrows:true});
+    for(let r=0;r<Math.min(A.length,25);r++){ const H=(A[r]||[]).map(norm); const cC=H.findIndex(h=>h==='calle'||h.startsWith('calle')), cD=H.findIndex(h=>h.startsWith('domicilio')||h.startsWith('direccion'));
+      if(cC<0&&cD<0) continue;
+      const cN=H.findIndex((h,i)=>i>Math.max(cC,cD)&&/^(n[°º.]?|nro\.?|numero|altura)$/.test(h)), cP=H.findIndex(h=>h.startsWith('pliego')), cDet=H.findIndex(h=>h.startsWith('detalle')||h.startsWith('observ')||h.startsWith('trabajo'));
+      const cIt=H.findIndex(h=>h==='item'||h==='items'||h.startsWith('item ')), cQ=H.findIndex(h=>h.startsWith('cantidad'));
+      const filas=new Map(); let vac=0;
+      const fila=f=>{ let calle=cC>=0?String(f[cC]??'').trim():'', nro=cN>=0?String(f[cN]??'').trim():''; if(!calle&&cD>=0){ const p=domPartes(f[cD]); calle=p.calle; nro=nro||p.nro; } else if(cD>=0&&!nro){ nro=domPartes(f[cD]).nro; }
+        const k=norm(calle)+'|'+norm(nro); if(!filas.has(k)) filas.set(k,{calle,nro,pl:cP>=0&&f[cP]!=null?String(f[cP]).trim():'',det:cDet>=0&&f[cDet]!=null?String(f[cDet]).trim():'',q:{}}); return filas.get(k); };
+      for(let k=r+1;k<A.length;k++){ const f=A[k]||[]; if(!f.some(v=>v!=null&&String(v).trim()!=='')){ if(++vac>3) break; continue; } vac=0;
+        if(f.slice(0,3).some(v=>/^total/.test(norm(v)))) break;
+        if(cIt>=0&&cQ>=0){ const x=itemDe(f[cIt]), q=num(f[cQ]); if(!x||q==null) continue; const o=fila(f); if(!o.calle) continue; o.q[x.item]=(o.q[x.item]||0)+q; }
+        else{ const o=fila(f); if(!o.calle) { continue; } H.forEach((h,ci)=>{ const x=itemDe(A[r][ci]); if(!x||ci===cN||ci===cC) return; const q=num(f[ci]); if(q) o.q[x.item]=(o.q[x.item]||0)+q; }); } }
+      const rows=[...filas.values()].filter(o=>o.calle&&!/^ej\s*[:.]/i.test(o.calle)&&(Object.keys(o.q).length||o.det));
+      if(rows.length&&(!mejor||rows.length>mejor.rows.length)) mejor={hoja:nom,rows}; break; } });
+  return mejor; }
+async function adImportar(file){ if(!file) return; try{ toast('Leyendo el Excel…',4000); await cargarXLSX(); const wb=XLSX.read(await file.arrayBuffer(),{type:'array'}); const R=adParse(wb);
+    if(!R){ toast('No encontré veredas en ese Excel: tiene que tener una columna Calle (o Domicilio) y una columna por ítem (1.1, 1.2…), o columnas Ítem y Cantidad. Bajá la “Planilla modelo”.',9000); return; }
+    const sinQ=R.rows.filter(o=>!Object.keys(o.q).length).length;
+    if(!confirm(`Encontré ${R.rows.length} vereda${R.rows.length===1?'':'s'} en la hoja “${R.hoja}”${sinQ?` (${sinQ} sin cantidades)`:''}. ¿Agregarlas a los adicionales del pliego ${CE.pliego}?`)) return;
+    const A=adPl(); R.rows.forEach(o=>{ const v={}; Object.entries(o.q).forEach(([k,q])=>{ const x=adItems().find(z=>z.item===k), t=String(Math.round(q*1e6)/1e6).replace('.',','); v[k]=x&&x.tipo?{_q:t}:{Q:t}; }); A.rows.push({id:'a'+Math.random().toString(36).slice(2,9),calle:o.calle,nro:o.nro,pl:o.pl&&ceNormPl(o.pl)!==ceNormPl(CE.pliego)?o.pl:'',det:o.det,v}); });
+    adGuardar(); renderAdic(); toast(`${R.rows.length} vereda${R.rows.length===1?'':'s'} agregada${R.rows.length===1?'':'s'} desde el Excel`);
+  }catch(e){ toast(e.message||'No se pudo leer el Excel'); } }
+async function adModelo(){ try{ await cargarXLSX(); const it=adItems().filter(x=>x.unidad);
+    const aoa=[['Calle','N°','Pliego','Detalle de trabajos',...it.map(x=>`${x.item} · ${x.desc} (${x.unidad})`)],['Ej: 20 de Febrero','155',CE.pliego||'','Reposición de baldosas',...it.map(()=>null)]];
+    const ws=XLSX.utils.aoa_to_sheet(aoa); ws['!cols']=[{wch:24},{wch:8},{wch:8},{wch:40},...it.map(()=>({wch:16}))]; const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Adicionales');
+    const out=XLSX.write(wb,{bookType:'xlsx',type:'array'}); download(`planilla_adicionales_pliego${String(CE.pliego||'').replace(/[^\w-]+/g,'')}.xlsx`,new Blob([out],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+    toast('Completá una fila por vereda con la cantidad de cada ítem y cargala con “Cargar desde Excel”',7000);
+  }catch(e){ toast(e.message||'No se pudo armar la planilla'); } }
 
 // ---------- visor de fotos: deslizar para pasar, con título Antes / Después ----------
 let FV={l:[],i:0};
