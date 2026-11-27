@@ -201,7 +201,8 @@ details.ce-elegir{margin-top:12px;border:1.5px dashed #b9d4ef;border-radius:12px
 #adBox{display:none}#vistaCert #ceEdit.ad-on>*{display:none!important}#vistaCert #ceEdit.ad-on>#adBox{display:block!important}#vistaCert.ad-on #ceAdmBox{display:none!important}
 .btn.ce-adic{background:#7a4b00;border-color:#7a4b00;color:#fff}.btn.ce-adic svg{fill:none;stroke:currentColor;stroke-width:2.2;width:16px;height:16px;stroke-linecap:round}
 .ad-cab{margin-top:6px}.ad-top{display:flex;gap:12px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}.ad-top h3{margin:0 0 4px;font-size:19px;color:#7a4b00}.ad-top p{margin:0 0 10px}
-@media (min-width:701px){.ce-rh.ad-rh{grid-template-columns:auto minmax(0,2.2fr) minmax(0,.8fr) minmax(0,.7fr) auto}}@media (max-width:700px){.ce-rh.ad-rh{grid-template-columns:auto 1fr 1fr auto!important;grid-template-areas:"n c c c" ". nro pl del"}.ad-rh>:nth-child(1){grid-area:n}.ad-rh>:nth-child(2){grid-area:c}.ad-rh>:nth-child(3){grid-area:nro}.ad-rh>:nth-child(4){grid-area:pl}.ad-rh>:nth-child(5){grid-area:del;align-self:end}}#adBox .ce-acc .btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;flex:none}.ad-rub{font-weight:700;color:#10233f;background:#f3f6f9;border-radius:8px;padding:6px 10px;font-size:13px;margin-top:4px}
+@media (min-width:701px){.ce-rh.ad-rh{grid-template-columns:auto minmax(0,2.2fr) minmax(0,.8fr) minmax(0,.7fr) auto}}@media (max-width:700px){.ce-rh.ad-rh{grid-template-columns:auto 1fr 1fr auto!important;grid-template-areas:"n c c c" ". nro pl del"}.ad-rh>:nth-child(1){grid-area:n}.ad-rh>:nth-child(2){grid-area:c}.ad-rh>:nth-child(3){grid-area:nro}.ad-rh>:nth-child(4){grid-area:pl}.ad-rh>:nth-child(5){grid-area:del;align-self:end}}.ad-est{margin:8px 0 0;font-size:13px;font-weight:600}.ad-est.sucio{color:#a15c00}.ad-est.ok{color:#1f7a45}.ad-ro-h{display:flex;align-items:center;gap:12px}.ad-ro-h b{font-size:16px}.ad-ro-h small{display:block;color:var(--ink2);font-size:12.5px}
+#adBox .ce-acc .btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;flex:none}.ad-rub{font-weight:700;color:#10233f;background:#f3f6f9;border-radius:8px;padding:6px 10px;font-size:13px;margin-top:4px}
 .ce-rs tr.ad-cero td{color:#8a94a3}
 .ce-rs .ce-at-w{max-height:300px}.ce-rs .ce-rt{font-size:11px}.ce-rs .ce-rt th{padding:4px;font-size:10.5px}.ce-rs .ce-rt td{padding:2px 4px}.ce-rs .ce-rt td.l{max-width:190px;min-width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ce-rs .ce-rt td small{display:inline;margin-left:4px}.ce-rs .ce-kpi{margin-bottom:8px}
 #certPrint .ct{font-size:11.5px;line-height:1.45;color:#000}#certPrint .ct p{margin:0 0 8px;text-align:justify}#certPrint .ct-tit{text-align:center;font-size:14px;font-weight:700;margin:6px 0 14px}#certPrint .ct-b{font-weight:700}#certPrint .ct-h{font-size:12px;font-weight:700;margin:14px 0 6px}#certPrint .ct-h2{font-size:13.5px;margin-top:18px}#certPrint .ct-l{margin:0 0 6px 22px;padding:0}#certPrint .ct-l li{margin:1px 0}#certPrint .ct-d{break-inside:avoid;page-break-inside:avoid}#certPrint .ct-d h4{font-size:11.5px;font-weight:700;margin:12px 0 5px}#certPrint .ct-sin{color:#777;font-style:italic}#certPrint .ct-fin{margin-top:16px!important}
@@ -1808,7 +1809,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
           <details class="ce-elegir" id="ceElegir"><summary>＋ Elegir veredas ejecutadas <small id="ceSumEle"></small></summary><div id="ceElegirIn"></div></details>
         </details>
         <details class="ce-ac ce-cert" id="ceAcRes"><summary><b>Certificado por ítem</b><small id="ceSumRes"></small></summary><div id="ceRes"></div></details>
-        <div id="adBox" class="ce-cert"></div>
+        <div id="adBox"></div>
         <div class="ce-bar ce-cert" id="ceBar"><div>Este certificado<b id="ceBarRes">—</b></div><button type="button" class="btn ce-save" id="ceGuardarPl">Guardar en la planilla</button></div>
         </div>
         <div id="ceGuard"></div>
@@ -1988,7 +1989,7 @@ window.addEventListener('error',function(e){ try{ var b=document.getElementById(
 
   <footer>
     <div class="solo-pwa" style="margin-bottom:8px"><a href="#" class="salir-ses" id="salirSesion"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg><span id="salirTxt">Cerrar sesión</span></a> <a href="#" id="admLink" style="color:var(--ink2)">Acceso administrador</a> <a href="#" id="usrSalir" hidden style="color:var(--ink2);margin-left:10px">Cambiar de usuario</a> <span id="admBox" hidden><input type="password" id="admKey" placeholder="Clave" style="min-width:0;width:140px"> <button class="btn" id="admGo">Entrar</button></span></div>
-    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 25/11 17:58</span>
+    <span id="fuente"></span> <span class="solo-pwa" style="opacity:.6" id="appVer">· Versión 27/11 12:00</span>
     <ul>
       <li>La “calle” corresponde al encabezado de sección de la planilla (una esquina puede figurar bajo la calle transversal).</li>
       <li>Cada fila de la planilla es un registro (un catastro); <span id="sinced"></span></li>
@@ -2199,9 +2200,14 @@ function normFp(v){
   if(n.includes('cuota')) return 'Cuotas';
   return String(v).trim();
 }
+// la “calle” sale del encabezado de sección de la planilla; si el encabezado nombra varias calles (“12 de Octubre y 20 de Febrero”) se usa la del domicilio
+function calleDeDom(calle,dom){ const nn=x=>String(x||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+  const partes=String(calle||'').split(/\s+y\s+|\s*\/\s*|\s*;\s*|\s*,\s*/i).map(x=>x.trim()).filter(x=>nn(x).length>2); if(partes.length<2) return calle;
+  const d=nn(dom); const p=partes.find(x=>d===nn(x)||d.startsWith(nn(x)+' ')); return p||calle; }
 function enrich(r){
   const d={id:r.id||nextId++, pliego:String(r.pliego??'').trim().replace(/^pliego\s*/i,'')||'s/n', ced:r.ced??null, dom:String(r.dom??'').replace(/\s+/g,' ').trim(), cat:String(r.cat??'').trim(), por:String(r.por??'').trim(), porId:r.porId||null, src:r.src||null, key:r.key||null, uid:r.uid||null, k:r.k||null, dev:r.dev||null, pend:!!r.pend, t:r.t||null, mine:PWA?(r.src==='alta'&&!!r.dev&&r.dev===PW.dev):ONLINE?(r.src==='alta'&&!!r.uid&&r.uid===ON.uid):!!r.mine,
     calle:(String(r.calle??'').trim()||(String(r.dom??'').match(/^[^\d]+/)||[''])[0].trim()||'Sin calle'), monto:numTrab(r.monto), ent:!!r.ent, pag:!!r.pag, eje:!!r.eje, fp:normFp(r.fp), anio:r.anio??null, obs:String(r.obs??'').trim()};
+  d.calle=calleDeDom(d.calle,d.dom);
   if(d.ced!==null && d.ced!=='' && !isNaN(+d.ced)) d.ced=+d.ced; else if(d.ced==='') d.ced=null;
   if(d.anio!==null && d.anio!=='' && !isNaN(+d.anio)) d.anio=+d.anio; else d.anio=null;
   d.enej=!!r.enej&&!d.eje;
@@ -3088,7 +3094,7 @@ $('ceGuardarPl').onclick=async()=>{ if(!String(CE.num||'').trim()){ toast('Poné
     if(!r||!r.ok) throw new Error(r&&r.error==='forbidden'?'No tenés permiso para guardar certificados':r&&r.error==='grande'?'El certificado es demasiado grande para una celda':'No se pudo guardar');
     PW.certs=r.certificados||PW.certs; pwCertCache(); toast(`Certificado N° ${CE.num} guardado en la planilla`); renderCertAdm(); renderCertRes();
   }catch(e){ toast(e.message||'No se pudo guardar'); } finally{ b.disabled=false; b.textContent=t0; } };
-function pwCertCache(){ try{ localStorage.setItem('pmv-app-cert',JSON.stringify({items:PW.certItems||[],certs:PW.certs||[],obras:PW.obras||[]})); }catch(e){} }
+function pwCertCache(){ try{ localStorage.setItem('pmv-app-cert',JSON.stringify({items:PW.certItems||[],certs:PW.certs||[],obras:PW.obras||[],adic:PW.adic||[]})); }catch(e){} }
 
 // ---- certificado guardado → objeto para informe/Excel ----
 function ceDeGuardado(c){ const d=ceDatos(c); return {num:String(c.numero),pliego:String(c.pliego),fecha:ceFechaIso(c.fecha),desde:ceFechaIso(c.desde),hasta:ceFechaIso(c.hasta),comp:d.comp,nota:d.nota||{},
@@ -3464,8 +3470,24 @@ $('ceaPdf').onclick=()=>{ if(!ceaDatosDesc().length){ toast(!$('ceEdit').hidden?
 // Se guarda en este dispositivo (localStorage 'pmv-adic'), un juego por pliego.
 let ADIC={};
 function adCargar(){ try{ ADIC=JSON.parse(localStorage.getItem('pmv-adic')||'{}')||{}; }catch(e){ ADIC={}; } }
-function adGuardar(){ try{ localStorage.setItem('pmv-adic',JSON.stringify(ADIC)); }catch(e){} }
-function adPl(){ const k=ceNormPl(CE&&CE.pliego); if(!ADIC[k]) ADIC[k]={rows:[]}; return ADIC[k]; }
+function adGuardar(limpio){ if(!CE_ADM){ const A=adPl(); A.sucio=limpio?0:Date.now(); } try{ localStorage.setItem('pmv-adic',JSON.stringify(ADIC)); }catch(e){} }
+// el administrador ve (sin poder cambiar) lo que guardaron en la planilla los inspectores de obra
+const adNom=x=>String(x||'').trim().toLowerCase();
+const adDatosDe=x=>{ try{ return typeof x.datos==='string'?JSON.parse(x.datos||'{}'):(x.datos||{}); }catch(e){ return {}; } };
+let AD_RO_C=null;
+function adRO(){ const pl=ceNormPl(CE&&CE.pliego), src=PW.adic||[]; if(AD_RO_C&&AD_RO_C.src===src&&AD_RO_C.pl===pl) return AD_RO_C.A;
+  const de=src.filter(x=>ceNormPl(x.pliego)===pl), rows=[]; de.forEach(x=>(adDatosDe(x).rows||[]).forEach((r,i)=>rows.push(Object.assign({},r,{id:'s'+rows.length,por:x.por,act:x.actualizado}))));
+  const A={rows,ro:true,de}; AD_RO_C={src,pl,A}; return A; }
+function adPl(){ if(CE_ADM) return adRO(); const k=ceNormPl(CE&&CE.pliego); if(!ADIC[k]) ADIC[k]={rows:[]}; return ADIC[k]; }
+function adMio(){ const pl=ceNormPl(CE&&CE.pliego); return (PW.adic||[]).find(x=>ceNormPl(x.pliego)===pl&&adNom(x.por)===adNom(PW.yo)); }
+async function adGuardarPl(){ const A=adPl(); if(CE_ADM) return;
+  if(window.PMV_DEMO){ PW.adic=(PW.adic||[]).filter(x=>!(ceNormPl(x.pliego)===ceNormPl(CE.pliego)&&adNom(x.por)===adNom(PW.yo))).concat([{id:ceNormPl(CE.pliego)+'|'+adNom(PW.yo),pliego:CE.pliego,por:PW.yo||'Inspector',datos:JSON.stringify({rows:A.rows}),actualizado:Date.now()}]); A.guardadoEn=Date.now(); adGuardar(true); renderAdic(); toast('Vista de ejemplo: en la app real se guarda en la hoja “Adicionales”'); return; }
+  if(!navigator.onLine){ toast('Sin conexión: guardalo cuando tengas internet (lo cargado sigue en este dispositivo)'); return; }
+  const b=$('adGuardarPl'); if(b){ b.disabled=true; b.textContent='Guardando…'; }
+  try{ const r=await pwPost({action:'adic_set',u:PW.u||undefined,t:PW.t||undefined,pliego:CE.pliego,datos:{rows:A.rows}});
+    if(!r||!r.ok) throw new Error(r&&r.error==='forbidden'?'Solo el inspector de obra puede guardar adicionales (o falta actualizar el Code.gs)':r&&r.error==='grande'?'Son demasiados datos para una celda: dividilos por pliego':'No se pudo guardar');
+    PW.adic=r.adicionales||PW.adic; pwCertCache(); A.guardadoEn=Date.now(); adGuardar(true); toast('Adicionales guardados en la planilla: el administrador ya los puede ver');
+  }catch(e){ toast(e.message||'No se pudo guardar'); } finally{ renderAdic(); } }
 const AD_EDIT=new Set();
 // ítems de la orden de compra: rubros (sin unidad) y renglones medibles; los que tienen tipo de medición usan sus medidas, el resto se carga la cantidad directa
 function adItems(){ return ceItemsPl(CE.pliego); }
@@ -3480,7 +3502,7 @@ const adCarg=(r,x)=>adCampos(x).some(([k])=>!['WP','Z','AL','AD'].includes(k)&&c
 const adU=x=>x.tipo?MT[x.tipo].u:(x.unidad||'');
 function adTotales(){ const it=adItems().filter(x=>x.unidad), rows=adPl().rows; return it.map(x=>({x,q:ceR2(rows.reduce((s,r)=>s+adCant(r,x),0))})); }
 function adSum(r){ const it=adItems().filter(x=>x.unidad&&adCarg(r,x)), ab=AD_EDIT.has(r.id);
-  return `<div class="ce-sum-h"><b data-asn>Ítems cargados${it.length?` (${it.length})`:''}</b><button type="button" class="btn ce-sum-b${ab?'':' pri'}" data-adeditar="1">${ab?'Cerrar ítems':it.length?'Editar ítems':'Cargar ítems'}</button></div><div data-asb>${adSumBody(r)}</div>`; }
+  return `<div class="ce-sum-h"><b data-asn>Ítems cargados${it.length?` (${it.length})`:''}</b>${CE_ADM?'':`<button type="button" class="btn ce-sum-b${ab?'':' pri'}" data-adeditar="1">${ab?'Cerrar ítems':it.length?'Editar ítems':'Cargar ítems'}</button>`}</div><div data-asb>${adSumBody(r)}</div>`; }
 function adSumBody(r){ const it=adItems().filter(x=>x.unidad&&adCarg(r,x)), det=String(r.det||'').trim();
   return (it.length?`<table class="ce-sum-t"><thead><tr><th>Ítem</th><th>Descripción</th><th>Cantidad</th></tr></thead><tbody>${it.map(x=>`<tr><td>${esc(x.item)}</td><td>${esc(ceCap(x.desc))}</td><td class="n">${ceF4n(adCant(r,x))} ${esc(adU(x))}</td></tr>`).join('')}</tbody></table>`:'<p class="ce-sum-v">Todavía no hay ítems cargados en esta vereda.</p>')+
     `<p class="ce-sum-det"${det?'':' hidden'}><b>Detalle de trabajos:</b> <span>${esc(det)}</span></p>`; }
@@ -3492,10 +3514,10 @@ function adTotHtml(){ const T=adTotales(), con=T.filter(t=>t.q>0), imp=T.reduce(
   return `<h3 class="ce-sec">Total de adicionales por ítem</h3><div class="obra-card ce-rs"><div class="ce-kpi"><div><span>Veredas</span><b>${adPl().rows.length}</b></div><div><span>Ítems con cantidad</span><b>${con.length} de ${T.length}</b></div><div><span>Importe (a precio de la orden de compra)</span><b>${ce$(imp)}</b></div></div>
     <div class="ce-at-w"><table class="ce-rt"><thead><tr><th>Ítem</th><th>Descripción</th><th>Un.</th><th>Cantidad total</th><th>Precio unitario</th><th>Importe</th></tr></thead><tbody>${T.map(t=>`<tr${t.q>0?'':' class="ad-cero"'}><td>${esc(t.x.item)}</td><td class="l" title="${esc(t.x.desc)}">${esc(t.x.desc)}</td><td>${esc(t.x.unidad)}</td><td class="n b">${ceF4n(t.q)}</td><td class="n">${ce$(t.x.PU)}</td><td class="n">${t.q>0?ce$(t.q*t.x.PU):''}</td></tr>`).join('')}</tbody>
     <tfoot><tr><td colspan="5" class="l">Total</td><td class="n">${ce$(imp)}</td></tr></tfoot></table></div></div>`; }
-function renderAdic(){ const box=$('adBox'); if(!box) return; const A=adPl(), it=adItems(), hay=it.some(x=>x.unidad);
-  box.innerHTML=`<div class="obra-card ad-cab"><div class="ad-top"><div><h3>Adicionales · pliego ${esc(CE.pliego||'')}</h3><p class="ce-nota">Medición por vereda con todos los ítems de la orden de compra. Se suma por ítem y se descarga en un Excel con el total de cada uno. Lo cargado queda en este dispositivo.</p></div>
+function renderAdic(){ const box=$('adBox'); if(!box) return; if(CE_ADM){ renderAdicRO(); return; } const A=adPl(), it=adItems(), hay=it.some(x=>x.unidad);
+  box.innerHTML=`<div class="obra-card ad-cab"><div class="ad-top"><div><h3>Adicionales · pliego ${esc(CE.pliego||'')}</h3><p class="ce-nota">Medición por vereda con todos los ítems de la orden de compra. Se suma por ítem y se descarga en un Excel con el total de cada uno. Lo cargado queda en este dispositivo hasta que tocás “Guardar en la planilla”: ahí lo ve el administrador.</p></div>
       <button type="button" class="btn" id="adVolver">← Volver a Certificaciones</button></div>
-    ${hay?`<div class="ce-acc"><button type="button" class="btn primary" id="adAdd">＋ Agregar vereda</button><button type="button" class="btn ce-xls" id="adXls"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>Excel de adicionales</button><button type="button" class="btn" id="adImp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V8M7 13l5-5 5 5M5 5h14"/></svg>Cargar desde Excel</button><button type="button" class="btn" id="adModelo">Planilla modelo</button><input type="file" id="adFile" accept=".xlsx,.xls,.xlsm,.ods,.csv" hidden>${A.rows.length?'<button type="button" class="btn ce-new" id="adVaciar">Vaciar adicionales</button>':''}</div>`
+    ${hay?`<div class="ce-acc"><button type="button" class="btn primary" id="adAdd">＋ Agregar vereda</button><button type="button" class="btn ce-save" id="adGuardarPl">Guardar en la planilla</button><button type="button" class="btn ce-xls" id="adXls"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>Excel de adicionales</button><button type="button" class="btn" id="adImp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V8M7 13l5-5 5 5M5 5h14"/></svg>Cargar desde Excel</button><button type="button" class="btn" id="adModelo">Planilla modelo</button><input type="file" id="adFile" accept=".xlsx,.xls,.xlsm,.ods,.csv" hidden>${A.rows.length?'<button type="button" class="btn ce-new" id="adVaciar">Vaciar adicionales</button>':''}</div>${adEstado()}`
       :`<p class="ce-nota" style="font-size:14px">Primero cargá los <b>ítems del pliego ${esc(CE.pliego||'')}</b> (en el certificado, “Ítems del pliego” → Importar orden de compra o Editar ítems).</p>`}</div>
     ${hay?`${A.rows.length?adTotHtml():''}<h3 class="ce-sec">Medición por vereda · adicionales</h3>`+(A.rows.length?A.rows.map((r,i)=>`<div class="ce-row ad-row" data-ar="${r.id}"><div class="ce-rh ad-rh"><span class="ce-n">${i+1}</span>
       <label>Calle<input data-ak="calle" value="${esc(r.calle||'')}" list="callesList" placeholder="Calle"></label>
@@ -3507,9 +3529,22 @@ function renderAdic(){ const box=$('adBox'); if(!box) return; const A=adPl(), it
       :'<div class="ce-vacio">Todavía no hay veredas con adicionales.<br>Tocá <b>＋ Agregar vereda</b>.</div>'):''}`;
   if($('adVolver')) $('adVolver').onclick=()=>adAbrir(false);
   if($('adAdd')) $('adAdd').onclick=()=>{ const r={id:'a'+Math.random().toString(36).slice(2,9),calle:'',nro:'',det:'',v:{}}; adPl().rows.push(r); AD_EDIT.add(r.id); adGuardar(); renderAdic(); setTimeout(()=>{ const e=document.querySelector(`[data-ar="${r.id}"] [data-ak="calle"]`); if(e){ e.scrollIntoView({block:'center'}); e.focus(); } },50); };
+  if($('adGuardarPl')) $('adGuardarPl').onclick=adGuardarPl;
   if($('adXls')) $('adXls').onclick=adExcel; if($('adImp')) $('adImp').onclick=()=>$('adFile').click(); if($('adFile')) $('adFile').onchange=e=>{ adImportar(e.target.files[0]); e.target.value=''; }; if($('adModelo')) $('adModelo').onclick=adModelo;
   if($('adVaciar')) $('adVaciar').onclick=()=>{ if(!confirm(`¿Borrar todos los adicionales cargados del pliego ${CE.pliego}? (${adPl().rows.length} veredas)`)) return; adPl().rows=[]; adGuardar(); renderAdic(); }; }
-function adAbrir(si){ adCargar(); $('certCerrar').setAttribute('aria-label',si?'Volver a Certificaciones':'Cerrar'); if(!si){ ceModo('home'); return; } if(ceaPl&&CE.pliego!==ceaPl&&!CE.rows.length){ CE.pliego=ceaPl; ceGuardar(); } $('vistaCert').classList.add('m-ed','ad-on'); $('ceEdit').classList.add('ad-on'); $('vistaCert').querySelector('.obra-top h2').textContent='Adicionales'; renderAdic(); $('vistaCert').scrollTop=0; }
+function adEstado(){ const A=adPl(), f=t=>new Date(t).toLocaleString('es-AR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+  if(A.sucio&&A.rows.length) return `<p class="ad-est sucio">Hay cambios sin guardar en la planilla: el administrador todavía no los ve.</p>`;
+  if(A.guardadoEn) return `<p class="ad-est ok">Guardado en la planilla el ${f(A.guardadoEn)}</p>`; return ''; }
+// vista del administrador: solo lectura, lo que guardaron los inspectores de obra
+function renderAdicRO(){ const box=$('adBox'), A=adPl(), it=adItems(), f=t=>t?new Date(t).toLocaleString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+  box.innerHTML=`<div class="obra-card ad-cab"><div class="ad-top"><div><h3>Adicionales · pliego ${esc(CE.pliego||'')}</h3><p class="ce-nota">Lo que cargaron y guardaron en la planilla los inspectores de obra. Desde la administración solo se ve y se descarga.</p></div>
+      <button type="button" class="btn" id="adVolver">← Volver a Certificaciones</button></div>
+    ${A.de.length?`<p class="ce-nota">${A.de.map(x=>`<b>${esc(x.por||'—')}</b> · ${(adDatosDe(x).rows||[]).length} vereda${(adDatosDe(x).rows||[]).length===1?'':'s'} · guardado el ${esc(f(x.actualizado))}`).join('<br>')}</p>`:''}
+    ${A.rows.length?'<div class="ce-acc"><button type="button" class="btn ce-xls" id="adXls"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>Excel de adicionales</button></div>':''}</div>
+    ${A.rows.length?adTotHtml()+'<h3 class="ce-sec">Veredas con adicionales</h3>'+A.rows.map((r,i)=>`<div class="ce-row ad-row" data-ar="${r.id}"><div class="ad-ro-h"><span class="ce-n">${i+1}</span><div><b>${esc(r.calle||'')} ${esc(r.nro||'')}</b><small>Pliego ${esc(r.pl||CE.pliego||'')} · cargado por ${esc(r.por||'—')}</small></div></div><div class="ce-sum" data-asum>${adSum(r)}</div></div>`).join('')
+      :`<div class="ce-vacio">Todavía no hay adicionales guardados del pliego ${esc(CE.pliego||'')}.<br>Los carga el inspector de obra y aparecen acá cuando toca “Guardar en la planilla”.</div>`}`;
+  $('adVolver').onclick=()=>adAbrir(false); if($('adXls')) $('adXls').onclick=adExcel; }
+function adAbrir(si){ adCargar(); $('certCerrar').setAttribute('aria-label',si?'Volver a Certificaciones':'Cerrar'); if(!si){ ceModo('home'); return; } if(ceaPl&&CE.pliego!==ceaPl&&!CE.rows.length){ CE.pliego=ceaPl; ceGuardar(); } if(!CE_ADM){ const A=adPl(), m=adMio(); if(m&&!A.rows.length){ A.rows=adDatosDe(m).rows||[]; A.guardadoEn=+new Date(m.actualizado)||Date.now(); adGuardar(true); } } $('vistaCert').classList.add('m-ed','ad-on'); $('ceEdit').classList.add('ad-on'); $('vistaCert').querySelector('.obra-top h2').textContent='Adicionales'; renderAdic(); $('vistaCert').scrollTop=0; }
 $('ceAdic').onclick=()=>adAbrir(true); $('ceaAdic').onclick=()=>adAbrir(true);
 let adT=null; const adTot=()=>{ clearTimeout(adT); adT=setTimeout(()=>{ const b=document.querySelector('#adBox .ce-rs'); if(!b) return; const h=document.createElement('div'); h.innerHTML=adTotHtml(); b.replaceWith(h.querySelector('.ce-rs')); },400); };
 $('adBox').addEventListener('input',e=>{ const box=e.target.closest('[data-ar]'); if(!box) return; const r=adPl().rows.find(x=>x.id===box.dataset.ar); if(!r) return;
@@ -3594,7 +3629,7 @@ function renderCeHome(){ const box=$('ceHome'); if(!box) return; const v=$('vist
     h+=`<button type="button" class="ceh-nuevo" data-h="nuevo"><i>＋</i><span>Nuevo certificado<small>Certificado N° ${n}${desde?' · desde '+desde:''}</small></span></button>`;
     if(mio) h+=`<button type="button" class="ceh-c bor" data-h="seguir"><span class="ceh-n">${esc(String(CE.num||'').trim()||'?')}</span><span><b>Certificado N° ${esc(String(CE.num||'').trim()||'sin número')}</b><span class="ceh-tag ${guardado?'ab':'bo'}">${guardado?'Abierto':'Borrador'}</span><small>${CE.rows.length} vereda${CE.rows.length===1?'':'s'} cargada${CE.rows.length===1?'':'s'} · ${guardado?'para corregir':'sin guardar'}</small></span><span class="ceh-ar">›</span></button>`;
     h+=`<div class="ceh-t"><button type="button" class="adic" data-h="adic"><span class="ico">＋</span>Adicionales</button><button type="button" data-h="ls" aria-pressed="${ls}"><span class="ico">⬇</span>Listado ejecutadas</button></div>`; }
-  else h+=`<div class="ceh-t"><button type="button" data-h="obra"><span class="ico">📄</span>Datos de obra (orden de compra)</button><button type="button" data-h="items"><span class="ico">☰</span>Ítems del pliego (${ceItemsPl(p).filter(x=>x.unidad).length||'sin cargar'})</button></div><div class="ceh-t" style="grid-template-columns:1fr"><button type="button" data-h="ls" aria-pressed="${ls}"><span class="ico">⬇</span>Listado de veredas ejecutadas (Excel / PDF)</button></div>`;
+  else h+=`<div class="ceh-t"><button type="button" data-h="obra"><span class="ico">📄</span>Datos de obra (orden de compra)</button><button type="button" data-h="items"><span class="ico">☰</span>Ítems del pliego (${ceItemsPl(p).filter(x=>x.unidad).length||'sin cargar'})</button></div><div class="ceh-t"><button type="button" class="adic" data-h="adic"><span class="ico">＋</span>Adicionales</button><button type="button" data-h="ls" aria-pressed="${ls}"><span class="ico">⬇</span>Listado ejecutadas (Excel / PDF)</button></div>`;
   box.innerHTML=h; }
 $('ceHome').addEventListener('click',e=>{ const pl=e.target.closest('[data-hp]'); if(pl){ ceElegirPl(pl.dataset.hp); return; }
   const b=e.target.closest('[data-h]'); if(!b) return; const a=b.dataset.h, p=ceaPl;
@@ -4428,6 +4463,9 @@ const pwBody=d=>{ const b={}; PW_FIELDS.forEach(f=>{ const v=d[f]; b[f]=(v===und
 const pwRand=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
 const lsGet=(k,def)=>{ try{ const v=localStorage.getItem(k); return v==null?def:JSON.parse(v); }catch(e){ return def; } };
 const lsSet=(k,v)=>{ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} };
+// copia local de la planilla: si no entra en el espacio del navegador se guarda sin el historial de avance y de fotos (lo importante son los registros de todos los pliegos)
+function pwGuardarCache(){ const c={regs:PW.regs,altas:PW.altas,fotos:PW.fotos,obra:PW.obraLog,ts:PW.lastSync};
+  for(const v of [c,{...c,obra:(PW.obraLog||[]).slice(-300)},{...c,obra:[],fotos:[]}]){ try{ localStorage.setItem(PW_CACHE,JSON.stringify(v)); return true; }catch(e){ try{ localStorage.removeItem(PW_CACHE); }catch(_){} } } return false; }
 function pwCanEdit(d){ return PW.role==='admin' || !!(d && d.src==='alta' && d.dev && d.dev===PW.dev); }
 
 function pwaInit(){
@@ -4452,8 +4490,8 @@ function pwaInit(){
   $('usrSalir').onclick=e=>{ if(PW.t){ e.preventDefault(); cerrarSesion(); return; } salir(e); }; $('porSalir').onclick=e=>{ if(PW.t){ e.preventDefault(); cerrarSesion(); return; } salir(e); };
   $('usrGo').onclick=pwUsarCodigo; $('usrCod').onkeydown=e=>{ if(e.key==='Enter') pwUsarCodigo(); }; $('usrUsu').onkeydown=e=>{ if(e.key==='Enter') $('usrCod').focus(); };
   const c=lsGet(PW_CACHE,null);
-  try{ const cc=JSON.parse(localStorage.getItem('pmv-app-cert')||'null'); if(cc){ PW.certItems=cc.items||[]; PW.certs=cc.certs||[]; PW.obras=cc.obras||[]; } }catch(e){}
-  if(window.PMV_DEMO_CERT){ PW.certItems=window.PMV_DEMO_CERT.items||[]; PW.certs=window.PMV_DEMO_CERT.certs||[]; PW.obras=window.PMV_DEMO_CERT.obras||[]; }
+  try{ const cc=JSON.parse(localStorage.getItem('pmv-app-cert')||'null'); if(cc){ PW.certItems=cc.items||[]; PW.certs=cc.certs||[]; PW.obras=cc.obras||[]; PW.adic=cc.adic||[]; } }catch(e){}
+  if(window.PMV_DEMO_CERT){ PW.certItems=window.PMV_DEMO_CERT.items||[]; PW.certs=window.PMV_DEMO_CERT.certs||[]; PW.obras=window.PMV_DEMO_CERT.obras||[]; PW.adic=window.PMV_DEMO_CERT.adic||[]; }
   if(c){ PW.regs=c.regs||[]; PW.altas=c.altas||[]; PW.fotos=c.fotos||[]; PW.obraLog=c.obra||[]; PW.lastSync=c.ts||0; }
   else { PW.regs=EMB.rows.map(r=>({...pwBody(r),key:'r'+String(r.id).padStart(2,'0')})); }   // datos incluidos, hasta la primera sincronización
   $('accForm').onsubmit=e=>{ e.preventDefault(); pwAcceso(); };
@@ -4555,13 +4593,13 @@ async function pwSync(){
     const j=await res.json(); if(!j||!j.ok) throw new Error('no se pudo leer la planilla');
     PW.regs=(j.registros||[]).filter(r=>r.key); PW.altas=(j.altas||[]).filter(a=>a.k);
     if(!!j.prueba!==!!PW.prueba){ PW.prueba=!!j.prueba; lsSet('pmv-app-prueba',PW.prueba); pwModoPrueba(); } PW.fotos=(j.fotos||[]).filter(f=>f.archivo); PW.obraLog=(j.obra||[]).filter(o=>o.registro); PW.prios=(j.prioridades||[]).filter(x=>x.registro); lsSet('pmv-app-prios',PW.prios);
-    if(j.cert_items||j.certificados){ PW.certItems=j.cert_items||[]; PW.certs=j.certificados||[]; PW.obras=j.obras||[]; try{ localStorage.setItem('pmv-app-cert',JSON.stringify({items:PW.certItems,certs:PW.certs,obras:PW.obras})); }catch(e){} if(typeof renderCertRes==='function'&&!$('vistaCert').hidden){ try{ renderCertAdm(); renderCertRes(); }catch(e){} } }
-    if(PW.u&&PW.t&&!PW.ver&&!j.yo&&!window.PMV_DEMO){ cerrarSesion('Tu sesión venció o te cambiaron la contraseña. Volvé a ingresar.'); PW.syncing=false; return; }
+    if(j.cert_items||j.certificados){ PW.certItems=j.cert_items||[]; PW.certs=j.certificados||[]; PW.obras=j.obras||[]; PW.adic=j.adicionales||[]; try{ localStorage.setItem('pmv-app-cert',JSON.stringify({items:PW.certItems,certs:PW.certs,obras:PW.obras,adic:PW.adic})); }catch(e){} if(typeof renderCertRes==='function'&&!$('vistaCert').hidden){ try{ renderCertAdm(); renderCertRes(); }catch(e){} } }
+    if(PW.u&&!PW.ver&&!j.yo&&!window.PMV_DEMO){ cerrarSesion(PW.t?'Tu sesión venció o te cambiaron la contraseña. Volvé a ingresar.':'Volvé a ingresar con tu usuario y contraseña (tu sesión de este dispositivo era de antes).'); PW.syncing=false; return; }   // sin sesión válida la planilla no manda los pliegos reservados
     if(PW.u&&PW.t&&!PW.ver&&j.rol){ const want=String(j.rol)==='admin'?'admin':'contrib'; if(PW.role!==want){ PW.role=want; setRole(); tilesKey=''; } }
     if(PW.u&&!PW.ver){ const yo=j.yo?String(j.yo):''; if(PW.yo&&!yo) toast('Tu usuario ya no está habilitado. Hablá con el responsable.'); PW.yo=yo; lsSet(PW_YO,yo); const rol=yo&&j.rol?String(j.rol):''; if(rol!==PW.rol) tilesKey=''; PW.rol=rol; lsSet(PW_ROL,rol); }
     if(PW.role==='admin'&&!PW.ver) pwNotas();
     if(PW.role==='admin'||PW.ver||(PW.yo&&PW.rol!=='secretario')) pwTareas();
-    PW.lastSync=Date.now(); lsSet(PW_CACHE,{regs:PW.regs,altas:PW.altas,fotos:PW.fotos,obra:PW.obraLog,ts:PW.lastSync});
+    PW.lastSync=Date.now(); pwGuardarCache();
     if(PW.role==='admin' && !PW.regs.length && !PW.altas.length && EMB.rows.length && !lsGet('pmv-app-sembrado',false)){
       lsSet('pmv-app-sembrado',true);
       PW.queue.push(...EMB.rows.map(r=>({op:'reg_set',key:'r'+String(r.id).padStart(2,'0'),body:pwBody(r),id:'o'+pwRand()}))); lsSet(PW_QUEUE,PW.queue);
@@ -4746,7 +4784,7 @@ async function pwBorrarFoto(fid){
   if(window.PMV_DEMO){ PW.fotos=PW.fotos.filter(f=>f.id!==fid); render(); toast('Foto eliminada'); return; }
   if(!navigator.onLine||!PW.api){ toast('Para borrar una foto ya subida hace falta conexión'); return; }
   try{ const r=await pwPost({action:'foto_del',adminKey:PW.admin||undefined,u:PW.u||undefined,fid});
-    if(r&&r.ok){ PW.fotos=PW.fotos.filter(f=>f.id!==fid); lsSet(PW_CACHE,{regs:PW.regs,altas:PW.altas,fotos:PW.fotos,obra:PW.obraLog,ts:PW.lastSync}); render(); toast('Foto eliminada'); }
+    if(r&&r.ok){ PW.fotos=PW.fotos.filter(f=>f.id!==fid); pwGuardarCache(); render(); toast('Foto eliminada'); }
     else toast(r&&r.error==='forbidden'?'No tenés permiso para borrar fotos':'No se pudo borrar la foto'); }
   catch(e){ toast('No se pudo borrar la foto: revisá la conexión'); }
 }
